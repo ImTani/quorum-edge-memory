@@ -1,0 +1,5 @@
+node_modules/
+frames/
+*.log
+__pycache__/
+.env
