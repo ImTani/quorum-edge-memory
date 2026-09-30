@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Quorum v3</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#0A0E16;color:#E8ECF4;
+  font-family:"Segoe UI Variable Display","Segoe UI Variable","Segoe UI","Segoe UI Symbol",sans-serif;
+  -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+/* ---- layers (bottom -> top): #bg, #vig, #cloud, #stage, #fx, #cap, #black ---- */
+#bg{position:absolute;left:-120px;top:-120px;width:2160px;height:1320px;
+  background-image:linear-gradient(rgba(124,140,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,140,255,.05) 1px,transparent 1px);
+  background-size:60px 60px}
+#glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 45%,rgba(124,140,255,.07),transparent 70%)}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 42%,rgba(0,0,0,.72) 100%);pointer-events:none}
+canvas.layer{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#stage{position:absolute;inset:0;overflow:hidden;z-index:0;isolation:isolate}
+#fx,#cap,#black{z-index:1}
+#fontwarm{position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap}
+.scene{position:absolute;left:0;top:0;width:1920px;height:1080px;display:none;transform-origin:960px 540px}
+#cap{position:absolute;left:0;right:0;top:930px;text-align:center;pointer-events:none;display:none}
+#cap span{display:inline-block;font-size:42px;font-weight:600;color:#fff;line-height:1.25;background:rgba(8,11,18,.78);
+  padding:12px 32px 14px;border-radius:16px;border:1px solid rgba(124,140,255,.16);box-shadow:0 10px 40px rgba(0,0,0,.5);max-width:1680px}
+#black{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+
+/* ---- shared classes for scenes ---- */
+.abs{position:absolute}
+.mono{font-family:Consolas,"Cascadia Mono",monospace}
+.card{position:absolute;background:rgba(20,26,40,.92);border:1px solid rgba(124,140,255,.28);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.2)}
+.hero{font-weight:800;letter-spacing:.04em;color:#fff}
+.amber{color:#F5A524}.green{color:#22C55E}.red{color:#EF4444}.indigo{color:#7C8CFF}.sub{color:#9AA4C0}.muted{color:#5B6478}.grey{color:#8A93A8}
+.strike{text-decoration:line-through;color:#8A93A8}
+.chip{display:inline-block;padding:4px 14px;border-radius:999px;font-size:20px;font-weight:600;border:1px solid;white-space:nowrap}
+.btn{display:inline-block;padding:12px 26px;border-radius:12px;background:#7C8CFF;color:#0A0E16;font-weight:700;font-size:26px}
+/* laptop window (makeLaptop) */
+.lap{overflow:hidden}
+.lap-bar{height:58px;display:flex;align-items:center;padding:0 20px;gap:9px;border-bottom:1px solid rgba(124,140,255,.16);background:rgba(255,255,255,.02)}
+.lap-bar .tl{width:14px;height:14px;border-radius:50%;flex:none}
+.lap-title{flex:1;text-align:center;font-size:21px;color:#9AA4C0;font-weight:600;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lap-pill{flex:none;font-size:19px;font-weight:600;padding:5px 14px;border-radius:999px;border:1px solid;white-space:nowrap;transform-origin:100% 50%}
+.lap-pill .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:currentColor;margin-right:8px;vertical-align:1px;box-shadow:0 0 8px currentColor}
+.lap-body{position:absolute;left:0;right:0;top:58px;bottom:0;padding:24px 28px}
+/* network graph (netGraph) */
+.netg{border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(124,140,255,.12);overflow:hidden}
+.netg-lbl{position:absolute;left:14px;top:8px;font-size:17px;color:#9AA4C0;letter-spacing:.5px;text-transform:uppercase}
+.netg-bps{position:absolute;right:14px;top:6px;font-size:24px;font-weight:600;z-index:2}
+</style></head>
+<body>
+<div id="bg"></div>
+<div id="glow"></div>
+<div id="vig"></div>
+<canvas id="cloud" class="layer" width="1920" height="1080"></canvas>
+<div id="stage"></div>
+<canvas id="fx" class="layer" width="1920" height="1080"></canvas>
+<div id="cap"><span id="capt"></span></div>
+<div id="black"></div>
+<div id="fontwarm">▶❚▾∈✓✔✕✗✈≠→←↑↓·•…—–★●○◆⌘⚠ <span style="font-family:Consolas">▶∈≠→·●✓</span> <b>▶∈≠→✓</b></div>
+
+<script src="lib.js"></script>
+<script src="scenes/A.js"></script>
+<script src="scenes/B.js"></script>
+<script src="scenes/C.js"></script>
+<script src="scenes/D.js"></script>
+<script src="scenes/E.js"></script>
+<script src="scenes/F.js"></script>
+<script src="scenes/G.js"></script>
+<script src="scenes/H.js"></script>
+<script src="scenes/I.js"></script>
+<script src="scenes/J.js"></script>
+<script src="scenes/K.js"></script>
+<script src="scenes/L.js"></script>
+<script src="scenes/M.js"></script>
+<script src="main.js"></script>
+</body></html>

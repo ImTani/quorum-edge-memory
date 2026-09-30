@@ -1,0 +1,686 @@
+{
+ "_help": "Times in seconds. Edit 't' (sfx) or a mark, then re-run compose.py. sfx types: whoosh pop pops blip sparkle stream bloom blink down up slam glitch sweep air stack draw zip snap collapse typing birth ding pulse alert click chime rise thunk clock stagger. Optional keys: gain, pan, pan0, pan1, dur, f, n, step. For whoosh/air/stream, 't' is the crest (start = t - peak*dur, peak default 0.62).",
+ "marks": {
+  "hook": 0.0,
+  "problem": 14.0,
+  "impact": 17.5,
+  "glitch": 18.5,
+  "title_hit": 24.0,
+  "lock": 26.0,
+  "groove": 32.0,
+  "claims": 46.0,
+  "offline": 58.0,
+  "airplane": 59.0,
+  "meanwhile": 74.0,
+  "reconnect": 82.5,
+  "pulse": 84.0,
+  "conflict": 86.0,
+  "found": 90.0,
+  "disputed": 91.0,
+  "calm": 100.0,
+  "resolve": 108.5,
+  "tiers": 114.0,
+  "proactive": 124.0,
+  "honesty": 131.0,
+  "close": 138.0,
+  "wordmark": 144.0,
+  "fade_start": 148.0,
+  "end": 150.0
+ },
+ "sfx": [
+  {
+   "t": 0.5,
+   "type": "sparkle",
+   "label": "A orbs fade in",
+   "dur": 1.6,
+   "gain": 0.35
+  },
+  {
+   "t": 2.0,
+   "type": "air",
+   "label": "A text seven projects",
+   "gain": 0.35
+  },
+  {
+   "t": 5.0,
+   "type": "bloom",
+   "label": "A orb swells (game project)",
+   "gain": 0.6
+  },
+  {
+   "t": 5.5,
+   "type": "air",
+   "label": "A text forget others",
+   "gain": 0.3
+  },
+  {
+   "t": 6.2,
+   "type": "blink",
+   "label": "A deadline orb blink 1",
+   "gain": 0.25,
+   "pan": 0.5
+  },
+  {
+   "t": 7.4,
+   "type": "blink",
+   "label": "A deadline orb blink 2",
+   "gain": 0.22,
+   "pan": 0.5
+  },
+  {
+   "t": 8.6,
+   "type": "blink",
+   "label": "A deadline orb blink 3",
+   "gain": 0.2,
+   "pan": 0.5
+  },
+  {
+   "t": 9.5,
+   "type": "pops",
+   "label": "A ring multiplies x4",
+   "n": 3,
+   "step": 0.12,
+   "gain": 0.45
+  },
+  {
+   "t": 9.5,
+   "type": "whoosh",
+   "label": "A ring multiply whoosh",
+   "dur": 0.9,
+   "gain": 0.35,
+   "pan0": 0.0,
+   "pan1": 0.0,
+   "f0": 300,
+   "f1": 2500
+  },
+  {
+   "t": 10.5,
+   "type": "down",
+   "label": "A signal bars crossed out",
+   "gain": 0.3
+  },
+  {
+   "t": 10.5,
+   "type": "glitch",
+   "label": "A signal bars glitch (tiny)",
+   "gain": 0.08
+  },
+  {
+   "t": 14.6,
+   "type": "whoosh",
+   "label": "B whatsapp slides from left",
+   "dur": 0.5,
+   "pan0": -0.9,
+   "pan1": -0.3,
+   "gain": 0.6,
+   "peak": 0.8
+  },
+  {
+   "t": 14.5,
+   "type": "pop",
+   "label": "B chat bubble 1 (very soft)",
+   "f": 900,
+   "pan": -0.45,
+   "gain": 0.15
+  },
+  {
+   "t": 14.62,
+   "type": "pop",
+   "label": "B chat bubble 2 (very soft)",
+   "f": 1000,
+   "pan": -0.4,
+   "gain": 0.13
+  },
+  {
+   "t": 14.7,
+   "type": "pop",
+   "label": "B whatsapp bubble lands",
+   "f": 620,
+   "pan": -0.4,
+   "gain": 0.45
+  },
+  {
+   "t": 16.0,
+   "type": "whoosh",
+   "label": "B email slides from right",
+   "dur": 0.7,
+   "pan0": 0.9,
+   "pan1": 0.3,
+   "gain": 0.6
+  },
+  {
+   "t": 16.2,
+   "type": "pop",
+   "label": "B email card lands",
+   "f": 700,
+   "pan": 0.4,
+   "gain": 0.45
+  },
+  {
+   "t": 17.5,
+   "type": "slam",
+   "label": "B 18th/16th slam",
+   "gain": 0.8
+  },
+  {
+   "t": 18.5,
+   "type": "glitch",
+   "label": "B red ? glitch",
+   "gain": 0.55
+  },
+  {
+   "t": 24.0,
+   "type": "stream",
+   "label": "C particles stream in",
+   "dur": 2.0,
+   "gain": 0.35
+  },
+  {
+   "t": 26.0,
+   "type": "sweep",
+   "label": "C wordmark light sweep",
+   "dur": 1.1,
+   "gain": 0.55
+  },
+  {
+   "t": 27.0,
+   "type": "air",
+   "label": "C subtitle",
+   "gain": 0.25
+  },
+  {
+   "t": 32.5,
+   "type": "whoosh",
+   "label": "D laptop L floats in",
+   "dur": 1.0,
+   "pan0": -0.8,
+   "pan1": -0.4,
+   "gain": 0.45,
+   "peak": 0.6
+  },
+  {
+   "t": 32.55,
+   "type": "whoosh",
+   "label": "D laptop R floats in",
+   "dur": 1.0,
+   "pan0": 0.8,
+   "pan1": 0.4,
+   "gain": 0.45,
+   "peak": 0.6
+  },
+  {
+   "t": 33.5,
+   "type": "stack",
+   "label": "D stack layers slide in (x2 laptops)",
+   "times": [
+    33.5,
+    34.3,
+    35.2,
+    36.0
+   ],
+   "gain": 0.35
+  },
+  {
+   "t": 37.0,
+   "type": "pop",
+   "label": "D hub card",
+   "f": 560,
+   "gain": 0.45
+  },
+  {
+   "t": 37.5,
+   "type": "draw",
+   "label": "D sync lines draw",
+   "dur": 1.0,
+   "gain": 0.3
+  },
+  {
+   "t": 38.2,
+   "type": "zip",
+   "label": "D packet 1",
+   "dur": 0.35,
+   "pan0": -0.4,
+   "pan1": 0.0,
+   "gain": 0.25
+  },
+  {
+   "t": 38.9,
+   "type": "zip",
+   "label": "D packet 2",
+   "dur": 0.35,
+   "pan0": 0.4,
+   "pan1": 0.0,
+   "gain": 0.22
+  },
+  {
+   "t": 39.5,
+   "type": "stream",
+   "label": "D sources stream into laptop A",
+   "dur": 1.6,
+   "pan": -0.5,
+   "gain": 0.35
+  },
+  {
+   "t": 46.5,
+   "type": "air",
+   "label": "E email line fades/slides in",
+   "gain": 0.4
+  },
+  {
+   "t": 46.5,
+   "type": "blip",
+   "label": "E email line notification blip",
+   "f": 1175,
+   "gain": 0.22
+  },
+  {
+   "t": 48.0,
+   "type": "whoosh",
+   "label": "E words fly apart",
+   "dur": 0.6,
+   "f0": 800,
+   "f1": 5000,
+   "gain": 0.4
+  },
+  {
+   "t": 48.6,
+   "type": "snap",
+   "label": "E snap into claim card",
+   "gain": 0.45
+  },
+  {
+   "t": 51.0,
+   "type": "pops",
+   "label": "E annotations pop",
+   "n": 3,
+   "step": 0.2,
+   "f": 820,
+   "gain": 0.35
+  },
+  {
+   "t": 55.5,
+   "type": "collapse",
+   "label": "E card collapses to point",
+   "dur": 0.8,
+   "gain": 0.7
+  },
+  {
+   "t": 55.5,
+   "type": "whoosh",
+   "label": "E point flight whoosh (55.5-57.45)",
+   "dur": 1.95,
+   "f0": 300,
+   "f1": 3500,
+   "peak": 0.55,
+   "pan0": -0.2,
+   "pan1": 0.5,
+   "gain": 0.45
+  },
+  {
+   "t": 56.0,
+   "type": "zip",
+   "label": "E point flies into cloud",
+   "dur": 1.4,
+   "pan0": 0.0,
+   "pan1": 0.5,
+   "gain": 0.3
+  },
+  {
+   "t": 57.45,
+   "type": "land",
+   "label": "E point lands in cloud",
+   "pan": 0.5,
+   "gain": 0.5
+  },
+  {
+   "t": 58.0,
+   "type": "whoosh",
+   "label": "F transition to laptop",
+   "dur": 0.9,
+   "f0": 250,
+   "f1": 1500,
+   "gain": 0.3
+  },
+  {
+   "t": 59.0,
+   "type": "down",
+   "label": "F airplane mode",
+   "gain": 0.5,
+   "pan": -0.3
+  },
+  {
+   "t": 61.0,
+   "type": "typing",
+   "label": "F query types",
+   "dur": 1.2,
+   "pan": -0.3,
+   "gain": 0.5
+  },
+  {
+   "t": 62.5,
+   "type": "pop",
+   "label": "F answer appears",
+   "f": 660,
+   "pan": -0.3,
+   "gain": 0.4
+  },
+  {
+   "t": 63.0,
+   "type": "sparkle",
+   "label": "F cloud points light up",
+   "dur": 0.8,
+   "pan": 0.4,
+   "gain": 0.3
+  },
+  {
+   "t": 66.0,
+   "type": "typing",
+   "label": "F quick note types",
+   "dur": 2.2,
+   "pan": -0.3,
+   "gain": 0.5
+  },
+  {
+   "t": 68.5,
+   "type": "birth",
+   "label": "F amber point born",
+   "f": 1175,
+   "pan": 0.4,
+   "gain": 0.65
+  },
+  {
+   "t": 68.5,
+   "type": "softimpact",
+   "label": "F amber point shockwave impact",
+   "pan": 0.3,
+   "gain": 0.45
+  },
+  {
+   "t": 68.55,
+   "type": "ding",
+   "label": "F amber point chime",
+   "pan": 0.4,
+   "gain": 0.3
+  },
+  {
+   "t": 69.0,
+   "type": "pop",
+   "label": "F outbox badge 0->1",
+   "f": 900,
+   "pan": -0.3,
+   "gain": 0.3
+  },
+  {
+   "t": 74.0,
+   "type": "whoosh",
+   "label": "G camera pulls back",
+   "dur": 1.0,
+   "f0": 250,
+   "f1": 1800,
+   "gain": 0.35
+  },
+  {
+   "t": 74.4,
+   "type": "whoosh",
+   "label": "G Lakshya window slides in right",
+   "dur": 0.7,
+   "pan0": 0.9,
+   "pan1": 0.4,
+   "gain": 0.35
+  },
+  {
+   "t": 75.5,
+   "type": "ding",
+   "label": "G email arrives",
+   "pan": 0.4,
+   "gain": 0.4
+  },
+  {
+   "t": 77.0,
+   "type": "birth",
+   "label": "G green point born",
+   "f": 1397,
+   "pan": 0.3,
+   "gain": 0.6
+  },
+  {
+   "t": 82.5,
+   "type": "up",
+   "label": "H pill online",
+   "pan": -0.3,
+   "gain": 0.5
+  },
+  {
+   "t": 83.0,
+   "type": "zip",
+   "label": "H outbox packet A->hub->B",
+   "dur": 1.0,
+   "pan0": -0.7,
+   "pan1": 0.7,
+   "gain": 0.4
+  },
+  {
+   "t": 84.0,
+   "type": "pulse",
+   "label": "H green pulse wave",
+   "dur": 1.4,
+   "gain": 0.55
+  },
+  {
+   "t": 86.0,
+   "type": "alert",
+   "label": "H conflict alert",
+   "gain": 0.6
+  },
+  {
+   "t": 86.5,
+   "type": "whoosh",
+   "label": "H camera swoops",
+   "dur": 1.4,
+   "f0": 200,
+   "f1": 1500,
+   "gain": 0.35
+  },
+  {
+   "t": 88.0,
+   "type": "whoosh",
+   "label": "H qdrant panel slides in",
+   "dur": 0.6,
+   "pan0": 0.8,
+   "pan1": 0.2,
+   "f0": 600,
+   "f1": 4500,
+   "gain": 0.4
+  },
+  {
+   "t": 90.0,
+   "type": "blip",
+   "label": "H found 2 claims",
+   "f": 988,
+   "gain": 0.35
+  },
+  {
+   "t": 91.0,
+   "type": "blip",
+   "label": "H dates disagree / disputed",
+   "f": 659,
+   "gain": 0.35
+  },
+  {
+   "t": 100.5,
+   "type": "entrance",
+   "label": "I assistant panel",
+   "dur": 1.2,
+   "gain": 0.55
+  },
+  {
+   "t": 103.5,
+   "type": "pop",
+   "label": "I suggestion button",
+   "f": 740,
+   "gain": 0.4
+  },
+  {
+   "t": 105.0,
+   "type": "typing",
+   "label": "I drafted message types",
+   "dur": 2.3,
+   "gain": 0.45
+  },
+  {
+   "t": 107.5,
+   "type": "click",
+   "label": "I Yes pressed",
+   "gain": 0.6
+  },
+  {
+   "t": 108.5,
+   "type": "chime",
+   "label": "I resolved chime",
+   "gain": 0.6
+  },
+  {
+   "t": 109.5,
+   "type": "pops",
+   "label": "I claim rows",
+   "n": 2,
+   "step": 0.15,
+   "f": 660,
+   "gain": 0.3
+  },
+  {
+   "t": 114.5,
+   "type": "whoosh",
+   "label": "J glass planes",
+   "dur": 1.0,
+   "f0": 300,
+   "f1": 2500,
+   "gain": 0.35
+  },
+  {
+   "t": 116.0,
+   "type": "rise",
+   "label": "J points rise to team plane",
+   "n": 4,
+   "step": 0.22,
+   "gain": 0.35
+  },
+  {
+   "t": 118.0,
+   "type": "thunk",
+   "label": "J private point bounces off lock",
+   "gain": 0.75
+  },
+  {
+   "t": 119.5,
+   "type": "pop",
+   "label": "J tier filter chip",
+   "f": 780,
+   "gain": 0.35
+  },
+  {
+   "t": 124.5,
+   "type": "clock",
+   "label": "K timer ticks",
+   "dur": 2.0,
+   "interval": 0.25,
+   "gain": 0.4
+  },
+  {
+   "t": 126.5,
+   "type": "whoosh",
+   "label": "K nudge slides in",
+   "dur": 0.6,
+   "pan0": 0.8,
+   "pan1": 0.3,
+   "f0": 700,
+   "f1": 4000,
+   "gain": 0.35
+  },
+  {
+   "t": 126.5,
+   "type": "ding",
+   "label": "K nudge notification",
+   "pan": 0.3,
+   "gain": 0.4
+  },
+  {
+   "t": 131.0,
+   "type": "sweep",
+   "label": "L title appears (soft sweep)",
+   "dur": 0.9,
+   "gain": 0.2
+  },
+  {
+   "t": 131.5,
+   "type": "whoosh",
+   "label": "L two columns appear",
+   "dur": 0.8,
+   "f0": 500,
+   "f1": 3500,
+   "gain": 0.25
+  },
+  {
+   "t": 131.8,
+   "type": "stagger",
+   "label": "L Real items stagger",
+   "n": 5,
+   "step": 0.11,
+   "pan": -0.45,
+   "f": 1320,
+   "gain": 0.22
+  },
+  {
+   "t": 132.3,
+   "type": "stagger",
+   "label": "L Mocked items stagger",
+   "n": 4,
+   "step": 0.07,
+   "pan": 0.45,
+   "f": 1175,
+   "gain": 0.2
+  },
+  {
+   "t": 138.5,
+   "type": "whoosh",
+   "label": "M camera pulls far out",
+   "dur": 1.8,
+   "f0": 150,
+   "f1": 1200,
+   "gain": 0.45
+  },
+  {
+   "t": 140.5,
+   "type": "air",
+   "label": "M closing line",
+   "gain": 0.25
+  },
+  {
+   "t": 144.0,
+   "type": "sweep",
+   "label": "M wordmark returns",
+   "dur": 1.3,
+   "gain": 0.45
+  },
+  {
+   "t": 144.0,
+   "type": "sparkle",
+   "label": "M wordmark sparkle",
+   "dur": 1.8,
+   "gain": 0.3
+  },
+  {
+   "t": 145.0,
+   "type": "air",
+   "label": "M per team per month",
+   "gain": 0.2
+  },
+  {
+   "t": 146.0,
+   "type": "pop",
+   "label": "M credits line",
+   "f": 620,
+   "gain": 0.2
+  }
+ ]
+}
