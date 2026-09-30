@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#0A0E16;color:#E8ECF4;font-family:"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",sans-serif}
+#bg{position:absolute;inset:0;background-image:linear-gradient(rgba(124,140,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,140,255,.05) 1px,transparent 1px);background-size:60px 60px}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.65) 100%);pointer-events:none}
+canvas{position:absolute;left:0;top:0}
+#stage{position:absolute;inset:0;transform-origin:960px 540px}
+.scene{position:absolute;inset:0;display:none}
+.abs{position:absolute}
+.mono{font-family:Consolas,"Cascadia Mono",monospace}
+.card{position:absolute;background:rgba(20,26,40,.92);border:1px solid rgba(124,140,255,.28);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.hdr{font-size:22px;color:#9AA4C0;letter-spacing:.5px}
+#cap{position:absolute;left:0;right:0;top:958px;text-align:center;font-size:42px;font-weight:600;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.9)}
+#cap span{background:rgba(10,14,22,.72);padding:10px 28px;border-radius:14px}
+.amber{color:#F5A524}.green{color:#22C55E}.red{color:#EF4444}.indigo{color:#7C8CFF}.grey{color:#8A93A8}
+.pill{display:inline-block;padding:4px 14px;border-radius:999px;font-size:20px;font-weight:600}
+.layer{height:62px;margin:10px 0;border-radius:12px;background:rgba(124,140,255,.10);border:1px solid rgba(124,140,255,.3);padding:8px 18px;font-size:23px;line-height:22px}
+.layer small{display:block;font-size:17px;color:#9AA4C0;margin-top:5px}
+.btn{display:inline-block;padding:10px 22px;border-radius:12px;background:#7C8CFF;color:#0A0E16;font-weight:700;font-size:24px}
+</style></head>
+<body>
+<div id="bg"></div>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<div id="stage">
+
+<!-- S1 HOOK -->
+<div class="scene" id="s1">
+  <div class="abs" style="left:200px;top:300px;width:1520px;font-size:64px;font-weight:600;line-height:1.35">
+    <div id="h1"></div><div id="h2" style="color:#C9D0E0"></div>
+    <div id="h3" style="margin-top:40px;color:#F5A524"></div>
+  </div>
+</div>
+
+<!-- S2 PROBLEM -->
+<div class="scene" id="s2">
+  <div class="card" id="b1" style="left:170px;top:250px;width:640px;padding:28px 32px">
+    <div class="hdr"><span class="pill" style="background:#25D36633;color:#25D366">WhatsApp</span> &nbsp;on set · 7:42 PM</div>
+    <div style="font-size:38px;margin-top:22px;line-height:1.3">"Client says push the Sharma delivery to the <b class="amber">18th</b>"</div>
+  </div>
+  <div class="card" id="b2" style="left:1110px;top:420px;width:640px;padding:28px 32px">
+    <div class="hdr"><span class="pill" style="background:#7C8CFF33;color:#9DA9FF">Email</span> &nbsp;from client · 8:05 PM</div>
+    <div style="font-size:38px;margin-top:22px;line-height:1.3">"Confirming delivery on the <b style="color:#22C55E">16th</b>"</div>
+  </div>
+  <div class="abs red" id="qm" style="left:900px;top:330px;width:120px;text-align:center;font-size:160px;font-weight:800;text-shadow:0 0 40px rgba(239,68,68,.7)">?</div>
+</div>
+
+<!-- S3 TITLE -->
+<div class="scene" id="s3">
+  <div class="abs" style="left:0;right:0;top:290px;text-align:center">
+    <div id="ttl" style="font-size:200px;font-weight:800;letter-spacing:30px;color:#fff;text-shadow:0 0 60px rgba(124,140,255,.5)">QUORUM</div>
+    <div id="sub" style="font-size:46px;color:#9DA9FF;margin-top:6px">Offline-first team memory on Qdrant Edge</div>
+    <div id="tag" style="font-size:40px;color:#E8ECF4;margin-top:60px">Your team's memory, on every laptop, <span class="amber">even with no signal.</span></div>
+  </div>
+</div>
+
+<!-- S4 ARCH -->
+<div class="scene" id="s4">
+  <svg class="abs" width="1920" height="1080" style="left:0;top:0">
+    <path id="l1" d="M430 360 C430 250 700 190 800 175" stroke="#7C8CFF" stroke-width="4" fill="none" stroke-dasharray="14 12"/>
+    <path id="l2" d="M1490 360 C1490 250 1220 190 1120 175" stroke="#7C8CFF" stroke-width="4" fill="none" stroke-dasharray="14 12"/>
+    <path id="l3" d="M810 560 L720 560" stroke="#9AA4C0" stroke-width="3" fill="none" stroke-dasharray="4 8"/>
+    <path id="l4" d="M960 760 C960 820 760 820 720 720" stroke="#9AA4C0" stroke-width="3" fill="none" stroke-dasharray="4 8"/>
+    <path id="l5" d="M960 760 C960 820 1160 820 1200 720" stroke="#9AA4C0" stroke-width="3" fill="none" stroke-dasharray="4 8"/>
+  </svg>
+  <div class="card" id="hub" style="left:760px;top:90px;width:400px;height:130px;padding:20px;text-align:center;border-color:#7C8CFF">
+    <div style="font-size:30px;font-weight:700">Home server</div>
+    <div style="font-size:22px;color:#9AA4C0;margin-top:6px">Qdrant Server + team hub</div>
+    <div style="font-size:18px;color:#7C8CFF;margin-top:4px">sync only</div>
+  </div>
+  <div class="card" id="lapA" style="left:140px;top:360px;width:580px;padding:20px 24px">
+    <div style="font-size:28px;font-weight:700">Tanishk's laptop <span class="pill" style="background:#7C8CFF22;color:#9DA9FF;font-size:17px">edge node</span></div>
+    <div class="layer">Qdrant Edge<small>vectors</small></div>
+    <div class="layer">FastEmbed<small>on-device embeddings · dense + BM25</small></div>
+    <div class="layer">SQLite<small>graph + outbox</small></div>
+    <div class="layer">Local LLM<small>llama.cpp</small></div>
+  </div>
+  <div class="card" id="lapB" style="left:1200px;top:360px;width:580px;padding:20px 24px">
+    <div style="font-size:28px;font-weight:700">Lakshya's laptop <span class="pill" style="background:#7C8CFF22;color:#9DA9FF;font-size:17px">edge node</span></div>
+    <div class="layer">Qdrant Edge<small>vectors</small></div>
+    <div class="layer">FastEmbed<small>on-device embeddings · dense + BM25</small></div>
+    <div class="layer">SQLite<small>graph + outbox</small></div>
+    <div class="layer">Local LLM<small>llama.cpp</small></div>
+  </div>
+  <div class="card" id="phone" style="left:810px;top:500px;width:300px;height:110px;padding:16px;text-align:center;border:2px dashed #9AA4C0;background:rgba(20,26,40,.6)">
+    <div style="font-size:26px;font-weight:600">Phone</div><div style="font-size:19px;color:#9AA4C0">(mocked) · feeds Tanishk</div>
+  </div>
+  <div class="card" id="feeds" style="left:810px;top:650px;width:300px;height:110px;padding:16px;text-align:center">
+    <div style="font-size:24px;font-weight:600">Gmail + WhatsApp export</div><div style="font-size:19px;color:#9AA4C0">ingested on-device</div>
+  </div>
+</div>
+
+<!-- S5 CLAIM -->
+<div class="scene" id="s5">
+  <div class="abs" style="left:170px;top:110px;font-size:34px;font-weight:700;color:#9DA9FF" id="s5t">claim · stored in Qdrant Edge payload</div>
+  <div class="card mono" id="code" style="left:170px;top:180px;width:1000px;height:700px;padding:36px 40px;font-size:30px;line-height:1.55;white-space:pre"></div>
+  <div class="abs" id="ann1" style="left:1220px;top:505px;font-size:30px"><span class="indigo">◀</span> <b>source</b>: who said it, where</div>
+  <div class="abs" id="ann2" style="left:1220px;top:647px;font-size:30px"><span class="indigo">◀</span> <b>tier</b>: who may see it</div>
+  <div class="abs" id="ann3" style="left:1220px;top:693px;font-size:30px"><span class="indigo">◀</span> <b>status</b>: still true?</div>
+</div>
+
+<!-- S6/S7/S8 shared laptop panel -->
+<div class="scene" id="s6">
+  <div class="card" id="lp" style="left:110px;top:90px;width:900px;height:820px;padding:28px 34px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:32px;font-weight:700" id="lpname">Tanishk's laptop</div>
+      <div id="net" style="font-size:24px;font-weight:600"></div>
+    </div>
+    <div id="netbox" style="margin-top:18px;height:120px;border-radius:12px;background:rgba(0,0,0,.25);position:relative">
+      <div class="hdr" style="position:absolute;left:14px;top:8px;font-size:18px">network</div>
+      <svg width="832" height="120" style="position:absolute;left:0;top:0"><polyline id="graph" fill="none" stroke="#7C8CFF" stroke-width="3"/></svg>
+      <div id="bps" class="mono" style="position:absolute;right:16px;top:8px;font-size:26px"></div>
+    </div>
+    <div id="srch" style="margin-top:24px">
+      <div style="height:64px;border-radius:12px;border:1px solid #7C8CFF;padding:12px 18px;font-size:28px"><span class="grey">⌕ </span><span id="q"></span></div>
+      <div id="ans" style="margin-top:14px;padding:14px 18px;border-radius:12px;background:rgba(124,140,255,.08);font-size:25px;line-height:1.5">
+        <div>• Sharma edit: delivery · <b>due Oct 16</b></div><div>• Game project build review · Oct 3</div>
+        <div class="mono" style="margin-top:6px;font-size:24px"><span class="green">14 ms</span> · <span class="amber">on-device</span></div>
+      </div>
+    </div>
+    <div id="note" style="margin-top:22px">
+      <div class="hdr" style="font-size:19px">quick note</div>
+      <div style="min-height:64px;border-radius:12px;border:1px solid rgba(245,165,36,.6);padding:12px 18px;font-size:28px;margin-top:6px" id="notet"></div>
+    </div>
+    <div id="mail" style="margin-top:24px;display:none">
+      <div class="card" style="position:relative;padding:22px 26px;border-color:#22C55E">
+        <div class="hdr"><span class="pill" style="background:#7C8CFF33;color:#9DA9FF">Gmail</span> &nbsp;client:sharma · just now</div>
+        <div style="font-size:34px;margin-top:14px">"Delivery confirmed for the <b class="green">16th</b>"</div>
+        <div style="font-size:22px;margin-top:12px" class="green">● extracted → claim · synced</div>
+      </div>
+    </div>
+    <div id="outbox" style="position:absolute;right:34px;bottom:28px;font-size:28px;font-weight:700;padding:10px 22px;border-radius:12px;border:2px solid #F5A524;color:#F5A524"></div>
+  </div>
+  <div class="card" id="qp" style="left:110px;top:560px;width:900px;height:350px;padding:26px 32px;display:none;border-color:#EF4444">
+    <div class="mono" style="font-size:25px;color:#9DA9FF">Qdrant hybrid search</div>
+    <div class="mono" style="font-size:23px;color:#9AA4C0;margin-top:6px">filter: attribute=due_date, status=active</div>
+    <div id="qr1" style="font-size:30px;margin-top:22px">Found <b>2 claims</b> about the Sharma delivery</div>
+    <div id="qr2" class="mono" style="font-size:26px;margin-top:10px">similarity <b>0.91</b></div>
+    <div id="qr3" style="font-size:34px;margin-top:14px;font-weight:700" class="red">Dates disagree → both marked disputed</div>
+  </div>
+  <div class="abs" id="cloudlbl" style="left:1120px;top:120px;width:720px;text-align:center;font-size:26px;color:#9AA4C0">team memory · claims as points</div>
+  <div class="abs" id="tagA" style="font-size:24px;font-weight:600"></div>
+  <div class="abs" id="tagB" style="font-size:24px;font-weight:600"></div>
+</div>
+
+<!-- S9 NO GUESSING -->
+<div class="scene" id="s9">
+  <div class="card" id="chat" style="left:110px;top:90px;width:1000px;height:820px;padding:28px 34px">
+    <div style="font-size:30px;font-weight:700">Assistant <span class="grey" style="font-size:22px;font-weight:400">· local model</span></div>
+    <div id="c1" style="margin-top:22px;padding:20px 24px;border-radius:14px;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.5);font-size:30px;line-height:1.4"><b class="red">Disputed.</b> The client's email says the <b>16th</b>; you said the <b>18th</b> on set. Want to settle it?</div>
+    <div id="c2" style="margin-top:22px;text-align:right"><span class="btn" id="askb">Should I ask the client?</span></div>
+    <div id="c3" style="margin-top:22px;padding:20px 24px;border-radius:14px;background:rgba(124,140,255,.08);border:1px solid rgba(124,140,255,.4);font-size:27px;line-height:1.4">
+      <div class="hdr" style="font-size:19px">draft to client:sharma</div>
+      <div id="draft" style="margin-top:8px"></div>
+      <div style="margin-top:16px;font-size:28px">Send? <span class="btn" id="yes" style="padding:6px 22px">Yes</span></div>
+    </div>
+    <div id="c4" style="margin-top:22px;font-size:34px;font-weight:700" class="green">✓ Resolved on both laptops</div>
+  </div>
+  <div class="card" id="clA" style="left:1170px;top:250px;width:640px;padding:22px 26px">
+    <div class="mono" style="font-size:22px;color:#9AA4C0">due_date · client email</div>
+    <div style="font-size:40px;font-weight:700;margin-top:6px">Oct 16</div>
+    <div id="stA" style="margin-top:10px"></div>
+  </div>
+  <div class="card" id="clB" style="left:1170px;top:500px;width:640px;padding:22px 26px">
+    <div class="mono" style="font-size:22px;color:#9AA4C0">due_date · Tanishk, on set</div>
+    <div style="font-size:40px;font-weight:700;margin-top:6px" id="clBv">Oct 18</div>
+    <div id="stB" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- S10 TIERS -->
+<div class="scene" id="s10">
+  <div class="abs" style="left:170px;top:90px;font-size:44px;font-weight:700">Privacy tiers</div>
+  <div class="card" id="t3" style="left:170px;top:180px;width:1100px;height:170px;padding:24px 30px;border-color:#22C55E"><div style="font-size:34px;font-weight:700">Team</div><div class="grey" style="font-size:22px">shared via hub</div></div>
+  <div class="card" id="t2" style="left:170px;top:380px;width:1100px;height:170px;padding:24px 30px;border-color:#7C8CFF"><div style="font-size:34px;font-weight:700">My devices</div><div class="grey" style="font-size:22px">only my laptop + phone</div></div>
+  <div class="card" id="t1" style="left:170px;top:580px;width:1100px;height:170px;padding:24px 30px;border-color:#F5A524"><div style="font-size:34px;font-weight:700">Device only</div><div class="grey" style="font-size:22px">never leaves this machine</div></div>
+  <div class="abs" id="tside" style="left:1330px;top:200px;width:480px;font-size:30px;line-height:1.45">
+    <div>Claims start <b class="amber">device-only</b>.</div>
+    <div style="margin-top:18px">They move up only when the <b>local model</b> classifies them as team work.</div>
+    <div class="mono" style="margin-top:26px;font-size:22px;color:#9DA9FF;background:rgba(124,140,255,.1);padding:12px 16px;border-radius:10px">search(filter: tier ∈ viewer_access)</div>
+    <div style="margin-top:26px;font-size:28px" class="green" id="nocloud">No cloud calls. Extraction and answers run on the local model.</div>
+  </div>
+  <div id="dots"></div>
+</div>
+
+<!-- S11 PROACTIVE -->
+<div class="scene" id="s11">
+  <div class="card" id="notif" style="left:460px;top:280px;width:1000px;padding:34px 40px;border-color:#F5A524">
+    <div class="hdr"><span class="pill" style="background:#F5A52433;color:#F5A524">Quorum</span> &nbsp;now</div>
+    <div style="font-size:40px;margin-top:20px;line-height:1.35">You've been on the game project since 2. <b class="amber">The Sharma edit is due tomorrow at 10.</b></div>
+  </div>
+  <div class="abs" id="nlbl" style="left:0;right:0;top:640px;text-align:center;font-size:34px;color:#9DA9FF">Hyperfocus nudge. A reminders app can't do this.</div>
+</div>
+
+<!-- S12 HONESTY -->
+<div class="scene" id="s12">
+  <div class="abs" style="left:0;right:0;top:130px;text-align:center;font-size:48px;font-weight:700">What's real, what's mocked</div>
+  <div class="card" id="real" style="left:260px;top:250px;width:680px;height:560px;padding:30px 36px;border-color:#22C55E">
+    <div style="font-size:36px;font-weight:700" class="green">Real</div>
+    <div style="font-size:30px;line-height:1.9;margin-top:14px">✓ Qdrant Edge memory + hybrid search<br>✓ Conflict detection<br>✓ Offline sync + outbox<br>✓ Tier filters</div>
+  </div>
+  <div class="card" id="mock" style="left:980px;top:250px;width:680px;height:560px;padding:30px 36px;border:2px dashed #9AA4C0">
+    <div style="font-size:36px;font-weight:700" class="grey">Mocked for demo</div>
+    <div style="font-size:30px;line-height:1.9;margin-top:14px;color:#C9D0E0">○ Phone app<br>○ Live WhatsApp stream<br>○ Screen understanding</div>
+  </div>
+</div>
+
+<!-- S13 CLOSE -->
+<div class="scene" id="s13">
+  <div class="abs" id="cl1" style="left:0;right:0;top:250px;text-align:center;font-size:52px;font-weight:600;line-height:1.3">Shared memory for small teams<br>that work where <span class="amber">the signal doesn't.</span></div>
+  <div class="abs" id="cl2" style="left:0;right:0;top:500px;text-align:center">
+    <div style="font-size:150px;font-weight:800;letter-spacing:24px;text-shadow:0 0 60px rgba(124,140,255,.5)">QUORUM</div>
+    <div style="font-size:34px;color:#9DA9FF;margin-top:4px">Code Cubicle 6.0 · PS3 · Qdrant Edge</div>
+    <div class="mono" style="font-size:32px;color:#E8ECF4;margin-top:18px">github.com/ImTani/quorum-edge-memory</div>
+  </div>
+</div>
+
+</div>
+<div id="cap"><span id="capt"></span></div>
+<div id="vig"></div>
+<div id="black" style="position:absolute;inset:0;background:#000;opacity:0"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const P=(t,a,d=.6)=>eio(cl((t-a)/d));
+const lerp=(a,b,k)=>a+(b-a)*k;
+function show(el,t,a,d=.6,dy=24){const k=P(t,a,d);el.style.opacity=k;el.style.transform=`translateY(${(1-k)*dy}px)`;return k}
+function type(el,s,t,a,cps=28,cursor=true){const n=Math.floor(cl((t-a)*cps,0,s.length));const on=t>=a&&(n<s.length||Math.floor(t*2)%2==0)&&cursor&&t<a+s.length/cps+1.2;el.innerHTML=esc(s.slice(0,n))+(on?'<span style="color:#7C8CFF">▍</span>':'');return n>=s.length}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function rnd(i){let x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)}
+const SC=[['s1',0,9],['s2',9,17],['s3',17,25],['s4',25,37],['s5',37,47],['s6',47,82],['s9',82,93],['s10',93,101],['s11',101,107],['s12',107,113],['s13',113,120]];
+const CAP=[[9.6,17,'Deadlines change in one place and get misquoted in another.'],
+[26,37,'Every device is a full edge node. The hub only syncs.'],
+[38,47,'Every fact is stored as a claim with a source, so the system can tell who said what.'],
+[49,60,'No signal. Still remembers. Still searches.'],
+[60.5,67,'Meanwhile, Lakshya is online. The client emails.'],
+[70.5,82,'Qdrant finds the conflict. Nothing wins by default.'],
+[83,93,'It asks instead of guessing. The task\'s owner decides.'],
+[94,101,'Every Qdrant search carries a tier filter. Private stays private.']];
+const cv=$('cv'),cx=cv.getContext('2d');
+const N=150,pts=[];for(let i=0;i<N;i++){const a=rnd(i)*6.283,r=Math.sqrt(rnd(i+500))*1;pts.push({a,r,ph:rnd(i+900)*6.28,sx:rnd(i+77)*1920,sy:rnd(i+99)*1080})}
+function dot(x,y,r,c,al){cx.globalAlpha=al*.25;cx.fillStyle=c;cx.beginPath();cx.arc(x,y,r*3,0,6.283);cx.fill();cx.globalAlpha=al;cx.beginPath();cx.arc(x,y,r,0,6.283);cx.fill()}
+function drawCloud(t){
+  cx.clearRect(0,0,1920,1080);
+  // ambient -> cloud blend
+  const inC=cl((t-47)/1.2)*(1-cl((t-81.5)/1));
+  const CX=1480,CY=520,RX=340,RY=330;
+  const amb=t<113?.35:.35*(1-cl((t-117)/2));
+  for(let i=0;i<N;i++){const p=pts[i];
+    const ax=(p.sx+t*8*(rnd(i+3)-.5)*4+1920)%1920, ay=(p.sy+Math.sin(t*.3+p.ph)*12);
+    const cxp=CX+Math.cos(p.a+t*.04)*p.r*RX, cyp=CY+Math.sin(p.a+t*.04)*p.r*RY;
+    const x=lerp(ax,cxp,inC),y=lerp(ay,cyp,inC);
+    let col='#7C8CFF',al=amb*(.5+.5*Math.sin(t*1.3+p.ph));
+    if(inC>0){col='#22C55E';al=lerp(al,.55+.2*Math.sin(t*2+p.ph),inC);
+      // reconnect pulse
+      if(t>67.5&&t<71){const w=Math.exp(-Math.pow((t-68.6-p.r*.8)*4,2));al=Math.min(1,al+w*.6)}}
+    dot(x,y,inC>0?3.2:2.2,col,al)}
+  if(inC>0){
+    // point A: Tanishk note; B: Lakshya email
+    let A=null,B=null;
+    const ax0=CX-180,ay0=CY+60,bx0=CX+110,by0=CY-90;
+    const pull=P(t,72.5,1.6);const mx=(ax0+bx0)/2,my=(ay0+by0)/2;
+    const ax=lerp(ax0,mx-45,pull),ay=lerp(ay0,my+10,pull),bx=lerp(bx0,mx+45,pull),by=lerp(by0,my-10,pull);
+    if(t>57.2){const k=P(t,57.2,.5);let c='#F5A524';if(t>68.4)c='#22C55E';if(t>71.8)c='#EF4444';
+      const pulse=t>71.8?1+.35*Math.sin(t*8):1;dot(ax,ay,9*k*pulse,c,inC);A=[ax,ay,c]}
+    if(t>63.2){const k=P(t,63.2,.5);let c='#22C55E';if(t>71.8)c='#EF4444';
+      const pulse=t>71.8?1+.35*Math.sin(t*8+1):1;dot(bx,by,9*k*pulse,c,inC);B=[bx,by,c]}
+    if(t>73.5&&A&&B){cx.globalAlpha=inC*P(t,73.5,.5);cx.strokeStyle='#EF4444';cx.lineWidth=3;cx.setLineDash([8,8]);cx.beginPath();cx.moveTo(A[0],A[1]);cx.lineTo(B[0],B[1]);cx.stroke();cx.setLineDash([])}
+    cx.globalAlpha=1;
+    const tA=$('tagA'),tB=$('tagB');
+    if(A){tA.style.left=(A[0]-330)+'px';tA.style.top=(A[1]+22)+'px';tA.style.color=A[2];tA.style.opacity=inC;
+      tA.innerHTML='18th · Tanishk, on set'+(t>74.5?' · <u>disputed</u>':t>68.4?' · synced':' · queued')}else tA.style.opacity=0;
+    if(B){tB.style.left=(B[0]-150)+'px';tB.style.top=(B[1]-58)+'px';tB.style.color=B[2];tB.style.opacity=inC;
+      tB.innerHTML='16th · client email'+(t>74.5?' · <u>disputed</u>':' · synced')}else tB.style.opacity=0;
+  }
+  cx.globalAlpha=1;
+}
+function netGraph(t,offAt,onAt){let s='';for(let i=0;i<=80;i++){const tt=t-(80-i)*.08;let v=.5+.35*Math.sin(tt*3.1)+.15*Math.sin(tt*7.7);const off=(tt>offAt&&tt<onAt);if(off)v=0;s+=`${i*10.4},${110-v*80} `}$('graph').setAttribute('points',s);return (t>offAt&&t<onAt)}
+window.render=function(t){
+  for(const [id,a,b] of SC){const el=$(id);if(t<a-.01||t>b+.01){el.style.display='none';continue}
+    el.style.display='block';el.style.opacity=Math.min(cl((t-a)/.5),cl((b-t)/.5))}
+  $('stage').style.transform=`scale(${1+.012*Math.sin(t*.21)}) translate(${Math.sin(t*.13)*6}px,${Math.cos(t*.17)*4}px)`;
+  $('bg').style.backgroundPosition=`${t*6}px ${t*3}px`;
+  drawCloud(t);
+  // caption
+  let ct='',co=0;for(const [a,b,s] of CAP){if(t>=a&&t<=b){ct=s;co=Math.min(cl((t-a)/.5),cl((b-t)/.4))}}
+  $('capt').textContent=ct;$('cap').style.opacity=co;$('cap').style.display=ct?'block':'none';
+  $('black').style.opacity=Math.max(1-cl(t/.6),cl((t-118.6)/1.4));
+  // S1
+  if(t<9.5){type($('h1'),'I run seven projects at once.',t,.4,26);type($('h2'),'When one gets interesting, I forget the others exist.',t,2.1,26);
+    type($('h3'),'Now imagine four of us. Half the time on shoots with no signal.',t,4.4,32);
+    $('h1').style.opacity=$('h2').style.opacity=1-.5*P(t,4.6)}
+  // S2
+  if(t>8.5&&t<17.5){show($('b1'),t,9.4,.7,40);show($('b2'),t,11.2,.7,40);const q=P(t,12.8,.5);$('qm').style.opacity=q;$('qm').style.transform=`scale(${q*(1+.08*Math.sin(t*5))})`}
+  // S3
+  if(t>16.5&&t<25.5){const k=P(t,17.3,1.2);$('ttl').style.opacity=k;$('ttl').style.letterSpacing=lerp(80,30,k)+'px';show($('sub'),t,18.6,.8);show($('tag'),t,20.4,.8)}
+  // S4
+  if(t>24.5&&t<37.5){show($('hub'),t,25.3);show($('lapA'),t,26.0,.7,40);show($('lapB'),t,26.6,.7,40);
+    for(const [i,a] of [['l1',27.4],['l2',27.6],['l3',29.2],['l4',29.8],['l5',29.8]]){const e=$(i);e.style.opacity=P(t,a);e.style.strokeDashoffset=-t*40}
+    show($('phone'),t,29.0);show($('feeds'),t,29.6);
+    document.querySelectorAll('#lapA .layer,#lapB .layer').forEach((e,i)=>{show(e,t,26.8+(i%4)*.35+(i>3?.3:0),.5,14)})}
+  // S5
+  if(t>36.5&&t<47.5){const J=['{','  "entity_id": "task_sharma_edit",','  "attribute": "due_date",','  "value": "2026-10-16",','  "source": {','    "kind": "email",','    "author": "client:sharma"','  },','  "captured_by": "lakshya",','  "tier": "team",','  "status": "active"','}'];
+    const full=J.join('\n');const n=Math.floor(cl((t-37.6)*95,0,full.length));const shown=full.slice(0,n);
+    const hl=P(t,41.0,.6);const lines=shown.split('\n').map((l,i)=>{let s=esc(l).replace(/(".*?")(:)/g,'<span style="color:#9DA9FF">$1</span>$2').replace(/: (".*?")/g,': <span style="color:#F5C27A">$1</span>');
+      if([4,5,6,9,10].includes(i))s=`<span style="background:rgba(124,140,255,${.22*hl});border-radius:6px;box-shadow:0 0 0 ${6*hl}px rgba(124,140,255,${.22*hl})">${s}</span>`;return s});
+    $('code').innerHTML=lines.join('\n');show($('s5t'),t,37.2);show($('ann1'),t,41.3,.5,0);show($('ann2'),t,42.0,.5,0);show($('ann3'),t,42.7,.5,0)}
+  // S6-8
+  if(t>46.5&&t<82.5){
+    const lak=t>60&&t<67;const off=lak?netGraph(t,0,0):netGraph(t,49.2,68.0);
+    $('lpname').textContent=lak?"Lakshya's laptop":"Tanishk's laptop";
+    const lp=$('lp');
+    // brief flip transition around 60 and 67
+    const f=Math.min(cl(Math.abs(t-60)/.35),cl(Math.abs(t-67)/.35));lp.style.opacity=f;lp.style.transform=`scaleX(${.9+.1*f})`;
+    if(lak){$('net').innerHTML='<span class="green">● Online</span>';$('bps').innerHTML='<span class="green">1.2 MB/s</span>'}
+    else if(off){$('net').innerHTML='<span class="amber">✈ Airplane mode</span>';$('bps').innerHTML='<span class="amber">0 B/s</span>'}
+    else if(t<49.2){$('net').innerHTML='<span class="green">● Online</span>';$('bps').innerHTML='<span class="green">840 KB/s</span>'}
+    else {$('net').innerHTML='<span class="green">● Online · syncing</span>';$('bps').innerHTML='<span class="green">2.4 MB/s</span>'}
+    $('graph').setAttribute('stroke',lak||!off?'#22C55E':'#F5A524');
+    const t8=t>=67;
+    $('srch').style.display=lak||t8?'none':'block';$('note').style.display=lak||t8?'none':'block';$('mail').style.display=lak?'block':'none';
+    if(!lak&&!t8){type($('q'),"what's due this week?",t,50.6,22);show($('ans'),t,52.0,.5,10);type($('notet'),'Client says push the Sharma delivery to the 18th.',t,54.2,26)}
+    if(lak){show($('mail').firstElementChild,t,61.0,.7,40)}
+    // outbox
+    const ob=$('outbox');let n=0;if(!lak){if(t>57.2)n=1;if(t>69.2)n=0}
+    ob.style.display=lak?'none':'block';ob.style.opacity=t<57.2&&!t8?.45:1;
+    ob.style.borderColor=ob.style.color=(n?'#F5A524':'#22C55E');ob.textContent=(t>69.2?'Outbox: 0 ✓ synced':'Outbox: '+n);
+    ob.style.transform=`scale(${1+.15*Math.exp(-Math.pow((t-57.4)*4,2))+.15*Math.exp(-Math.pow((t-69.4)*4,2))})`;
+    const qp=$('qp');if(t>71.5){qp.style.display='block';const k=P(t,71.5,.7);qp.style.opacity=k;qp.style.transform=`translateX(${(1-k)*-80}px)`;
+      show($('qr1'),t,73.2,.5,10);show($('qr2'),t,74.0,.5,10);show($('qr3'),t,74.8,.5,10)}else qp.style.display='none';
+    lp.style.height=t8?'440px':'820px';
+    show($('cloudlbl'),t,47.8)}
+  // S9
+  if(t>81.5&&t<93.5){show($('c1'),t,82.6);show($('c2'),t,84.6);show($('c3'),t,86.4);
+    type($('draft'),'Hi! Quick check on the Sharma delivery: is it the 16th or the 18th? Want to lock the right date.',t,86.8,45,false);
+    const ck=Math.exp(-Math.pow((t-85.8)*5,2)),ck2=Math.exp(-Math.pow((t-89.5)*5,2));$('askb').style.transform=`scale(${1-.1*ck})`;$('yes').style.transform=`scale(${1-.15*ck2})`;
+    $('askb').style.boxShadow=`0 0 0 ${8*ck}px rgba(124,140,255,.4)`;$('yes').style.boxShadow=`0 0 0 ${10*ck2}px rgba(34,197,94,.5)`;
+    show($('c4'),t,90.0);show($('clA'),t,82.8,.6,30);show($('clB'),t,83.1,.6,30);
+    const res=t>90.2;
+    $('stA').innerHTML=res?'<span class="pill" style="background:#22C55E33;color:#22C55E">active</span>':'<span class="pill" style="background:#EF444433;color:#EF4444">disputed</span>';
+    $('stB').innerHTML=res?'<span class="pill" style="background:#8A93A833;color:#B8C0D0">superseded · kept, not deleted</span>':'<span class="pill" style="background:#EF444433;color:#EF4444">disputed</span>';
+    $('clA').style.borderColor=res?'#22C55E':'#EF4444';$('clB').style.borderColor=res?'#8A93A8':'#EF4444';$('clB').style.opacity=res?.75:$('clB').style.opacity;
+    $('clBv').style.textDecoration=res?'line-through':'none';$('clBv').style.color=res?'#8A93A8':'#fff'}
+  // S10
+  if(t>92.5&&t<101.5){show($('t3'),t,93.3);show($('t2'),t,93.6);show($('t1'),t,93.9);show($('tside'),t,94.6);show($('nocloud'),t,97.2);
+    let h='';for(let i=0;i<9;i++){const x=560+i*75;const up=[1,4,7].includes(i),mid=[2,6].includes(i);
+      const k=P(t,95.4+i*.18,1.1);let y=665;if(up)y=lerp(665,265,k);if(mid)y=lerp(665,465,k);
+      const c=up?(k>.95?'#22C55E':'#F5A524'):mid?(k>.95?'#7C8CFF':'#F5A524'):'#F5A524';const a=P(t,94.4+i*.07,.4);
+      h+=`<div style="position:absolute;left:${x}px;top:${y}px;width:26px;height:26px;border-radius:50%;background:${c};box-shadow:0 0 18px ${c};opacity:${a}"></div>`}
+    $('dots').innerHTML=h}
+  // S11
+  if(t>100.5&&t<107.5){const k=P(t,101.4,.7);const n=$('notif');n.style.opacity=k;n.style.transform=`translateY(${(1-k)*-60}px) scale(${lerp(.95,1,k)})`;show($('nlbl'),t,103.0)}
+  // S12
+  if(t>106.5&&t<113.5){show($('real'),t,107.4,.6,40);show($('mock'),t,108.0,.6,40)}
+  // S13
+  if(t>112.5){show($('cl1'),t,113.4,.8);$('cl1').style.opacity=P(t,113.4,.8)*(1-.6*P(t,115.6,.6));show($('cl2'),t,115.6,.9,30)}
+};
+window.render(0);
+</script>
+</body></html>
