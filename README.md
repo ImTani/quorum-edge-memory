@@ -6,7 +6,7 @@
 
 **Code Cubicle 6.0 · Problem Statement 03: AI-Powered Edge Memory & Intelligence (Qdrant Edge)**
 
-🎬 **Showcase video:** [`video/quorum-showcase.mp4`](video/quorum-showcase.mp4)
+🎬 **Showcase video:** linked in our submission (Google Drive). The film is generated from code in [`video/v3/`](video/v3/): run `node render.js` there to rebuild it.
 
 ---
 

@@ -6,7 +6,7 @@
 (function () {
   const START = 46, END = 58, DUR = END - START, DRIFT = .03;
   const T_MAIL = 45.95, T_TYPE = 46.5, CPS = 30, T_FLY = 48.0, T_SNAP = 48.6, T_ANN = [51.0, 51.2, 51.4], T_CAP = 52.0, T_COL = 55.5;
-  const MAIL = { x: 440, y: 390, w: 1040, h: 250 };
+  const MAIL = { x: 401, y: 390, w: 1118, h: 250 };  // fits the 66px sentence (~1006px) + 56px padding each side, centred
   const CARD = { x: 380, y: 142, w: 740, h: 716 };
   const FS = 29, LINE_H = 45, J_TOP = 88, J_LEFT = 44;
   const TARGET = [.22, .1, .12];               // neutral spot: a claim joining the memory (NOT the 16th key point, born at 77 in G)

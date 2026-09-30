@@ -3,3 +3,15 @@ frames/
 *.log
 __pycache__/
 .env
+
+# large media: videos and audio live on Drive, not in git
+*.mp4
+*.mov
+*.webm
+*.wav
+*.bundle
+*.stackdump
+video/**/out/
+video/**/stills/
+video/stills/
+video/fallback/seg_*
