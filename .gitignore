@@ -15,3 +15,6 @@ video/**/out/
 video/**/stills/
 video/stills/
 video/fallback/seg_*
+
+# internal planning notes stay local
+PS3-Technical-Brief*.md

@@ -6,7 +6,7 @@
 
 **Code Cubicle 6.0 · Problem Statement 03: AI-Powered Edge Memory & Intelligence (Qdrant Edge)**
 
-🎬 **Showcase video:** linked in our submission (Google Drive). The film is generated from code in [`video/v3/`](video/v3/): run `node render.js` there to rebuild it.
+🎬 **Showcase video:** linked in our submission (Google Drive). The film is generated from code in [`video/`](video/); see [Repository layout](#repository-layout).
 
 ---
 
@@ -139,6 +139,25 @@ Memory point cloud (claims in 3D by meaning, coloured local / queued / synced / 
 ## Status
 
 🚧 **Round 1 submission: concept, architecture and motion showcase.** The build runs through the hackathon week; see [`docs/ROADMAP.md`](docs/ROADMAP.md).
+
+## Repository layout
+
+| Path | What it is |
+| --- | --- |
+| `docs/ROADMAP.md` | Build plan and cut lines for the hackathon week |
+| `deck/` | Pitch deck (`Quorum-Pitch.pptx`) and the script that generates it (`python make_deck.py`) |
+| `video/` | The showcase film as code: a deterministic HTML/canvas renderer, one file per scene in `video/scenes/`, a synthesized score in `video/audio/` |
+
+To rebuild the film (needs Node, Chrome, ffmpeg and Python with numpy/scipy):
+
+```sh
+cd video
+npm install                  # puppeteer-core
+python audio/compose.py      # -> audio/soundtrack.wav
+node render.js               # -> out/quorum-v3.mp4 (about 8 min with 8 workers)
+```
+
+Rendered video and audio are kept out of git; the film is distributed via the submission link.
 
 ## Team
 
