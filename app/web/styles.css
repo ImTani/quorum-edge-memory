@@ -229,7 +229,8 @@ svg { width: 16px; height: 16px; flex: none; }
 .cf-src span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cf-src svg { color: var(--sub); }
 .cf-meta { font-size: 12px; color: var(--muted); }
-.cf-quote { font-size: 13px; color: var(--sub); font-style: italic; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Two lines: the date in the source sentence is the evidence, so it must not be cut off. */
+.cf-quote { font-size: 13px; color: var(--sub); font-style: italic; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .cf-own { margin-left: auto; text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 13px; color: var(--text); }
 .cf-own + .x { margin-left: 10px; }
 .cf-why { font-size: 13px; font-weight: 400; color: var(--sub); margin-left: 4px; }
@@ -252,7 +253,9 @@ svg { width: 16px; height: 16px; flex: none; }
 .btn.ask { background: rgba(124,140,255,.2); border-color: rgba(124,140,255,.6); }
 .cf-draft { margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: rgba(124,140,255,.08); border: 1px dashed rgba(124,140,255,.45); }
 .cf-draft-head { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--indigo); }
+.cf-draft-head { display: flex; align-items: center; }
 .cf-draft-head span { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--muted); margin-left: 6px; }
+.cf-draft-wait { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-style: normal; text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 600; color: var(--text); }
 .cf-draft-text { margin: 5px 0 8px; font-size: 14.5px; line-height: 1.4; }
 .cf-draft-links { display: flex; gap: 8px; }
 .cf-draft-links .btn { height: 34px; font-size: 13.5px; }
@@ -326,6 +329,7 @@ main.grid.focus .answer-text { font-size: 16px; }
 .toast.amber { border-color: rgba(245,165,36,.6); }
 .toast.violet { border-color: rgba(169,139,232,.6); }
 .toast.red { border-color: rgba(239,68,68,.6); }
+.toast.working { display: flex; align-items: center; gap: 10px; color: var(--sub); }
 .toast .t-meta { margin-left: 10px; font: 12px var(--mono); color: var(--muted); }
 
 /* -------------------------------------------------- mock control strip */

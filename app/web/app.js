@@ -45,8 +45,10 @@ const NAMES = { tanishk: 'Tanishk', lakshya: 'Lakshya' };
 const nameOf = id => NAMES[id] || capFirst(String(id || 'someone'));
 const isMe = id => id && id === state.device;
 
+// "Rohit Sharma <rohit@x.com>" -> "Rohit Sharma": the address is noise on a card and pushes the date out.
+const dropAddress = a => String(a || '').replace(/\s*<[^>]*@[^>]*>\s*$/, '').trim() || String(a || '').trim();
 function prettyAuthor(a) {
-  const s = String(a || '').trim();
+  const s = dropAddress(a);
   const m = /^(client|whatsapp|email|group)\s*:\s*(.+)$/i.exec(s);
   if (m) return m[1].toLowerCase() === 'client' ? `Client ${capFirst(m[2])}` : capFirst(m[2]);
   return /^[a-z]+$/.test(s) ? nameOf(s) : s;
@@ -254,7 +256,12 @@ function renderHeader() {
   r.classList.toggle('frozen', known && !online);
   $('#up-total').textContent = fmtBytes(s.bytes_up);
   $('#down-total').textContent = fmtBytes(s.bytes_down);
-  const hub = !state.sync ? ['unknown', 'hub'] : !online ? ['paused', 'sync paused'] : s.hub_ok === false ? ['down', 'hub unreachable'] : ['ok', 'hub ok'];
+  // Right after reconnecting, hub_ok is still false until the first round lands; only an actual
+  // error (last_error) means the hub is unreachable.
+  const hub = !state.sync ? ['unknown', 'hub']
+    : !online ? ['paused', 'sync paused']
+    : s.hub_ok === false ? (s.last_error ? ['down', 'hub unreachable'] : ['unknown', 'reaching hub…'])
+    : ['ok', 'hub ok'];
   $('#hub-dot').className = `dot ${hub[0]}`;
   $('#hub-text').textContent = hub[1];
   $('#hub-stat').title = s.last_error ? `Last error: ${s.last_error}` : 'Hub status';
@@ -290,6 +297,9 @@ function setView(v) {
   document.querySelectorAll('.view-toggle button').forEach(b => b.classList.toggle('on', b.dataset.view === v));
   $('#ask-scope').textContent = v === 'team' ? 'team view: only claims shared with the team' : 'searching everything on this device';
   cloud.setView(v);
+  // A settled conflict has had its moment; give the whole cloud to the view change. Open ones stay.
+  const cf = state.conflicts.get(state.cardConflictId);
+  if (cf && cf.status === 'resolved' && !state.dismissed.has(cf.conflict_id)) { state.dismissed.add(cf.conflict_id); renderConflictCard(); }
   renderLegend();
 }
 
@@ -366,7 +376,8 @@ function renderConflictCard() {
   const kickerNote = !resolved && owner ? '<span class="cf-own">You own this: keep the version that is true</span>' : '';
   const draftHtml = draft && !resolved ? `
     <div class="cf-draft">
-      <div class="cf-draft-head">Draft to ${esc(nameOf(draft.to) || ownerName)} <span>nothing is sent until you choose</span></div>
+      <div class="cf-draft-head">Draft to ${esc(nameOf(draft.to) || ownerName)} <span>nothing is sent until you choose</span>
+        <em class="cf-draft-wait"><i class="spin"></i>Waiting for ${esc(ownerName)}</em></div>
       <div class="cf-draft-text">${esc(draft.text)}</div>
       <div class="cf-draft-links">
         ${draft.mailto ? `<a class="btn" href="${esc(draft.mailto)}" target="_blank" rel="noopener">Open in email</a>` : ''}
@@ -486,11 +497,13 @@ $('#note-form').addEventListener('submit', async e => {
   e.preventDefault();
   const input = $('#note-input'), text = input.value.trim(); if (!text) return;
   const btn = e.target.querySelector('button'); btn.disabled = true; btn.textContent = 'Saving…';
+  const done = working('Reading the note on this device…');
   try {
     const r = await api('POST', '/api/ingest', { kind: 'note', text });
     input.value = '';
+    done();
     afterIngest(r, 'note');
-  } catch (err) { toast(`Couldn't save the note: ${esc(err.message)}`, 'red'); }
+  } catch (err) { done(); toast(`Couldn't save the note: ${esc(err.message)}`, 'red'); }
   btn.disabled = false; btn.textContent = 'Save';
 });
 
@@ -514,7 +527,7 @@ function renderInbox() {
   $('#inbox').innerHTML = list.length ? list.map(m => `
     <div class="mail" data-id="${esc(m.id)}">
       <div class="mail-body">
-        <div class="mail-top"><b>${esc(m.from)}</b><span>${esc(fmtWhen(m.at))}</span></div>
+        <div class="mail-top"><b title="${esc(m.from)}">${esc(dropAddress(m.from))}</b><span>${esc(fmtWhen(m.at))}</span></div>
         <div class="mail-subject">${esc(m.subject)}</div>
         <div class="mail-text">${esc(m.text)}</div>
       </div>
@@ -524,12 +537,14 @@ function renderInbox() {
 $('#inbox').addEventListener('click', async e => {
   const b = e.target.closest('[data-receive]'); if (!b) return;
   b.disabled = true; b.textContent = 'Reading…';
+  const done = working('Reading the email on this device…');
   try {
     const r = await api('POST', `/api/inbox/${encodeURIComponent(b.dataset.receive)}/receive`);
     state.inbox = state.inbox.filter(m => m.id !== b.dataset.receive);
     renderInbox();
+    done();
     afterIngest(r, 'email');
-  } catch (err) { toast(`Couldn't receive it: ${esc(err.message)}`, 'red'); b.disabled = false; b.textContent = 'Receive'; }
+  } catch (err) { done(); toast(`Couldn't receive it: ${esc(err.message)}`, 'red'); b.disabled = false; b.textContent = 'Receive'; }
 });
 
 /* --------------------------------------------------------------- activity */
@@ -543,13 +558,17 @@ function renderActivity(freshKey) {
 }
 
 /* ------------------------------------------------------------------ toasts */
-function toast(html, tone = 'indigo') {
+/** Returns a close function; ms = 0 keeps the toast up until it is closed (progress messages). */
+function toast(html, tone = 'indigo', ms = 3800) {
   const t = document.createElement('div');
   t.className = `toast ${tone}`; t.innerHTML = html;
   $('#toasts').appendChild(t);
   requestAnimationFrame(() => t.classList.add('in'));
-  setTimeout(() => { t.classList.remove('in'); setTimeout(() => t.remove(), 400); }, 3800);
+  const close = () => { t.classList.remove('in'); setTimeout(() => t.remove(), 400); };
+  if (ms) setTimeout(close, ms);
+  return close;
 }
+const working = text => toast(`<i class="spin"></i>${esc(text)}`, 'indigo working', 0);
 
 /* -------------------------------------------------------------------- boot */
 function setLive(s) {
