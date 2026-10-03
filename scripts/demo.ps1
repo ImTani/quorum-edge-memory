@@ -138,7 +138,9 @@ Invoke-WithEnv @{ PYTHONUNBUFFERED = "1" } {
 foreach ($d in $devices.Keys) { Wait-Http "http://127.0.0.1:$($devices[$d])/api/state" 90 "Device $d" }
 
 Write-Host ""
-Write-Host "Quorum is running:"
+Write-Host "Quorum is running. Demo stage (both devices and the hub, one window):"
+Write-Host "  stage    http://127.0.0.1:$($devices['tanishk'])/stage"
+Write-Host "Single-device pages:"
 foreach ($d in $devices.Keys) { Write-Host ("  {0,-8} http://127.0.0.1:{1}" -f $d, $devices[$d]) }
 Write-Host "  hub      $hubUrl/dashboard"
 Write-Host "Stop with: .\scripts\demo.ps1 -Stop"

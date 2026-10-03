@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quorum · demo stage</title>
+  <link rel="icon" href="data:,">
+  <style>html, body { background: #0B0F17; margin: 0; }</style>
+  <!-- One screen for judges: Tanishk's device (left), the team hub (centre), Lakshya's device
+       (right). Device URLs: ?left=http://127.0.0.1:8001&right=http://127.0.0.1:8002&hub=http://127.0.0.1:6333
+       Nothing here plays by itself: every change on screen comes from a real event. -->
+  <link rel="stylesheet" href="/web/styles.css">
+  <link rel="stylesheet" href="/web/stage.css">
+</head>
+<body class="stage">
+  <header class="caption-bar">
+    <div class="caption" aria-live="polite">
+      <h1 class="cap-head"><span class="cap-dot" data-cap="dot"></span><span data-cap="head">Two laptops, one team hub.</span></h1>
+      <p class="cap-how" data-cap="how">Each device keeps its own memory on Qdrant Edge and answers on its own. The Qdrant server in the middle only relays what the team shares.</p>
+      <p class="cap-src hidden" data-cap="src"></p>
+    </div>
+    <nav class="beats" aria-label="Demo script progress">
+      <ol data-beats></ol>
+      <div class="beat-next" data-beat-next></div>
+    </nav>
+  </header>
+
+  <main class="stage-main">
+    <section class="pane left" data-pane="left" aria-label="Tanishk's device"></section>
+
+    <aside class="hub-col" aria-label="Team hub">
+      <div class="hub-node" data-hub="node">
+        <div class="hub-title">Team hub</div>
+        <div class="hub-sub">Qdrant server</div>
+        <div class="hub-state" data-hub="state">connecting…</div>
+      </div>
+
+      <div class="hub-block hub-total">
+        <div class="hub-num" data-hub="total">–</div>
+        <div class="hub-label">claims on the hub</div>
+      </div>
+
+      <div class="hub-block hub-privacy" data-hub="privacy">
+        <div class="priv-line">Device-only claims on the hub: <b data-hub="device">–</b></div>
+        <div class="priv-sub" data-hub="privsub">Counted live from Qdrant with a filter on tier = device.</div>
+      </div>
+
+      <div class="hub-block hub-recent">
+        <h2>Latest to reach the hub</h2>
+        <ol data-hub="recent"><li class="empty">Waiting for the hub…</li></ol>
+      </div>
+
+      <div class="hub-foot" data-hub="foot">Read from the hub every second.</div>
+    </aside>
+
+    <section class="pane right" data-pane="right" aria-label="Lakshya's device"></section>
+
+    <svg class="links" data-links aria-hidden="true"></svg>
+  </main>
+
+  <script type="module" src="/web/stage.js"></script>
+</body>
+</html>

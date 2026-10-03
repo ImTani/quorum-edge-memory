@@ -230,3 +230,14 @@ s.count(q.CountRequest()); s.scroll(...); s.flush(); s.close()
 ```
 Hybrid query took 7 ms on a cold shard. Check exact signatures of `scroll`, `set_payload` and `Query.Nearest` for
 sparse input with `__text_signature__` before relying on them.
+
+### Demo stage (3 Oct)
+
+- `GET /stage` (and `/web/stage.html`) on every device serves one page with both devices and the hub:
+  `?left=http://127.0.0.1:8001&right=http://127.0.0.1:8002&hub=http://127.0.0.1:6333` (the defaults).
+- The device UI is a component, `createDeviceUI(root, {base, variant})` in `app/web/device.js`; `index.html`
+  mounts it once (same origin), the stage twice. `ui.on(fn)` relays every SSE event plus local actions
+  (`answer`, `view`, `draft`, `working`) so the stage captions only what really happened.
+- The device API allows CORS from `http://127.0.0.1:*` and `http://localhost:*` (GET/POST, SSE). The stage
+  reads the hub straight from Qdrant REST (CORS is on by default): exact counts, `tier = device` count,
+  latest points by `order_by modified_at`.
