@@ -13,4 +13,5 @@ export HF_HOME="$QUORUM_ROOT/models/hf"
 export FASTEMBED_CACHE_PATH="$QUORUM_ROOT/models/fastembed"
 export QUORUM_MODELS="$QUORUM_ROOT/models"
 export UV_PYTHON_DOWNLOADS=never
+export IMPECCABLE_HOME="$QUORUM_ROOT/.cache/impeccable"   # skill engine; default is ~/.impeccable
 mkdir -p "$UV_CACHE_DIR" "$PIP_CACHE_DIR" "$HF_HOME" "$FASTEMBED_CACHE_PATH"

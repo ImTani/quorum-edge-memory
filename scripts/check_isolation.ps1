@@ -17,6 +17,7 @@ $targets = [ordered]@{
   "hf"             = "$env:USERPROFILE\.cache\huggingface"
   "fastembed"      = "$env:TEMP\fastembed_cache"
   "playwright"     = "$env:LOCALAPPDATA\ms-playwright"
+  "impeccable"     = "$env:USERPROFILE\.impeccable"
 }
 $leaks = @()
 foreach ($name in $targets.Keys) {

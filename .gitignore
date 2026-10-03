@@ -33,3 +33,8 @@ models/
 app/hub/bin/
 app/hub/static/
 app/data/
+
+# impeccable working state (config.json and design.json are committed)
+.impeccable/*
+!.impeccable/config.json
+!.impeccable/design.json

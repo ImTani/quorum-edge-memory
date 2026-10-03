@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "git-clone",
+      "gitCommitSha": "e103efe779e2dd01274dabae83531fef00bf2563",
+      "skillPath": ".claude/skills/impeccable",
+      "skillVersion": "4.5.0",
+      "engineVersion": "0.1.11",
+      "licence": "Apache-2.0, copied to .claude/skills/impeccable/LICENSE-Apache-2.0.txt with NOTICE.md beside it",
+      "notes": "Vendored 3 Oct 2026 for the landing page and the device UI. The engine binary is not vendored: the launcher downloads it on first run into IMPECCABLE_HOME, which scripts/env.ps1 and env.sh point at .cache/impeccable (its default is ~/.impeccable, a machine-global location)."
+    }
+  }
+}
