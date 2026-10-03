@@ -11,13 +11,15 @@
   <main class="deck" id="deck" aria-roledescription="slide deck">
 
     <!-- 1 -->
-    <section class="slide title" data-title="Quorum">
+    <section class="slide title vis" data-title="Quorum">
       <div class="logo-big"><span class="sq">Q</span>Quorum</div>
       <h1>Your team's memory, on every laptop. <span class="u">Even with no signal.</span></h1>
       <p class="lede">Offline-first team memory on Qdrant Edge. When two people disagree about a deadline, it asks instead of guessing.</p>
       <p class="hand blue aside">Code Cubicle 6.0 · Problem Statement 03 · by BKA</p>
       <div class="sticky y" style="right:96px;top:110px;--r:4deg">Client just called: Sharma delivery moves to the 18th.<span>note · Tanishk</span></div>
       <div class="sticky b" style="right:220px;top:420px;--r:-3deg">Confirming final delivery of the Sharma wedding edit on 16 October.<span>email · Lakshya</span></div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true"><path class="red" d="M1222 300 C 1150 320, 1120 360, 1104 420"/><path class="red" d="M1092 404 L1104 422 L1118 404"/></svg>
+      <p class="mk red" style="left:1012px;top:352px;transform:rotate(-6deg);font-size:22px">same job, dates disagree</p>
     </section>
 
     <!-- 2 -->
@@ -27,39 +29,57 @@
         <a href="#3"><b>The problem</b><span>why field teams lose track</span></a>
         <a href="#4"><b>What Quorum does</b><span>four things, in one line each</span></a>
         <a href="#5"><b>How it works</b><span>interactive architecture</span></a>
-        <a href="#6"><b>A claim</b><span>memory with a source</span></a>
-        <a href="#7"><b>Catching conflicts</b><span>the Qdrant query</span></a>
-        <a href="#8"><b>Sync and offline</b><span>outbox, cursor, switch</span></a>
-        <a href="#9"><b>Privacy</b><span>what never leaves</span></a>
-        <a href="#10"><b>Tech stack</b><span>and why each piece</span></a>
-        <a href="#11"><b>Real vs mocked</b><span>straight answers</span></a>
-        <a href="#12"><b>FAQ: design</b><span>key vector, LLM, 1.00</span></a>
-        <a href="#13"><b>FAQ: limits</b><span>scale, clocks, dates</span></a>
-        <a href="#14"><b>What's next</b><span>after this round</span></a>
+        <a href="#6"><b>Your private assistant</b><span>what it knows, and why it can</span></a>
+        <a href="#7"><b>A day with Quorum</b><span>the Sharma day, across devices</span></a>
+        <a href="#8"><b>A claim</b><span>memory with a source</span></a>
+        <a href="#9"><b>Catching conflicts</b><span>the Qdrant query</span></a>
+        <a href="#10"><b>Sync and offline</b><span>outbox, cursor, switch</span></a>
+        <a href="#11"><b>Privacy</b><span>what never leaves</span></a>
+        <a href="#12"><b>Tech stack</b><span>and why each piece</span></a>
+        <a href="#13"><b>Real vs mocked</b><span>straight answers</span></a>
+        <a href="#14"><b>FAQ: design</b><span>key vector, LLM, 1.00</span></a>
+        <a href="#15"><b>FAQ: limits</b><span>scale, clocks, dates</span></a>
+        <a href="#16"><b>What's next</b><span>after this round</span></a>
       </nav>
-      <p class="toc-deep"><b>deep dive</b><a href="#5">architecture (interactive)</a><a href="#15">module map</a><a href="#16">capture pipeline</a><a href="#17">search</a><a href="#18">conflict engine</a><a href="#19">sync engine</a><a href="#20">data model</a><a href="#21">failure handling</a><a href="#22">trade-offs</a></p>
+      <p class="toc-deep"><b>deep dive</b><a href="#5">architecture (interactive)</a><a href="#17">module map</a><a href="#18">capture pipeline</a><a href="#19">search</a><a href="#20">conflict engine</a><a href="#21">sync engine</a><a href="#22">data model</a><a href="#23">failure handling</a><a href="#24">trade-offs</a></p>
     </section>
 
     <!-- 3 -->
-    <section class="slide" data-title="The problem">
+    <section class="slide vis" data-title="The problem">
       <h2>A deadline changes in one place and gets misquoted in another.</h2>
-      <div class="cols three">
-        <div class="note y"><b>Many clients, many channels</b>Email, WhatsApp, a call on set. Four people each hear a different piece.</div>
-        <div class="note b"><b>Often no signal</b>Shoots and site work happen where cloud tools don't reach.</div>
-        <div class="note y"><b>Cloud assistants don't fit</b>To help, they'd need everything: your inbox, your chats. That shouldn't leave the laptop.</div>
-      </div>
-      <p class="hand red bottom-line">Nobody notices until the client does.</p>
+      <p class="mk" style="left:96px;top:236px;font-size:22px">Many clients, many channels. Four people each hear a different piece.</p>
+      <div class="crd" style="left:96px;top:296px;width:350px;--r:-1deg;transform:rotate(-1deg)"><p class="cap">email · Lakshya</p><p class="chan">Confirming final delivery of the Sharma wedding edit on <span class="circ">16 October</span>.</p></div>
+      <div class="stk y taped" style="left:500px;top:300px;width:300px;--r:-2deg;font-size:23px">Client just called: Sharma delivery moves to <span class="circ">the 18th</span>.<small>a call on set · Tanishk</small></div>
+      <div class="wa" style="left:860px;top:330px;width:250px"><p>Sharma delivery <span class="circ">Monday?</span></p><small>WhatsApp</small></div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <path class="red" d="M270 470 C 300 560, 420 620, 520 650"/>
+        <path class="red" d="M650 512 C 650 560, 640 600, 630 640"/>
+        <path class="red" d="M985 430 C 960 540, 860 620, 760 650"/>
+      </svg>
+      <p class="hand red" style="position:absolute;left:400px;top:660px;font-size:36px;transform:rotate(-1deg)">Nobody notices until the client does.</p>
+      <div class="stk b" style="left:1170px;top:250px;width:334px;--r:1.5deg"><b class="hd"><svg class="nosig" viewBox="0 0 34 28" aria-hidden="true"><path d="M4 24 V20 M12 24 V15 M20 24 V10 M28 24 V5"/><path class="x" d="M2 4 L32 26"/></svg>Often no signal</b>Shoots and site work happen where cloud tools don't reach.</div>
+      <div class="stk y" style="left:1180px;top:520px;width:324px;--r:-1.5deg"><b class="hd">Cloud assistants don't fit</b>To help, they'd need everything: your inbox, your chats. That shouldn't leave the laptop.</div>
     </section>
 
     <!-- 4 -->
-    <section class="slide" data-title="What Quorum does">
+    <section class="slide vis" data-title="What Quorum does">
       <h2>One memory for the team. Every laptop keeps its own copy.</h2>
-      <div class="cols four">
-        <div class="note y"><b>Remembers</b>Every message becomes a claim with its source: who said it, where, when.</div>
-        <div class="note b"><b>Works offline</b>Search, extraction and answers run on the laptop, in milliseconds.</div>
-        <div class="note y"><b>Syncs on reconnect</b>A durable outbox sends team claims to the hub; laptops pull what changed.</div>
-        <div class="note b"><b>Asks, never guesses</b>When claims disagree, both versions stay and the task's owner decides.</div>
-      </div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah4" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <path marker-start="url(#ah4)" marker-end="url(#ah4)" d="M430 462 C 450 380, 540 320, 630 306"/>
+        <path marker-start="url(#ah4)" marker-end="url(#ah4)" d="M972 306 C 1060 320, 1150 380, 1170 462"/>
+      </svg>
+      <div class="crd hubbox" style="left:640px;top:252px;width:322px"><b>Team hub</b><p class="hand">Qdrant server</p></div>
+      <div class="stk y taped" style="left:96px;top:244px;width:300px;--r:-2deg"><b class="hd">Remembers</b>Every message becomes a claim with its source: who said it, where, when.</div>
+      <div class="stk b taped" style="left:1204px;top:244px;width:300px;--r:2deg"><b class="hd">Asks, never guesses</b>When claims disagree, both versions stay and the task's owner decides.</div>
+      <div class="laptop" style="left:96px;top:480px;width:420px;height:236px"><p class="lbl">Tanishk's laptop</p>
+        <p class="clm" style="top:44px">Sharma wedding edit · 18 Oct<span>note · Tanishk</span></p>
+        <p class="clm dim" style="top:128px">salary<span>device only</span></p></div>
+      <div class="laptop" style="left:1064px;top:480px;width:420px;height:236px"><p class="lbl">Lakshya's laptop</p>
+        <p class="clm" style="top:44px">Sharma wedding edit · 16 Oct<span>email · Lakshya</span></p>
+        <p class="askq" style="top:130px">18 Oct or 16 Oct? <b>Tanishk decides.</b></p></div>
+      <div class="stk b" style="left:560px;top:520px;width:232px;--r:1.5deg"><b class="hd">Works offline</b>Search, extraction and answers run on the laptop, in milliseconds.</div>
+      <div class="stk y" style="left:812px;top:540px;width:232px;--r:-1.5deg"><b class="hd">Syncs on reconnect</b>A durable outbox sends team claims to the hub; laptops pull what changed.</div>
     </section>
 
     <!-- 5: interactive architecture -->
@@ -105,125 +125,220 @@
       <p class="arch-note">For this round both laptops run on one machine as separate processes, each with its own shard. "Offline" is a per-device switch that cuts hub traffic at the transport; everything else keeps running.</p>
     </section>
 
-    <!-- 6 -->
-    <section class="slide" data-title="A claim">
-      <h2>Memory is claims, not facts.</h2>
-      <div class="split">
-        <div class="sticky y big" style="--r:-2deg">Client just called: Sharma delivery moves to the 18th.<span>note · Tanishk · 3 Oct, 14:02</span></div>
-        <table class="kv">
-          <tr><th>entity</th><td>Sharma wedding edit</td></tr>
-          <tr><th>attribute</th><td>due date</td></tr>
-          <tr><th>value</th><td>18 Oct</td></tr>
-          <tr><th>source</th><td>call, heard by Tanishk</td></tr>
-          <tr><th>tier</th><td>team</td></tr>
-          <tr><th>status</th><td>active · disputed · superseded</td></tr>
-        </table>
-      </div>
-      <p class="vecs"><b>Three vectors per claim:</b> <code>text</code> for meaning · <code>bm25</code> for keywords · <code>key</code> for what it's about (entity + attribute, never the value).</p>
+    <!-- 6: the product -->
+    <section class="slide vis" data-title="Your private assistant">
+      <h2>Your private assistant.</h2>
+      <p class="mk blue" style="left:96px;top:176px;font-size:22px">it reads</p>
+      <p class="inp" style="left:96px;top:214px">email</p>
+      <p class="inp" style="left:96px;top:284px">WhatsApp</p>
+      <p class="inp" style="left:96px;top:354px">calls and notes</p>
+      <p class="inp" style="left:96px;top:424px">what you're working on<small>active app and window</small></p>
+      <p class="inp" style="left:96px;top:520px">the phone in your pocket</p>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah6" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <g class="soft" marker-end="url(#ah6)">
+          <path d="M402 238 C 430 250, 436 330, 452 360"/>
+          <path d="M402 308 C 428 316, 436 360, 452 380"/>
+          <path d="M402 378 C 424 382, 436 392, 452 398"/>
+          <path d="M402 466 C 422 450, 436 430, 452 418"/>
+          <path d="M402 556 C 424 520, 438 470, 454 438"/>
+        </g>
+        <path marker-end="url(#ah6)" d="M882 400 C 888 396, 894 404, 902 400"/>
+      </svg>
+      <div class="laptop" style="left:470px;top:262px;width:396px;height:250px"><p class="lbl">your laptop</p>
+        <p class="me">Quorum<span>knows what you're up to, because it never leaves the laptop</span></p>
+        <p class="voice"><svg viewBox="0 0 40 24" aria-hidden="true"><path d="M3 12 H7 M11 6 V18 M17 2 V22 M23 7 V17 M29 4 V20 M35 10 V14"/></svg>voice in and out</p></div>
+      <div class="stk y bub" style="left:910px;top:196px;width:290px;--r:-1.5deg"><span class="lab">hyperfocus nudge</span>“You've been on the game project since 2. The Sharma edit is due tomorrow at 10.”</div>
+      <div class="stk b bub" style="left:1222px;top:212px;width:282px;--r:1.5deg"><span class="lab">deadline reminder</span>“Reel cutdowns due Monday. Three, not two, per the client's last message.”</div>
+      <div class="stk b bub" style="left:920px;top:486px;width:282px;--r:1deg"><span class="lab">a person</span>“Riya's birthday is Thursday. Last time you talked about her trip to Goa.”</div>
+      <div class="stk y bub" style="left:1226px;top:470px;width:278px;--r:-2deg"><span class="lab">a pattern</span>“You usually forget invoices on Fridays. Want a reminder at 4?”</div>
+      <p class="hand blue" style="position:absolute;left:96px;top:770px;font-size:27px;transform:rotate(-.6deg)">It can know this much because nothing leaves your laptop unless it's work your team needs.</p>
     </section>
 
-    <!-- 7 -->
-    <section class="slide" data-title="Catching conflicts">
-      <h2>Qdrant finds claims about the same thing.</h2>
-      <ol class="steps">
-        <li><b>Every new claim</b>, typed or pulled from the hub, runs one query on the <code>key</code> vector.</li>
-        <li><b>Filtered</b> to the same attribute and live claims; <b>threshold 0.82</b>.</li>
-        <li><b>Same thing, different value</b> → a conflict. Nothing is overwritten.</li>
-        <li><b>Both laptops agree</b> without talking: the conflict id is a hash of the two claim ids.</li>
-        <li><b>The task's owner</b> keeps one; the other is kept as history; the decision syncs.</li>
-      </ol>
-      <div class="measure"><p class="hand">measured</p><p><b>0.899</b> "Sharma delivery" vs "Sharma edit"</p><p><b>0.738</b> vs an unrelated deadline</p></div>
+    <!-- 7: a day -->
+    <section class="slide vis" data-title="A day with Quorum">
+      <h2>A day with Quorum.</h2>
+      <p class="mk" style="left:96px;top:166px">Tanishk at BKA, a four-person production house and developer group</p>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <path d="M120 304 C 300 296, 420 312, 511 304"/>
+        <path class="red dash" d="M511 304 C 700 296, 900 312, 1079 304"/>
+        <path d="M1079 304 C 1200 298, 1360 310, 1480 302"/>
+        <circle cx="227" cy="302" r="9" class="dot"/><circle cx="511" cy="304" r="9" class="dot"/><circle cx="795" cy="304" r="9" class="dot"/><circle cx="1079" cy="304" r="9" class="dot"/><circle cx="1363" cy="304" r="9" class="dot"/>
+      </svg>
+      <p class="tchip" style="left:107px;top:236px">morning · laptop</p>
+      <p class="tchip" style="left:391px;top:236px">the shoot · phone</p>
+      <p class="tchip" style="left:675px;top:236px">afternoon · laptop</p>
+      <p class="tchip" style="left:959px;top:236px">reconnect · both laptops</p>
+      <p class="tchip" style="left:1243px;top:236px">evening · everyone</p>
+      <p class="mk red" style="left:640px;top:316px">no signal, still working</p>
+      <div class="stk b taped" style="left:96px;top:380px;width:262px;--r:-1.5deg">A brief from his own memory: today's shoot, and what's due this week.</div>
+      <div class="stk y taped" style="left:380px;top:404px;width:262px;--r:1.5deg">No signal in Ladakh. The client calls: delivery moves to the 18th. A voice note on the phone, saved on the device.</div>
+      <div class="stk y taped" style="left:664px;top:380px;width:262px;--r:-1deg">“You've been on the game project since 2. The Sharma edit is due tomorrow at 10.”</div>
+      <div class="stk b taped" style="left:948px;top:404px;width:262px;--r:2deg">Back in signal: his note goes up, Lakshya's email comes down. Both laptops catch 18 Oct vs 16 Oct and ask Tanishk, the owner.</div>
+      <div class="stk y taped" style="left:1232px;top:380px;width:262px;--r:-1.5deg">Tanishk keeps the 18th. Everyone has it a second later. His private notes stayed private.</div>
     </section>
 
     <!-- 8 -->
-    <section class="slide" data-title="Sync and offline">
-      <h2>Works where the signal doesn't.</h2>
-      <div class="cols three">
-        <div class="note y"><b>Outbox</b>Team claims queue in SQLite, survive restarts, push oldest first, retry with backoff.</div>
-        <div class="note b"><b>Cursor</b>Each laptop scrolls the hub for claims changed since its last pull. Points sync with vectors, no re-embedding.</div>
-        <div class="note y"><b>Offline switch</b>One transport hook refuses hub traffic and counts bytes, so "0 B" is measured, not drawn.</div>
+    <section class="slide vis" data-title="A claim">
+      <h2>Memory is claims, not facts.</h2>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah8" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <path marker-end="url(#ah8)" d="M448 360 C 474 352, 500 366, 528 356"/>
+      </svg>
+      <div class="sticky y big" style="position:absolute;left:96px;top:236px;--r:-2deg">Client just called: Sharma delivery moves to the 18th.<span>note · Tanishk · 3 Oct, 14:02</span></div>
+      <div class="icard simple" style="left:544px;top:206px;width:500px">
+        <p class="ic-h">claim</p>
+        <dl><dt>entity</dt><dd>Sharma wedding edit</dd><dt>attribute</dt><dd>due date</dd><dt>value</dt><dd>18 Oct</dd><dt>source</dt><dd>call, heard by Tanishk</dd><dt>tier</dt><dd>team</dd><dt>status</dt><dd>active · disputed · superseded</dd></dl>
       </div>
-      <p class="figures"><span><b>7–70 ms</b> search on the laptop</span><span><b>~1 s</b> conflict on both laptops after reconnect</span><span><b>~1 s</b> a decision reaches the other laptop</span></p>
+      <p class="mk blue" style="left:1050px;top:226px;font-size:22px">three vectors per claim</p>
+      <p class="tapev t" style="left:1020px;top:280px;--r:-3deg">text</p>
+      <p class="tapev m" style="left:1020px;top:376px;--r:2deg">bm25</p>
+      <p class="tapev k" style="left:1020px;top:472px;--r:-1.5deg">key</p>
+      <p class="vdesc" style="left:1268px;top:290px;width:236px"><b>meaning</b></p>
+      <p class="vdesc" style="left:1268px;top:386px;width:236px"><b>keywords</b></p>
+      <p class="vdesc" style="left:1268px;top:470px;width:236px"><b>what it's about</b>entity + attribute, never the value</p>
     </section>
 
     <!-- 9 -->
-    <section class="slide" data-title="Privacy">
-      <h2>It reads everything. Nothing leaves unless it's team work.</h2>
-      <div class="split">
-        <div class="tiers">
-          <div class="tier"><b>Device only</b>salary, a friend's news<span>never leaves</span></div>
-          <div class="tier"><b>My devices</b>birthdays, my schedule<span>my laptops only</span></div>
-          <div class="tier"><b>Team</b>deadlines, shoots, deliverables<span>everyone</span></div>
-        </div>
-        <ul class="layers">
-          <li>Everything starts device-only; rules promote only clear team work.</li>
-          <li>A follow-up never gets a wider tier than its entity already has.</li>
-          <li>The outbox and the push both refuse device-only claims.</li>
-          <li>The pull only takes team claims (or my own).</li>
-          <li>Team view filters by tier inside the Qdrant query.</li>
-          <li>On stage we count private claims on the hub live: <b>0</b>.</li>
-        </ul>
-      </div>
+    <section class="slide vis" data-title="Catching conflicts">
+      <h2>Qdrant finds claims about the same thing.</h2>
+      <div class="zone-hot" style="left:672px;top:330px;width:788px;height:110px"></div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <path d="M140 386 C 500 382, 900 390, 1462 384"/>
+        <path class="gtick" d="M160 378 V394 M587 378 V394 M1013 378 V394 M1440 378 V394"/>
+        <path class="thr" d="M672 300 V470"/>
+        <circle cx="322" cy="385" r="10" class="dot grey"/>
+        <circle cx="800" cy="386" r="11" class="dot"/>
+        <circle cx="1009" cy="386" r="11" class="dot"/>
+        <circle cx="1440" cy="384" r="11" class="dot"/>
+      </svg>
+      <p class="sc" style="left:140px;top:398px">0.70</p><p class="sc" style="left:567px;top:398px">0.80</p><p class="sc" style="left:993px;top:430px">0.90</p><p class="sc" style="left:1420px;top:398px">1.00</p>
+      <p class="sim grey" style="left:222px;top:420px;width:220px"><b>0.738</b>vs an unrelated deadline</p>
+      <p class="sim" style="left:582px;top:478px;width:200px;color:var(--ink-2)"><b>0.82</b>the threshold</p>
+      <p class="sim" style="left:690px;top:196px;width:240px"><b>0.85</b>“Sharma delivery” vs “Sharma wedding edit”</p>
+      <p class="sim" style="left:920px;top:456px;width:220px"><b>0.899</b>“Sharma delivery” vs “Sharma edit”</p>
+      <p class="sim" style="left:1250px;top:196px;width:254px;text-align:right"><b>1.00</b>both snap to the same known task</p>
+      <p class="mk" style="left:1150px;top:342px;font-size:18px;color:var(--ink-3)">same thing</p>
+      <div class="stk y" style="left:96px;top:580px;width:262px;--r:-1.5deg;font-size:20px">Every new claim, typed or pulled from the hub, runs one query on the <b>key</b> vector.</div>
+      <div class="stk b" style="left:384px;top:592px;width:262px;--r:1deg;font-size:20px">Filtered to the same attribute and live claims; threshold 0.82.</div>
+      <div class="stk y" style="left:672px;top:578px;width:262px;--r:-1deg;font-size:20px">Same thing, different value: a conflict. Nothing is overwritten.</div>
+      <div class="stk b" style="left:960px;top:592px;width:262px;--r:1.5deg;font-size:20px">Both laptops agree without talking: the id is a hash of the two claim ids.</div>
+      <div class="stk y" style="left:1248px;top:580px;width:256px;--r:-1.5deg;font-size:20px">The task's owner keeps one; the other stays as history; the decision syncs.</div>
     </section>
 
     <!-- 10 -->
-    <section class="slide" data-title="Tech stack">
-      <h2>What we used, and why.</h2>
-      <table class="stack">
-        <tr><th>Qdrant Edge</th><td>Vector DB on the laptop: BM25 + dense + filters in one query, offline. Same data model as the hub.</td></tr>
-        <tr><th>Qdrant server</th><td>The team hub. Points sync as-is, vectors included.</td></tr>
-        <tr><th>bge-small (FastEmbed)</th><td>Small, fast, local dense embeddings. 384 dims.</td></tr>
-        <tr><th>BM25 + RRF</th><td>Exact names ("Sharma") plus meaning; RRF fuses by rank, no score calibration.</td></tr>
-        <tr><th>Ollama · llama3.2</th><td>Local extraction, no cloud calls. Dates are resolved in code, not by the model.</td></tr>
-        <tr><th>SQLite</th><td>Durable outbox, conflicts and sync cursor.</td></tr>
-        <tr><th>FastAPI + vanilla JS</th><td>Two device processes and a live UI over SSE. No build step.</td></tr>
-      </table>
+    <section class="slide vis" data-title="Sync and offline">
+      <h2>Works where the signal doesn't.</h2>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah10" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <g marker-end="url(#ah10)">
+          <path d="M400 372 C 420 300, 520 250, 612 240"/>
+          <path d="M988 240 C 1090 250, 1190 300, 1210 372"/>
+        </g>
+        <path class="red dash" d="M462 262 L520 330"/>
+        <g class="scis" transform="translate(468 284) rotate(-40)"><circle cx="-16" cy="14" r="7"/><circle cx="16" cy="14" r="7"/><path d="M-11 9 L12 -22"/><path d="M11 9 L-12 -22"/></g>
+      </svg>
+      <div class="crd hubbox" style="left:620px;top:196px;width:360px"><b>Team hub</b><p class="hand">Qdrant server</p></div>
+      <div class="cutnote" style="left:96px;top:186px;width:330px"><p class="hand red">offline switch</p><p>one transport hook refuses hub traffic and counts bytes, so <b class="zb">0 B</b> is measured, not drawn</p></div>
+      <p class="mk" style="left:450px;top:340px">push</p>
+      <p class="mk" style="left:1110px;top:300px">pull</p>
+      <div class="laptop" style="left:96px;top:392px;width:470px;height:270px"><p class="lbl">Tanishk's laptop</p>
+        <div class="obx"><span></span><span></span><span></span><span>team claim</span></div>
+        <p class="obx-l">outbox · SQLite</p>
+        <ul class="obx-n"><li>team claims queue</li><li>survive restarts</li><li>push oldest first</li><li>retry with backoff</li></ul></div>
+      <div class="laptop" style="left:1034px;top:392px;width:470px;height:270px"><p class="lbl">Lakshya's laptop</p>
+        <svg class="ruler" viewBox="0 0 440 76" aria-hidden="true" style="width:420px">
+          <path d="M8 46 C 120 44, 300 48, 432 45" class="rl"/>
+          <path d="M30 38 V54 M80 38 V54 M130 38 V54 M180 38 V54 M230 38 V54 M280 38 V54 M330 38 V54 M380 38 V54" class="rt"/>
+          <rect x="52" y="20" width="14" height="14" class="old"/><rect x="104" y="20" width="14" height="14" class="old"/><rect x="152" y="20" width="14" height="14" class="old"/>
+          <rect x="262" y="20" width="14" height="14" class="new"/><rect x="312" y="20" width="14" height="14" class="new"/><rect x="360" y="20" width="14" height="14" class="new"/>
+          <path d="M214 8 C 215 30, 213 50, 215 70" class="cur"/><text x="222" y="72" class="t-red">cursor</text>
+        </svg>
+        <ul class="obx-n wide" style="top:128px;width:410px"><li>scrolls the hub for claims changed since its last pull</li><li>points sync with vectors, no re-embedding</li></ul></div>
+      <div class="figs" style="left:96px;top:716px"><b>7–70 ms</b>search on the laptop</div>
+      <div class="figs" style="left:560px;top:716px"><b>~1 s</b>conflict on both laptops after reconnect</div>
+      <div class="figs" style="left:1034px;top:716px"><b>~1 s</b>a decision reaches the other laptop</div>
     </section>
 
     <!-- 11 -->
-    <section class="slide" data-title="Real vs mocked">
-      <h2>Straight answers.</h2>
-      <div class="split even">
-        <div><p class="tape green">Real</p><ul class="ticks"><li>Qdrant Edge memory and hybrid search on each device</li><li>Conflict detection at capture and at sync</li><li>Hub sync with a persistent outbox</li><li>Owner resolution that syncs</li><li>Tier privacy, zero private claims on the hub</li><li>Local extraction with sources</li></ul></div>
-        <div><p class="tape">Mocked or next</p><ul class="dashes"><li>Two physical laptops (one machine this round)</li><li>Gmail API (a fixture inbox stands in)</li><li>Phone app, live WhatsApp stream</li><li>Partial snapshots, encryption at rest</li><li>Hub auth and TLS</li></ul></div>
-      </div>
+    <section class="slide vis" data-title="Privacy">
+      <h2>It reads everything. Nothing leaves unless it's team work.</h2>
+      <div class="stk y" style="left:190px;top:268px;width:230px;--r:-5deg;z-index:1">salary · a friend's news</div>
+      <div class="pk" style="left:120px;top:370px;width:380px;height:170px"><p><b>Device only</b>never leaves</p></div>
+      <div class="laptop mini" style="left:600px;top:330px;width:180px;height:116px"></div>
+      <div class="laptop mini" style="left:820px;top:330px;width:180px;height:116px"></div>
+      <div class="stk b" style="left:690px;top:286px;width:230px;--r:2deg;z-index:1">birthdays · my schedule</div>
+      <p class="zl" style="left:580px;top:486px;width:440px"><b>My devices</b>my laptops only</p>
+      <div class="wall" style="left:1086px;top:262px;width:418px;height:216px">
+        <span class="stk y" style="left:22px;top:26px;width:150px;--r:-3deg">deadlines</span>
+        <span class="stk b" style="left:200px;top:18px;width:150px;--r:2deg">shoots</span>
+        <span class="stk y" style="left:110px;top:110px;width:170px;--r:1deg">deliverables</span></div>
+      <p class="zl" style="left:1086px;top:486px;width:418px"><b>Team</b>everyone</p>
+      <div class="crd hubbox zero" style="left:96px;top:600px;width:404px"><b>Team hub</b><p class="z0">0</p><p class="hs">private claims on the hub, counted live on stage</p></div>
+      <ul class="rules" style="left:580px;top:604px;width:924px">
+        <li>Everything starts device-only; rules promote only clear team work.</li>
+        <li>A follow-up never gets a wider tier than its entity already has.</li>
+        <li>The outbox and the push both refuse device-only claims.</li>
+        <li>The pull only takes team claims (or my own).</li>
+        <li>Team view filters by tier inside the Qdrant query.</li>
+      </ul>
     </section>
 
     <!-- 12 -->
-    <section class="slide faq" data-title="FAQ: design">
-      <h2>FAQ: design</h2>
-      <dl>
-        <dt>Why a separate key vector?</dt><dd>A conflict is "same thing, different value", so matching must ignore the value and the wording. The key is just entity + attribute.</dd>
-        <dt>Why not let the LLM decide conflicts?</dt><dd>Two laptops must reach the same conflict on their own. That needs a deterministic rule: same vectors, same query, same threshold, same id. The LLM only extracts.</dd>
-        <dt>Why does the demo show similarity 1.00?</dt><dd>Both mentions were matched to the known task "Sharma wedding edit", so the key text is identical. Worded differently, it's 0.85–0.90.</dd>
-        <dt>Why templated answers?</dt><dd>Milliseconds, no hallucinated facts, and every sentence cites a claim.</dd>
-      </dl>
+    <section class="slide vis" data-title="Tech stack">
+      <h2>What we used, and why.</h2>
+      <div class="stk y taped hero" style="left:96px;top:206px;width:440px;--r:-1.5deg"><b class="nm">Qdrant Edge</b>Vector DB on the laptop: BM25 + dense + filters in one query, offline. Same data model as the hub.</div>
+      <div class="stk b taped" style="left:590px;top:214px;width:280px;--r:1.5deg"><b class="nm">Qdrant server</b>The team hub. Points sync as-is, vectors included.</div>
+      <div class="stk y taped" style="left:910px;top:204px;width:270px;--r:-1deg"><b class="nm">bge-small (FastEmbed)</b>Small, fast, local dense embeddings. 384 dims.</div>
+      <div class="stk b taped" style="left:1220px;top:222px;width:284px;--r:2deg"><b class="nm">BM25 + RRF</b>Exact names (“Sharma”) plus meaning; RRF fuses by rank, no score calibration.</div>
+      <div class="stk b taped" style="left:150px;top:560px;width:360px;--r:1deg"><b class="nm">Ollama · llama3.2</b>Local extraction, no cloud calls. Dates are resolved in code, not by the model.</div>
+      <div class="stk y taped" style="left:600px;top:548px;width:290px;--r:-2deg"><b class="nm">SQLite</b>Durable outbox, conflicts and sync cursor.</div>
+      <div class="stk b taped" style="left:980px;top:566px;width:340px;--r:1.2deg"><b class="nm">FastAPI + vanilla JS</b>Two device processes and a live UI over SSE. No build step.</div>
     </section>
 
     <!-- 13 -->
-    <section class="slide faq" data-title="FAQ: limits">
-      <h2>FAQ: limits</h2>
-      <dl>
-        <dt>What if the model misreads a date?</dt><dd>It never computes dates; code resolves them from the message. And a wrong claim can't overwrite anything: it shows up as a conflict with both sources.</dd>
-        <dt>Three devices? Clock skew?</dt><dd>Detection scales: each device finds the same conflict. The sync cursor uses device clocks; the fix is a hub-assigned sync stamp.</dd>
-        <dt>Does it scale?</dt><dd>Each question is one hybrid query or one filtered nearest-neighbour search, which is what Qdrant is built for. We haven't benchmarked large memories yet.</dd>
-        <dt>Business model?</dt><dd>Per team, per month; no price set yet. Customer zero is BKA, a four-person production house and developer group.</dd>
-      </dl>
+    <section class="slide rvm" data-title="Real vs mocked">
+      <h2>Straight answers.</h2>
+      <div class="split even">
+        <div class="rv-real"><p class="tape green">Real</p><ul class="ticks"><li>Qdrant Edge memory and hybrid search on each device</li><li>Conflict detection at capture and at sync</li><li>Hub sync with a persistent outbox</li><li>Owner resolution that syncs</li><li>Tier privacy, zero private claims on the hub</li><li>Local extraction with sources</li></ul></div>
+        <div class="rv-mock"><p class="tape">Mocked or next</p><ul class="dashes"><li>Two physical laptops (one machine this round)</li><li>Gmail API (a fixture inbox stands in)</li><li>Phone app, live WhatsApp stream</li><li>Partial snapshots, encryption at rest</li><li>Hub auth and TLS</li></ul></div>
+      </div>
     </section>
 
     <!-- 14 -->
-    <section class="slide" data-title="What's next">
+    <section class="slide vis" data-title="FAQ: design">
+      <h2>FAQ: design</h2>
+      <div class="qa" style="left:96px;top:210px"><p class="stk y q2" style="--r:-2deg">Why a separate key vector?</p><p class="a2">A conflict is “same thing, different value”, so matching must ignore the value and the wording. The key is just entity + attribute.</p></div>
+      <div class="qa" style="left:820px;top:224px"><p class="stk b q2" style="--r:1.5deg">Why not let the LLM decide conflicts?</p><p class="a2">Two laptops must reach the same conflict on their own: same vectors, same query, same threshold, same id. The LLM only extracts.</p></div>
+      <div class="qa" style="left:96px;top:520px"><p class="stk b q2" style="--r:1.5deg">Why does the demo show similarity 1.00?</p><p class="a2">Both mentions were matched to the known task “Sharma wedding edit”, so the key text is identical. Worded differently, it's 0.85–0.90.</p></div>
+      <div class="qa" style="left:820px;top:506px"><p class="stk y q2" style="--r:-1.5deg">Why templated answers?</p><p class="a2">Milliseconds, no hallucinated facts, and every sentence cites a claim.</p></div>
+    </section>
+
+    <!-- 15 -->
+    <section class="slide vis" data-title="FAQ: limits">
+      <h2>FAQ: limits</h2>
+      <div class="qa" style="left:96px;top:210px"><p class="stk y q2" style="--r:-2deg">What if the model misreads a date?</p><p class="a2">It never computes dates; code resolves them from the message. And a wrong claim can't overwrite anything: it shows up as a conflict with both sources.</p></div>
+      <div class="qa" style="left:820px;top:224px"><p class="stk b q2" style="--r:1.5deg">Three devices? Clock skew?</p><p class="a2">Detection scales: each device finds the same conflict. The sync cursor uses device clocks; the fix is a hub-assigned sync stamp.</p></div>
+      <div class="qa" style="left:96px;top:520px"><p class="stk b q2" style="--r:1.5deg">Does it scale?</p><p class="a2">Each question is one hybrid query or one filtered nearest-neighbour search, which is what Qdrant is built for. We haven't benchmarked large memories yet.</p></div>
+      <div class="qa" style="left:820px;top:506px"><p class="stk y q2" style="--r:-1.5deg">Business model?</p><p class="a2">Per team, per month; no price set yet. Customer zero is BKA, a four-person production house and developer group.</p></div>
+    </section>
+
+    <!-- 16 -->
+    <section class="slide vis" data-title="What's next">
       <h2>After this round.</h2>
-      <div class="cols three">
-        <div class="note y"><b>Two laptops</b>Real airplane mode, a hub-assigned sync stamp, partial snapshots.</div>
-        <div class="note b"><b>More inputs</b>Gmail API, WhatsApp import in the UI, phone capture.</div>
-        <div class="note y"><b>Hardening</b>Hub auth and TLS, encryption at rest, N-way conflicts, packaging.</div>
-      </div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <path d="M120 470 C 320 430, 480 520, 700 468 C 900 420, 1060 520, 1280 466 C 1380 444, 1440 456, 1490 462"/>
+        <circle cx="200" cy="456" r="11" class="dot grey"/><circle cx="560" cy="482" r="11" class="dot"/><circle cx="960" cy="458" r="11" class="dot"/><circle cx="1360" cy="452" r="11" class="dot"/>
+        <path class="soft" d="M560 470 V420 M960 470 V520 M1360 440 V400"/>
+      </svg>
+      <p class="mk" style="left:140px;top:492px">this round</p>
+      <div class="stk y taped" style="left:420px;top:200px;width:290px;--r:-2deg"><b class="hd">Two laptops</b>Real airplane mode, a hub-assigned sync stamp, partial snapshots.</div>
+      <div class="stk b taped" style="left:820px;top:534px;width:290px;--r:1.5deg"><b class="hd">More inputs</b>Gmail API, WhatsApp import in the UI, phone capture.</div>
+      <div class="stk y taped" style="left:1214px;top:186px;width:290px;--r:-1deg"><b class="hd">Hardening</b>Hub auth and TLS, encryption at rest, N-way conflicts, packaging.</div>
       <p class="hand blue bottom-line">Thank you. Ask us anything.</p>
     </section>
 
-
-    <!-- 15: module map -->
+    <!-- 17: module map -->
     <section class="slide deep vis" data-title="Module map">
       <h2 class="tight">Module map: one job per file.</h2>
       <div class="band" style="top:154px;height:142px"><p class="lbl">UI · web/</p></div>
@@ -261,7 +376,7 @@
       <div class="stk b mod" style="left:1186px;top:656px;--r:1.3deg"><b class="fn">embed.py</b>bge-small dense + Edge BM25</div>
     </section>
 
-    <!-- 16: capture pipeline -->
+    <!-- 18: capture pipeline -->
     <section class="slide deep vis cap-slide" data-title="Capture pipeline">
       <h2 class="tight">Capture: from a message to a claim.</h2>
       <button class="play" type="button" data-play><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5 L13 8 L4 13.5 Z"/></svg>Play the note through</button>
@@ -310,7 +425,7 @@
       <p class="step" data-step="7" style="left:96px;top:782px;width:470px"><i>7</i><b>Publish</b> · events stream to the UI over SSE</p>
     </section>
 
-    <!-- 17: search and answers -->
+    <!-- 19: search and answers -->
     <section class="slide deep vis" data-title="Search and answers">
       <h2 class="tight">Search and answers: one query, on the laptop.</h2>
       <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
@@ -338,7 +453,7 @@
       <div class="fig" style="left:1180px;top:590px;width:324px"><b>7–70 ms</b><p>end to end, on the laptop</p><p>no model in the answer path</p></div>
     </section>
 
-    <!-- 18: conflict engine -->
+    <!-- 20: conflict engine -->
     <section class="slide deep vis" data-title="Conflict engine">
       <h2 class="tight">Conflict engine: deterministic on every laptop.</h2>
       <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
@@ -378,7 +493,7 @@
       <p class="mk red" style="left:864px;top:806px;width:640px">“disputed” stays local and bumps no version, so it can't outrank a real update pulled later</p>
     </section>
 
-    <!-- 19: sync engine -->
+    <!-- 21: sync engine -->
     <section class="slide deep vis" data-title="Sync engine">
       <h2 class="tight">Sync engine: outbox up, cursor down.</h2>
       <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
@@ -419,7 +534,7 @@
       </div>
     </section>
 
-    <!-- 20: data model -->
+    <!-- 22: data model -->
     <section class="slide deep vis" data-title="Data model">
       <h2 class="tight">Data model: a point per claim.</h2>
       <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
@@ -457,7 +572,7 @@
       </div>
     </section>
 
-    <!-- 21: concurrency and failure -->
+    <!-- 23: concurrency and failure -->
     <section class="slide deep vis" data-title="Concurrency and failure">
       <h2 class="tight">Concurrency and failure handling.</h2>
       <p class="whatif" style="left:96px;top:158px">Crash mid-write?</p>
@@ -476,7 +591,7 @@
         <ul><li>The pull cursor uses device clocks <span>fix: a hub-assigned stamp</span></li><li>Conflicts are pairwise</li><li>The hub has no auth yet</li></ul></div>
     </section>
 
-    <!-- 22: decisions and trade-offs -->
+    <!-- 24: decisions and trade-offs -->
     <section class="slide deep vis" data-title="Decisions and trade-offs">
       <h2 class="tight">Decisions and trade-offs.</h2>
       <div class="dec" style="left:96px;top:176px">
@@ -513,7 +628,7 @@
     </section>
 
   </main>
-  <div class="hud"><span id="counter">1 / 22</span><a href="#2" class="hud-toc">contents</a></div>
+  <div class="hud"><span id="counter">1 / 24</span><a href="#2" class="hud-toc">contents</a></div>
   <script defer src="js/deck.js"></script>
 </body>
 </html>
