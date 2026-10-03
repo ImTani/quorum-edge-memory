@@ -56,7 +56,8 @@
         <p class="fine">Priced per team, per month. <b>Customer zero: BKA</b>, a four-person production house and developer group.</p>
       </div>
 
-      <div class="board" id="board" role="group" aria-label="A whiteboard showing Quorum on two laptops and the team hub. It responds: switch Tanishk off the hub, write a note, switch him back on.">
+      <div class="board-fit fit" data-fit="772x690">
+      <div class="board fit-inner" id="board" role="group" aria-label="A whiteboard showing Quorum on two laptops and the team hub. It responds: switch Tanishk off the hub, write a note, switch him back on.">
         <div class="frame">
           <span class="cap tl"></span><span class="cap tr"></span>
           <div class="surface">
@@ -68,7 +69,7 @@
             <div class="lanes">
               <!-- Tanishk's laptop -->
               <div class="lane" id="lane-t">
-                <h3 class="tape-label boil">Tanishk's laptop</h3>
+                <p class="tape-label boil">Tanishk's laptop</p>
                 <p class="who boil">on a shoot</p>
                 <button class="hubtoggle boil" id="hub-toggle" role="switch" aria-checked="true"><span class="knob" aria-hidden="true"></span><span id="hub-label">on the hub</span></button>
                 <div class="sticky y boil" id="t-note" style="left:18px;top:150px;transform:rotate(-4deg)">
@@ -88,7 +89,7 @@
               <!-- Team wall: the hub -->
               <div class="lane" id="lane-w">
                 <svg class="divider boil" viewBox="0 0 12 600" preserveAspectRatio="none" aria-hidden="true"><path d="M6 4 C 3 150, 9 300, 5 450 S 7 560, 6 596" stroke="#1b1d22" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/></svg>
-                <h3 class="tape-label boil" style="transform:rotate(1.5deg)">Team wall · the hub</h3>
+                <p class="tape-label boil" style="transform:rotate(1.5deg)">Team wall · the hub</p>
                 <p class="who boil">only what the team needs</p>
                 <p class="who quiet boil" id="wall-count">18 notes · nothing private</p>
                 <div class="sticky y boil" id="w-note" style="left:30px;top:138px;transform:rotate(-5deg)">
@@ -123,7 +124,7 @@
               <!-- Lakshya's laptop -->
               <div class="lane" id="lane-l">
                 <svg class="divider boil" viewBox="0 0 12 600" preserveAspectRatio="none" aria-hidden="true"><path d="M6 4 C 9 160, 3 310, 7 460 S 5 560, 6 596" stroke="#1b1d22" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/></svg>
-                <h3 class="tape-label boil" style="transform:rotate(-1deg)">Lakshya's laptop</h3>
+                <p class="tape-label boil" style="transform:rotate(-1deg)">Lakshya's laptop</p>
                 <p class="who boil">at the office</p>
                 <p class="who quiet boil">connected</p>
                 <div class="sticky b boil" id="l-email" style="left:20px;top:150px;transform:rotate(3deg)">
@@ -192,14 +193,148 @@
         </div>
         <p class="sr-only" id="board-live" aria-live="polite"></p>
       </div>
+      </div>
     </section>
 
     <section class="claims-intro" id="how" aria-labelledby="how-title">
       <h2 id="how-title">Every memory is a claim with a source.</h2>
       <p>Who said it, where and when. That's what lets Quorum show both sides of a disagreement instead of quietly overwriting one.</p>
     </section>
+
+    <section class="anatomy" aria-label="Anatomy of a claim">
+      <div class="anatomy-board">
+        <div class="big-sticky boil">
+          <span class="strip"></span>
+          <p class="big-sticky-text">Client just called: Sharma delivery moves to the 18th.</p>
+          <p class="meta">Note · Tanishk · 3 Oct, 14:02</p>
+        </div>
+        <svg class="callouts boil" viewBox="0 0 1328 440" aria-hidden="true">
+          <g fill="none" stroke="#1b1d22" stroke-width="2.6" stroke-linecap="round">
+            <path d="M520 112 C 450 96, 400 74, 318 76"/><path d="M520 220 C 450 230, 400 222, 318 216"/><path d="M530 330 C 450 352, 400 362, 318 358"/>
+            <path d="M808 112 C 878 96, 928 74, 1010 76"/><path d="M808 220 C 878 214, 928 222, 1010 216"/><path d="M798 330 C 878 352, 928 362, 1010 358"/>
+          </g>
+        </svg>
+        <dl class="callout-list">
+          <div class="co" style="left:0;top:50px"><dt>who said it</dt><dd>the client, on a call</dd></div>
+          <div class="co" style="left:0;top:190px"><dt>who heard it</dt><dd>Tanishk, on his laptop, no signal</dd></div>
+          <div class="co" style="left:0;top:330px"><dt>when</dt><dd>3 Oct, 14:02</dd></div>
+          <div class="co r" style="right:0;top:50px"><dt>what it's about</dt><dd>Sharma wedding edit · due date</dd></div>
+          <div class="co r" style="right:0;top:190px"><dt>the value</dt><dd>18 Oct</dd></div>
+          <div class="co r" style="right:0;top:330px"><dt>who can see it</dt><dd>the team: it's client work</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="conflicts" id="conflicts" aria-labelledby="conflicts-title">
+      <div class="conflicts-copy">
+        <h2 id="conflicts-title">Two people heard two dates. Quorum asks the owner.</h2>
+        <p>Lakshya's email says “Sharma wedding edit”. Tanishk's note says “Sharma delivery”. Different words, same job.</p>
+        <p>Quorum compares what each note is <em>about</em>: the job and the kind of fact, never the value. Close enough, with different values, and both laptops open the same conflict on their own. Nothing is overwritten. The person who owns the task decides, and the decision reaches everyone.</p>
+      </div>
+      <div class="match-fit fit" data-fit="680x400">
+      <figure class="match fit-inner" aria-label="How two notes about the same job are matched">
+        <div class="m-sticky y boil" style="left:0;top:16px;--r:-3deg">Sharma delivery moves to the 18th.<span>note · Tanishk</span></div>
+        <div class="m-sticky b boil" style="left:0;top:214px;--r:2deg">Final delivery of the Sharma wedding edit on 16 October.<span>email · Lakshya</span></div>
+        <svg class="match-lines boil" viewBox="0 0 640 400" aria-hidden="true">
+          <g fill="none" stroke="#1b1d22" stroke-linecap="round" stroke-width="2.6">
+            <path d="M214 92 C 300 104, 330 170, 392 188"/>
+            <path d="M214 298 C 300 290, 330 222, 392 206"/>
+            <path d="M380 178 l14 11 l-14 12"/>
+          </g>
+        </svg>
+        <div class="about boil"><p class="k">what both are about</p><p class="v">Sharma wedding edit · due date</p></div>
+        <div class="verdict-box">
+          <p class="hand red boil">0.90 alike · above the 0.82 bar</p>
+          <p class="hand red boil">18 Oct ≠ 16 Oct</p>
+          <p class="ask">Ask Tanishk. He owns the task.</p>
+        </div>
+      </figure>
+      </div>
+    </section>
+
+    <section class="offline" id="demo" aria-labelledby="offline-title">
+      <div class="offline-head">
+        <h2 id="offline-title">Works where the signal doesn't.</h2>
+        <p>Everything that matters happens on the laptop: remembering, searching, catching a disagreement. The team hub is only how laptops catch up. Here's the Sharma afternoon.</p>
+      </div>
+      <div class="tl-wrap">
+        <svg class="tl-line boil" viewBox="0 0 1328 40" preserveAspectRatio="none" aria-hidden="true"><path d="M6 22 C 200 14, 420 30, 660 20 S 1100 14, 1322 22" fill="none" stroke="#1b1d22" stroke-width="3" stroke-linecap="round"/></svg>
+        <ol class="timeline">
+          <li class="tl y boil" style="--r:-2deg"><time>14:02</time><b>No signal.</b> Tanishk notes the client's call. It's saved on his laptop and waits.</li>
+          <li class="tl w boil" style="--r:1.5deg"><time>14:03</time><b>Still answers.</b> “When is the Sharma delivery?” comes back from the laptop in milliseconds.</li>
+          <li class="tl b boil" style="--r:-1deg"><time>14:04</time><b>Meanwhile.</b> Lakshya's laptop reads the client's email: the 16th. It reaches the hub.</li>
+          <li class="tl y boil" style="--r:2deg"><time>14:05</time><b>Back online.</b> His note goes up, hers comes down. Both laptops spot the clash within a second.</li>
+          <li class="tl g boil" style="--r:-1.5deg"><time>14:06</time><b>Settled.</b> Tanishk keeps the date that's true. Lakshya's laptop has it a second later.</li>
+        </ol>
+      </div>
+      <a class="btn quiet stage-link" href="http://127.0.0.1:8001/stage">Open the live two-laptop demo</a>
+    </section>
+
+    <section class="privacy" id="privacy" aria-labelledby="privacy-title">
+      <div class="privacy-copy">
+        <h2 id="privacy-title">It reads everything. Nothing leaves unless it's work your team needs.</h2>
+        <p>Every note starts on the laptop that heard it. It moves up only when it's clearly team work: a deadline, a shoot, a deliverable. Anything unsure stays put.</p>
+        <p>The hub never receives a private note. In the demo we count them on the hub, live: zero.</p>
+      </div>
+      <div class="zones" aria-label="Where a note can live">
+        <div class="zone">
+          <div class="pocket boil">
+            <span class="back"></span><span class="peek"></span><span class="peek two"></span><span class="front"></span><span class="tp l"></span><span class="tp r"></span>
+            <p class="txt">only on this laptop<small>salary · a friend's news · dentist</small></p>
+            <svg class="lock" width="24" height="28" viewBox="0 0 26 30" aria-hidden="true"><rect x="3" y="13" width="20" height="15" rx="3" fill="none" stroke="#3a2a12" stroke-width="2.5"/><path d="M7 13 V9 a6 6 0 0 1 12 0 V13" fill="none" stroke="#3a2a12" stroke-width="2.5"/></svg>
+          </div>
+          <p class="zone-label boil">stays on the laptop</p>
+        </div>
+        <div class="zone">
+          <div class="zone-sticky pink boil" style="--r:3deg">Riya's birthday, Thursday</div>
+          <p class="zone-label boil">my own devices</p>
+        </div>
+        <div class="zone">
+          <div class="zone-sticky y boil" style="--r:-2deg">Mehta reel cutdowns: three, due Monday</div>
+          <p class="zone-label boil">the whole team</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="qdrant" id="qdrant" aria-labelledby="qdrant-title">
+      <div class="qdrant-head">
+        <h2 id="qdrant-title">Built on Qdrant Edge.</h2>
+        <p>Each laptop runs its own Qdrant Edge shard. The team hub is a Qdrant server. No cloud calls in the private path.</p>
+      </div>
+      <dl class="spec">
+        <div><dt>Memory</dt><dd>Every claim is a point with three named vectors: <code>text</code> for meaning, <code>key</code> for what it's about, <code>bm25</code> for keywords.</dd></div>
+        <div><dt>Search</dt><dd>Hybrid: BM25 and dense results fused with RRF, answered on the laptop in 7 to 70 ms.</dd></div>
+        <div><dt>Conflicts</dt><dd>A nearest-neighbour query on <code>key</code>, filtered to the same kind of fact and live claims, threshold 0.82. The same pair gets the same conflict id on every laptop.</dd></div>
+        <div><dt>Sync</dt><dd>An outbox that survives restarts pushes team claims to the hub; each laptop pulls what changed since its cursor.</dd></div>
+        <div><dt>Understanding</dt><dd>A local model turns emails, WhatsApp and notes into claims with sources. Dates are worked out in code, not by the model.</dd></div>
+      </dl>
+    </section>
+
+    <section class="teams" aria-labelledby="teams-title">
+      <h2 id="teams-title">Built with BKA, our customer zero.</h2>
+      <p>BKA is a four-person production house and developer group: many clients, shoots where there's no signal, deadlines that change on a phone call. Quorum is for teams like that: production houses, developer groups, event teams, agencies, site crews.</p>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-board">
+        <h2 id="closing-title">Give your team one memory.</h2>
+        <p>Priced per team, per month. Early access opens team by team.</p>
+        <form class="cta" novalidate>
+          <label class="sr-only" for="email-2">Work email</label>
+          <input id="email-2" name="email" type="email" placeholder="you@yourteam.com" autocomplete="email" required>
+          <button class="btn" type="submit">Request early access</button>
+        </form>
+        <p class="cta-note" role="status"></p>
+        <p class="closing-aside boil">we'll save you a spot on the wall</p>
+      </div>
+    </section>
   </main>
 
-  <script type="module" src="js/board.js"></script>
+  <footer class="foot">
+    <a class="logo" href="#top" aria-label="Quorum, back to top"><span class="sq" aria-hidden="true">Q</span>Quorum</a>
+    <p>Team memory on every laptop, by BKA. Built on Qdrant Edge for Code Cubicle 6.0.</p>
+  </footer>
+
+  <script defer src="js/board.js"></script>
 </body>
 </html>

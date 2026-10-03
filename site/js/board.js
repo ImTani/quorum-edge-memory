@@ -37,7 +37,7 @@ const el = {
   keep18: $('keep-18'), keep16: $('keep-16'), eraser: $('eraser'), live: $('board-live'),
 };
 
-const state = { online: true, noteText: ORIGINAL_NOTE, noteOnWall: true, conflict: true, resolved: null };
+const state = { online: true, noteText: ORIGINAL_NOTE, noteDay: 18, noteOnWall: true, conflict: true, resolved: null };
 const wait = (ms) => new Promise((r) => setTimeout(r, reduceMotion ? 0 : ms));
 const say = (msg) => { el.live.textContent = msg; };
 const show = (node, on) => node.classList.toggle('is-hidden', !on);
@@ -82,10 +82,12 @@ function render() {
   show(el.gauge, state.noteOnWall);
   show(el.owner, state.conflict && state.noteOnWall);
   show(el.ownerRow, !state.resolved);
-  setStrike(el.wNote, state.resolved === 16);
-  setStrike(el.wEmail, state.resolved === 18);
-  setStrike(el.lEmail, state.resolved === 18);
-  el.lMeta.innerHTML = state.resolved === 18 ? 'Email · Rohit Sharma<br>settled: 18 Oct, by Tanishk' : 'Email · Rohit Sharma<br>synced to the team';
+  const keptNote = state.resolved !== null && state.resolved !== EMAIL_DAY;
+  setStrike(el.wNote, state.resolved === EMAIL_DAY);
+  setStrike(el.wEmail, keptNote);
+  setStrike(el.lEmail, keptNote);
+  el.keep18.textContent = `Keep ${state.noteDay} Oct`;
+  el.lMeta.innerHTML = keptNote ? `Email · Rohit Sharma<br>settled: ${state.resolved} Oct, by Tanishk` : 'Email · Rohit Sharma<br>synced to the team';
 }
 
 function setVerdict(text, tone) {
@@ -113,6 +115,7 @@ async function goOnline() {
   setSimilarity(r.sameJob ? r.sim : r.sim);
   if (r.sameJob && r.day && r.day !== EMAIL_DAY) {
     state.conflict = true;
+    state.noteDay = r.day;
     setVerdict('same job · dates disagree!', 'red');
     el.ownerText.innerHTML = '<b>Tanishk owns this.</b> Quorum won\'t pick for him.';
     say(`Back on the hub. Quorum found the same job in Lakshya's email, similarity ${r.sim.toFixed(2)}, with a different date. It asks Tanishk instead of guessing.`);
@@ -133,11 +136,11 @@ el.toggle.addEventListener('click', () => (state.online ? goOffline() : goOnline
 function resolve(day) {
   state.resolved = day;
   el.ownerText.innerHTML = `<b>Settled by Tanishk: ${day} Oct.</b> Lakshya's laptop has it too.`;
-  setVerdict(day === 18 ? 'kept the call · 18 Oct' : 'kept the email · 16 Oct', 'green');
+  setVerdict(day === EMAIL_DAY ? 'kept the email · 16 Oct' : `kept the call · ${day} Oct`, 'green');
   render();
   say(`Tanishk kept ${day} October. The other version is kept as history, struck through, on both laptops.`);
 }
-el.keep18.addEventListener('click', () => resolve(18));
+el.keep18.addEventListener('click', () => resolve(state.noteDay));
 el.keep16.addEventListener('click', () => resolve(16));
 
 // ---------- writing a note on the pad ----------
@@ -183,7 +186,7 @@ el.pad.addEventListener('click', () => {
 // ---------- the eraser wipes the board back to the start ----------
 el.eraser.addEventListener('click', () => {
   document.querySelector('.writer')?.remove();
-  Object.assign(state, { online: true, noteText: ORIGINAL_NOTE, noteOnWall: true, conflict: true, resolved: null });
+  Object.assign(state, { online: true, noteText: ORIGINAL_NOTE, noteDay: 18, noteOnWall: true, conflict: true, resolved: null });
   setSimilarity(0.90);
   setVerdict('same job · dates disagree!', 'red');
   el.ownerText.innerHTML = '<b>Tanishk owns this.</b> Quorum won\'t pick for him.';
@@ -191,27 +194,45 @@ el.eraser.addEventListener('click', () => {
   say('Board wiped back to the start.');
 });
 
-// ---------- early access form ----------
-const form = $('early-access');
-const note = $('cta-note');
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = form.email.value.trim();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    note.textContent = 'That email looks off. Try name@yourteam.com.';
-    note.className = 'cta-note err';
-    form.email.focus();
-    return;
-  }
-  note.textContent = '';
-  const slip = document.createElement('div');
-  slip.className = 'signed boil';
-  slip.setAttribute('role', 'status');
-  slip.innerHTML = `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 21 L17 30 L33 10" fill="none" stroke="#14895a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <p><b>You're on the list.</b><br>We'll write to <span class="addr"></span> when your team's invite is ready.</p>`;
-  slip.querySelector('.addr').textContent = email;
-  form.replaceWith(slip);
+// ---------- early access forms ----------
+document.querySelectorAll('form.cta').forEach((form) => {
+  const sib = form.nextElementSibling;
+  const note = sib && sib.classList.contains('cta-note') ? sib : null;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (note) { note.textContent = 'That email looks off. Try name@yourteam.com.'; note.className = 'cta-note err'; }
+      form.email.focus();
+      return;
+    }
+    if (note) note.textContent = '';
+    const slip = document.createElement('div');
+    slip.className = 'signed boil';
+    slip.setAttribute('role', 'status');
+    slip.innerHTML = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 21 L17 30 L33 10" fill="none" stroke="#14895a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      + '<p><b>You\'re on the list.</b><br>We\'ll write to <span class="addr"></span> when your team\'s invite is ready.</p>';
+    slip.querySelector('.addr').textContent = email;
+    form.replaceWith(slip);
+  });
 });
+
+// ---------- fixed compositions scale as one object on narrower screens ----------
+// The board and the matching diagram are drawn at a design size; below it they scale down whole
+// (never reflow), so every sticky and marker stroke stays where it was drawn.
+function fitAll() {
+  document.querySelectorAll('[data-fit]').forEach((box) => {
+    const inner = box.firstElementChild;
+    const [w, h] = box.dataset.fit.split('x').map(Number);
+    const s = Math.min(1, box.clientWidth / w);
+    inner.style.width = w + 'px';
+    inner.style.height = h + 'px';
+    inner.style.transform = s < 1 ? `scale(${s})` : '';
+    box.style.height = (h * s) + 'px';
+  });
+}
+window.addEventListener('resize', fitAll);
+fitAll();
 
 setSimilarity(0.90);
 render();

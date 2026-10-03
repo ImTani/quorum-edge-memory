@@ -38,3 +38,4 @@ app/data/
 .impeccable/*
 !.impeccable/config.json
 !.impeccable/design.json
+!.impeccable/surfaces/
