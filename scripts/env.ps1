@@ -15,6 +15,7 @@ $env:FASTEMBED_CACHE_PATH     = Join-Path $root "models\fastembed"
 $env:QUORUM_MODELS            = Join-Path $root "models"
 $env:UV_PYTHON_DOWNLOADS      = "never"
 $env:IMPECCABLE_HOME          = Join-Path $root ".cache\impeccable"   # skill engine; default is ~/.impeccable
+$env:IMPECCABLE_NO_TELEMETRY  = "1"                                    # no usage pings from the skill
 foreach ($d in $env:UV_CACHE_DIR, $env:PIP_CACHE_DIR, $env:HF_HOME, $env:FASTEMBED_CACHE_PATH) {
   New-Item -ItemType Directory -Force $d | Out-Null
 }
