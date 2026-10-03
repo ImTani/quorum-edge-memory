@@ -37,7 +37,7 @@ Display names: `tanishk` → "Tanishk · on set", `lakshya` → "Lakshya · offi
 | `answer.py` | Answers | `compose(question, hits, conflicts, cfg) -> {answer, citations, disputed}`; templated, no LLM |
 | `sync.py` | Hub sync | `SyncWorker(ctx)` thread: 1 s loop; `set_online(bool)`; `status() -> sync dict`; `ensure_collection()` |
 | `events.py` | Live updates | `EventBus.publish(type, data)` (thread-safe), `subscribe()` async generator for SSE |
-| `api.py` | FastAPI | `create_app(cfg)`; builds a `ctx` (cfg, memory, store, bus, sync); routes below; serves `app/web/` at `/` |
+| `api.py` | FastAPI | `create_app(cfg)`; builds a `ctx` (cfg, memory, store, bus, sync); routes below; serves `app/web/` at `/` and `/web` (index.html loads `/web/app.js`, `/web/styles.css`) |
 | `seed.py` | Demo reset | `python -m edge.seed` (devices stopped, hub running): wipes `app/data/<device>/`, recreates hub collection, loads `app/fixtures/seed.json` into both devices and the hub, sets each device's pull cursor |
 
 `ctx` is a simple namespace: `ctx.cfg, ctx.memory, ctx.store, ctx.bus, ctx.sync`.
@@ -163,10 +163,32 @@ Activity kinds: `claim_added, search, sync_push, sync_pull, conflict_opened, con
 2. Tanishk toggles **no connection to hub**. His network counter freezes at 0 B/s; asking still answers in ms.
 3. Tanishk types the note → amber point, outbox 1, nothing reaches the hub.
 4. Lakshya clicks **Receive** on the client email → claim (16 Oct) syncs to the hub, point goes green.
-5. Tanishk reconnects → outbox drains, pull brings the 16 Oct claim → **conflict**: the two points pulse red, pull together, card says *"Found 2 claims about the Sharma wedding edit, similarity 0.90. Dates disagree."* Lakshya's window detects it too on its next pull.
+5. Tanishk reconnects → outbox drains, pull brings the 16 Oct claim → **conflict**: the two points pulse red, pull together, card says *"Found 2 claims about the Sharma wedding edit, similarity 1.00. Dates disagree."* Lakshya's window detects it too on its next pull. (The number is the real key cosine. The extractor snaps "Sharma delivery" to the known entity "Sharma wedding edit", so both key vectors are identical and it reads 1.00; differently named entities score about 0.85 to 0.90.)
 6. Tanishk asks "when is the Sharma delivery?" → "Disputed: ..." with both sources.
 7. Lakshya's card: "Waiting for Tanishk" + **Ask Tanishk** (draft). Tanishk resolves → both windows show it resolved, loser dimmed.
 8. Team view toggle: device-only points vanish; the hub dashboard (`:6333/dashboard`) has no device-tier points.
+
+## As built (integration, 3 Oct): where the code refines the contract
+
+- **Extraction:** `extract_with_meta(text, source, cfg, known) -> (drafts, "llm"|"fallback")` feeds `/api/ingest`;
+  `extract()` returns drafts only. Ollama 0.3.14 rejects a JSON-schema `format`, so after one 400 the extractor uses
+  `format: "json"` with the schema in the prompt and validates every claim in Python. Tier comes from rules, not the
+  model. `python -m edge` calls `extract.warm_up(cfg)` in the background at startup.
+- **memory:** `update_fields(claim_id, bump_version=True, **fields)`. Local-only marks (disputed, applying a remote
+  resolution) pass `bump_version=False` so they never outrank the next real version from the hub. Extra helpers:
+  `find_entity`, `all_claims_with_xyz`, `key_vector`, `count`. `get_with_vectors` returns sparse as `{indices, values}`.
+- **Conflict owner:** the claims' shared owner (ingest inherits the owner of an existing entity); if they differ,
+  the owner of the earlier-stated claim, so both devices agree.
+- **Ask:** the response also carries `conflict_id` (for the UI's Resolve buttons); `disputed` is a boolean.
+- **Resolve route:** 403 if this device isn't the owner, 400 if the winner isn't in the conflict, 404 if unknown.
+- **Draft:** same wording as the disputed answer ("the client's email says 16 Oct; Tanishk's note from the call says 18 Oct").
+- **Sync status:** `last_push` / `last_pull` are epoch ms. `set_online` logs the `net` activity itself.
+- **Hub env:** demo.ps1 also sets `QDRANT_INIT_FILE_PATH=data\hub\.qdrant-initialized` (else it lands in `app\`).
+- **Known limit:** the pull cursor is the max `modified_at` seen from other devices. With two devices this is safe;
+  with three or more, a claim captured offline (old `modified_at`) can be skipped by a peer whose cursor already
+  moved past it via a third device. A push-time stamp on the hub (`synced_at`) would fix it.
+- **End-to-end check:** after `scripts\demo.ps1`, `app\.venv\Scripts\python scripts\demo_check.py [--until N]`
+  drives the 8 steps over HTTP and queries the hub directly.
 
 ## Verified API (qdrant-edge-py 0.8.0, 3 Oct 2026)
 
