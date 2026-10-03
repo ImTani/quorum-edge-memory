@@ -316,6 +316,44 @@ def test_stage_is_served_at_slash_stage_and_under_web(data_dir, embedder, monkey
         assert "<title>Quorum</title>" in client.get("/").text  # the single-device page is unchanged
 
 
+def test_look_defaults_to_classic_and_studio_is_opt_in(data_dir, embedder, monkeypatch):
+    web = data_dir / "web"
+    web.mkdir()
+    index = '<!doctype html>\n<html lang="en">\n<title>Quorum</title>'
+    stage_html = '<!doctype html>\n<html lang="en">\n<title>Quorum stage</title>'
+    (web / "index.html").write_bytes(index.encode("utf-8"))       # bytes: no newline translation
+    (web / "stage.html").write_bytes(stage_html.encode("utf-8"))
+    (web / "app.js").write_text("console.log('hi')", encoding="utf-8")
+    monkeypatch.setattr(edge.api, "WEB_DIR", web)
+
+    def app_for(**kw):
+        store = FakeStore()
+        return edge.api.create_app(Config(device="tanishk", port=0, data_dir=data_dir, **kw), embedder=embedder,
+                                   store=store, sync=FakeSync(store))
+
+    assert Config(device="tanishk").look == "classic"
+    with TestClient(app_for()) as client:      # classic: the pages go out exactly as they are on disk
+        assert client.get("/api/look").json() == {"look": "classic", "looks": ["classic", "studio"]}
+        assert client.get("/").text == index
+        assert client.get("/stage").text == stage_html
+    with TestClient(app_for(look="studio")) as client:
+        assert client.get("/api/look").json()["look"] == "studio"
+        for path, title in (("/", "<title>Quorum</title>"), ("/stage", "<title>Quorum stage</title>")):
+            res = client.get(path)
+            assert res.headers["content-type"].startswith("text/html")
+            assert '<html lang="en" data-look="studio">' in res.text and title in res.text
+        assert client.get("/app.js").text == "console.log('hi')"    # assets still come from the static mount
+
+
+def test_real_pages_load_the_studio_look_only_behind_the_flag():
+    from edge.config import WEB_DIR
+    assert (WEB_DIR / "looks" / "studio.css").is_file()
+    for name in ("index.html", "stage.html"):
+        html = (WEB_DIR / name).read_text(encoding="utf-8")
+        assert html.count("looks/studio.css") == 1
+        assert "if (look === 'studio')" in html     # the only path that writes the stylesheet link
+
+
 @pytest.mark.parametrize("origin", ["http://127.0.0.1:8001", "http://localhost:8002", "http://127.0.0.1:5173"])
 def test_cors_lets_a_local_stage_call_this_device(make_client, origin):
     client, _ = make_client()

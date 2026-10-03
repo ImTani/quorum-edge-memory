@@ -14,8 +14,22 @@ export const COLORS = {
   sub: '#9AA4C0',
 };
 
-const FONT = '"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif';
-const MONO = 'Consolas,"Cascadia Mono",monospace';
+// The optional studio look (app/web/looks/studio.css) is named on <html> before any module runs.
+// It is a light scene, so the cloud draws flat points instead of additive glow, which would wash out
+// on white. Every STUDIO branch below leaves the classic drawing exactly as it was.
+export const LOOK = (typeof document !== 'undefined' && document.documentElement.getAttribute('data-look')) || 'classic';
+const STUDIO = LOOK === 'studio';
+const INK = '#14171F';
+if (STUDIO) {
+  Object.assign(COLORS, {
+    private: '#6A4BC4', queued: '#B45F00', synced: '#13824F', disputed: '#D7263D', superseded: '#A2A7B1',
+    indigo: INK,                // the system speaks in ink; colour is kept for claim states
+    text: INK, sub: '#5E6472',
+  });
+}
+
+const FONT = STUDIO ? '"Schibsted Grotesk",system-ui,sans-serif' : '"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif';
+const MONO = STUDIO ? FONT : 'Consolas,"Cascadia Mono",monospace';
 const TAU = Math.PI * 2;
 
 /* ------------------------------------------------------------------ math */
@@ -95,6 +109,16 @@ function glowLine(ctx, x1, y1, x2, y2, color, alpha = 1, width = 3) {
     ctx.lineWidth = width * wm; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
   ctx.restore();
+}
+/** Studio look: a flat disc with a paper-white edge so overlapping claims stay separate. */
+function drawFlat(ctx, x, y, r, color, alpha, disputed) {
+  if (alpha <= 0.003 || r <= 0) return;
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalAlpha = clamp(alpha); ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+  ctx.lineWidth = 1.5; ctx.strokeStyle = '#FFFFFF'; ctx.stroke();
+  if (disputed) { ctx.strokeStyle = color; ctx.globalAlpha = clamp(alpha * 0.6); ctx.beginPath(); ctx.arc(x, y, r + 5, 0, TAU); ctx.stroke(); }
+  ctx.globalAlpha = 1;
 }
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
@@ -365,7 +389,7 @@ export class MemoryCloud {
     ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     ctx.clearRect(0, 0, this.w, this.h);
     this.waves = this.waves.filter(w => t - w.t0 < 4);
-    this._drawDust(ctx, t, cam, focused);
+    if (!STUDIO) this._drawDust(ctx, t, cam, focused);   // no starfield in the light scene
     const proj = this._drawClaims(ctx, t, dt, cam);
     this._drawConflicts(ctx, t, proj);
     this.opts.onFrame?.(id => this.screen.get(id) || null);
@@ -431,21 +455,25 @@ export class MemoryCloud {
       const fog = Math.max(0.6, this._fog(cam, pr.z));
       const a = n.vis * fog * (superseded ? 0.45 : 1);
       const R = Math.max(3.2, 0.034 * size * pr.s) * born * beat * (1 + 0.35 * waveB) * (sel ? 1.25 : 1);
-      drawGlow(ctx, pr.x, pr.y, R * (disputed ? 7 : 4.6) * (1 + flash * 0.9), color, a * (0.5 + flash + waveB * 0.5 + (hl ? 0.35 : 0)), false);
-      drawGlow(ctx, pr.x, pr.y, R * 2.2, color, a * 0.95, true);
-      drawGlow(ctx, pr.x, pr.y, R * 0.85, mixColor(color, '#ffffff', 0.5 + 0.4 * flash), a, true);
+      if (STUDIO) {
+        drawFlat(ctx, pr.x, pr.y, R * 1.15 * (1 + 0.25 * flash), color, a, disputed);
+      } else {
+        drawGlow(ctx, pr.x, pr.y, R * (disputed ? 7 : 4.6) * (1 + flash * 0.9), color, a * (0.5 + flash + waveB * 0.5 + (hl ? 0.35 : 0)), false);
+        drawGlow(ctx, pr.x, pr.y, R * 2.2, color, a * 0.95, true);
+        drawGlow(ctx, pr.x, pr.y, R * 0.85, mixColor(color, '#ffffff', 0.5 + 0.4 * flash), a, true);
+      }
       if (sel || hl) {
         ctx.globalCompositeOperation = 'source-over';
         ctx.globalAlpha = a * (sel ? 0.9 : 0.55 + 0.35 * Math.sin(t * 5));
-        ctx.strokeStyle = sel ? '#ffffff' : color; ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.arc(pr.x, pr.y, R * 2.4 + 3, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.strokeStyle = sel ? (STUDIO ? INK : '#ffffff') : color; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(pr.x, pr.y, STUDIO ? R * 1.15 + 6 : R * 2.4 + 3, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
       }
       for (const t0 of [n.bornAt, n.flashAt]) {  // shockwave rings on birth and on sync
         if (t0 == null || t - t0 > 1.6 || t < t0) continue;
         for (const [dly, mul] of [[0, 1], [0.16, 0.65]]) {
           const q = progress(t, t0 + dly, 1.25); if (q <= 0 || q >= 1) continue;
           const rr = 6 + easeOutExpo(q) * 90 * mul;
-          ctx.globalCompositeOperation = 'lighter';
+          ctx.globalCompositeOperation = STUDIO ? 'source-over' : 'lighter';
           ctx.globalAlpha = clamp(a * (1 - q) * 0.9); ctx.strokeStyle = color; ctx.lineWidth = 1 + 3 * (1 - q);
           ctx.beginPath(); ctx.ellipse(pr.x, pr.y, rr, rr * 0.92, 0, 0, TAU); ctx.stroke();
         }
@@ -494,10 +522,17 @@ export class MemoryCloud {
         al *= 1 - easeInOutCubic(progress(t, e.resolvedAt + RELEASE_AFTER - 0.5, 1.5));
       }
       if (al <= 0.01) continue;
-      glowLine(ctx, A.x, A.y, B.x, B.y, color, al * (0.7 + 0.3 * Math.sin(t * 9)), 2.2);
-      for (let j = 0; j < 4; j++) {
-        const u = ((t - e.openedAt) * 0.9 + j / 4) % 1;
-        drawGlow(ctx, lerp(A.x, B.x, u), lerp(A.y, B.y, u), 8, '#ffffff', al * 0.45 * Math.sin(u * Math.PI));
+      if (STUDIO) {
+        // One plain line, its dashes marching from one claim to the other.
+        ctx.save(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.setLineDash([6, 7]); ctx.lineDashOffset = -(t - e.openedAt) * 16;
+        ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke(); ctx.restore();
+      } else {
+        glowLine(ctx, A.x, A.y, B.x, B.y, color, al * (0.7 + 0.3 * Math.sin(t * 9)), 2.2);
+        for (let j = 0; j < 4; j++) {
+          const u = ((t - e.openedAt) * 0.9 + j / 4) % 1;
+          drawGlow(ctx, lerp(A.x, B.x, u), lerp(A.y, B.y, u), 8, '#ffffff', al * 0.45 * Math.sin(u * Math.PI));
+        }
       }
       // similarity tag above the beam's midpoint
       const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
@@ -508,9 +543,9 @@ export class MemoryCloud {
       ctx.globalAlpha = al;
       ctx.strokeStyle = rgba(color, 0.6); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(mx, my - 6); ctx.lineTo(mx, by + bh); ctx.stroke();
-      ctx.fillStyle = 'rgba(10,14,22,.9)'; roundRect(ctx, bx, by, bw, bh, 8); ctx.fill();
+      ctx.fillStyle = STUDIO ? '#FFFFFF' : 'rgba(10,14,22,.9)'; roundRect(ctx, bx, by, bw, bh, STUDIO ? 4 : 8); ctx.fill();
       ctx.strokeStyle = rgba(color, 0.75); ctx.lineWidth = 1.2; ctx.stroke();
-      ctx.fillStyle = mixColor(color, '#ffffff', 0.3); ctx.textBaseline = 'middle';
+      ctx.fillStyle = STUDIO ? mixColor(color, INK, 0.3) : mixColor(color, '#ffffff', 0.3); ctx.textBaseline = 'middle';
       ctx.fillText(text, bx + 11, by + bh / 2 + 1);
       ctx.textBaseline = 'alphabetic'; ctx.globalAlpha = 1;
     }
@@ -529,10 +564,10 @@ export class MemoryCloud {
     const bw = Math.max(tw, sw) + 20, bh = Math.round((sub ? 44 : 28) * this.fs);
     let bx = side > 0 ? x2 + 4 : x2 - 4 - bw; bx = clamp(bx, 4, this.w - bw - 4);
     const by = clamp(y1 - 14, Math.max(4, this.labelTop - 2), this.h - bh - 4);
-    ctx.fillStyle = 'rgba(10,14,22,.88)'; roundRect(ctx, bx, by, bw, bh, 8); ctx.fill();
-    ctx.strokeStyle = rgba(color, 0.55); ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = STUDIO ? 'rgba(255,255,255,.96)' : 'rgba(10,14,22,.88)'; roundRect(ctx, bx, by, bw, bh, STUDIO ? 4 : 8); ctx.fill();
+    ctx.strokeStyle = rgba(color, STUDIO ? 0.7 : 0.55); ctx.lineWidth = 1; ctx.stroke();
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = mixColor(color, '#ffffff', 0.3); ctx.font = `600 ${f1}px ${FONT}`; ctx.fillText(label, bx + 10, by + 14 * this.fs);
+    ctx.fillStyle = STUDIO ? mixColor(color, INK, 0.45) : mixColor(color, '#ffffff', 0.3); ctx.font = `600 ${f1}px ${FONT}`; ctx.fillText(label, bx + 10, by + 14 * this.fs);
     if (sub) { ctx.fillStyle = COLORS.sub; ctx.font = `400 ${f2}px ${FONT}`; ctx.fillText(sub, bx + 10, by + 32 * this.fs); }
     ctx.textBaseline = 'alphabetic'; ctx.globalAlpha = 1;
   }

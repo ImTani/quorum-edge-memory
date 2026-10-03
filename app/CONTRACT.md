@@ -238,6 +238,11 @@ sparse input with `__text_signature__` before relying on them.
 - The device UI is a component, `createDeviceUI(root, {base, variant})` in `app/web/device.js`; `index.html`
   mounts it once (same origin), the stage twice. `ui.on(fn)` relays every SSE event plus local actions
   (`answer`, `view`, `draft`, `working`) so the stage captions only what really happened.
+- **Looks (opt-in, 3 Oct):** `classic` (default) is the UI as built. `scripts\demo.ps1 -Look studio` passes
+  `--look studio` to both devices; `GET /api/look` reports it, and `/` and `/stage` then go out with
+  `<html data-look="studio">`. A page's `?look=studio|classic` overrides the server. Only then does the head
+  script write `/web/looks/studio.css` (light scene, self-hosted Schibsted Grotesk); `cloud.js` patches `COLORS`
+  and draws flat points behind `LOOK === 'studio'`. Classic serves the files untouched and loads nothing extra.
 - The device API allows CORS from `http://127.0.0.1:*` and `http://localhost:*` (GET/POST, SSE). The stage
   reads the hub straight from Qdrant REST (CORS is on by default): exact counts, `tier = device` count,
   latest points by `order_by modified_at`.

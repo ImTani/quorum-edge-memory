@@ -11,6 +11,15 @@
        Nothing here plays by itself: every change on screen comes from a real event. -->
   <link rel="stylesheet" href="/web/styles.css">
   <link rel="stylesheet" href="/web/stage.css">
+  <!-- Optional look, layered over the CSS above: scripts\demo.ps1 -Look studio names it on <html>, and
+       ?look=studio or ?look=classic overrides it for this page. Classic loads nothing extra. -->
+  <script>
+    (function () {
+      var el = document.documentElement, look = new URLSearchParams(location.search).get('look') || el.getAttribute('data-look');
+      if (look === 'studio') { el.setAttribute('data-look', look); document.write('<link rel="stylesheet" href="/web/looks/studio.css">'); }
+      else el.removeAttribute('data-look');
+    })();
+  </script>
 </head>
 <body class="stage">
   <header class="caption-bar">

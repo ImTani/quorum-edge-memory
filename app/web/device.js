@@ -4,7 +4,7 @@
 // twice, against :8001 and :8002. State comes from GET /api/state, then SSE events (claim /
 // conflict / sync / activity) are applied by id. Listeners (ui.on) see every event, so the stage
 // can caption what happened without opening a second stream.
-import { MemoryCloud, COLORS, claimState } from './cloud.js';
+import { MemoryCloud, COLORS, LOOK, claimState } from './cloud.js';
 
 const RESOLVED_CARD_MS = 15000;
 
@@ -347,9 +347,10 @@ export function createDeviceUI(root, opts = {}) {
     ctx.clearRect(0, 0, w, h);
     ctx.beginPath();
     rate.history.forEach((v, i) => { const x = i / (rate.history.length - 1) * w, y = h - 3 - (v / max) * (h - 8); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.shadowColor = color; ctx.shadowBlur = 6; ctx.stroke();
+    const studio = LOOK === 'studio';   // light scene: no glow under the line
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.shadowColor = color; ctx.shadowBlur = studio ? 0 : 6; ctx.stroke();
     ctx.shadowBlur = 0; ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
-    ctx.fillStyle = online ? 'rgba(34,197,94,.10)' : 'rgba(245,165,36,.08)'; ctx.fill();
+    ctx.fillStyle = studio ? (online ? 'rgba(19,130,79,.10)' : 'rgba(180,95,0,.10)') : online ? 'rgba(34,197,94,.10)' : 'rgba(245,165,36,.08)'; ctx.fill();
   }
 
   function renderHeader() {

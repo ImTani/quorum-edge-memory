@@ -12,6 +12,8 @@ FIXTURES_DIR = APP_DIR / "fixtures"
 
 DISPLAY_NAMES = {"tanishk": "Tanishk · on set", "lakshya": "Lakshya · office"}
 PEERS = {"tanishk": "http://127.0.0.1:8001", "lakshya": "http://127.0.0.1:8002"}
+# UI looks. "classic" is the page exactly as built; any other look is opt-in (app/web/looks/<name>.css).
+LOOKS = ("classic", "studio")
 
 
 def _default_today() -> date:
@@ -36,6 +38,7 @@ class Config:
     ollama_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.2"
     hub_collection: str = "quorum_team"
+    look: str = "classic"
 
     def __post_init__(self):
         self.data_dir = Path(self.data_dir)

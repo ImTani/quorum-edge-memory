@@ -13,6 +13,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@700&display=swap">
   <link rel="stylesheet" href="/web/styles.css">
+  <!-- Optional look, layered over the CSS above: scripts\demo.ps1 -Look studio names it on <html>, and
+       ?look=studio or ?look=classic overrides it for this page. Classic loads nothing extra. -->
+  <script>
+    (function () {
+      var el = document.documentElement, look = new URLSearchParams(location.search).get('look') || el.getAttribute('data-look');
+      if (look === 'studio') { el.setAttribute('data-look', look); document.write('<link rel="stylesheet" href="/web/looks/studio.css">'); }
+      else el.removeAttribute('data-look');
+    })();
+  </script>
 </head>
 <body>
   <div id="app" class="device-app"></div>

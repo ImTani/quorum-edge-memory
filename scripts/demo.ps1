@@ -3,11 +3,13 @@
 #   .\scripts\demo.ps1 -NoSeed   restart without touching data
 #   .\scripts\demo.ps1 -Stop     stop all three processes
 #   -Force                       also stop foreign processes holding :6333/:8001/:8002
+#   -Look studio                 serve the optional studio look (default: classic, the look as built).
+#                                Any page also takes ?look=studio or ?look=classic, no restart needed.
 # Processes run in hidden windows; logs go to app\data\logs.
 # Only processes this checkout started are stopped (PID files in app\data\run, plus this checkout's
 # own qdrant.exe). Anything else on the demo ports is reported, never killed, unless -Force.
 # The stop is a hard kill; that is safe because devices flush their shard after every write.
-param([switch]$Stop, [switch]$NoSeed, [switch]$Force)
+param([switch]$Stop, [switch]$NoSeed, [switch]$Force, [ValidateSet("classic", "studio")][string]$Look = "classic")
 $ErrorActionPreference = "Stop"
 
 . (Join-Path $PSScriptRoot "env.ps1")
@@ -132,7 +134,9 @@ if (-not $NoSeed) {
 Invoke-WithEnv @{ PYTHONUNBUFFERED = "1" } {
   foreach ($d in $devices.Keys) {
     Write-Host "Starting device $d on :$($devices[$d]) ..."
-    Start-Hidden $d $python @("-m", "edge", "--device", $d, "--port", "$($devices[$d])", "--hub", $hubUrl)
+    $deviceArgs = @("-m", "edge", "--device", $d, "--port", "$($devices[$d])", "--hub", $hubUrl)
+    if ($Look -ne "classic") { $deviceArgs += @("--look", $Look) }
+    Start-Hidden $d $python $deviceArgs
   }
 }
 foreach ($d in $devices.Keys) { Wait-Http "http://127.0.0.1:$($devices[$d])/api/state" 90 "Device $d" }
@@ -143,4 +147,5 @@ Write-Host "  stage    http://127.0.0.1:$($devices['tanishk'])/stage"
 Write-Host "Single-device pages:"
 foreach ($d in $devices.Keys) { Write-Host ("  {0,-8} http://127.0.0.1:{1}" -f $d, $devices[$d]) }
 Write-Host "  hub      $hubUrl/dashboard"
+if ($Look -ne "classic") { Write-Host "Look: $Look (add ?look=classic to any page for the classic look)" }
 Write-Host "Stop with: .\scripts\demo.ps1 -Stop"

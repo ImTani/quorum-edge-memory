@@ -10,13 +10,13 @@ from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from edge import answer, conflicts
 from edge import extract as extractor
-from edge.config import FIXTURES_DIR, PEERS, WEB_DIR, first_name
+from edge.config import FIXTURES_DIR, LOOKS, PEERS, WEB_DIR, first_name
 from edge.embed import get_embedder
 from edge.events import EventBus, log_activity, publish_claim, ui_claim
 from edge.memory import Memory, now_ms
@@ -182,10 +182,28 @@ def create_app(cfg, *, embedder=None, store=None, sync=None) -> FastAPI:
 
     # ---- static UI -----------------------------------------------------------------------
 
+    @app.get("/api/look")
+    def look():
+        """The UI look this device serves (python -m edge --look). A page's ?look=<name> overrides it."""
+        return {"look": cfg.look, "looks": list(LOOKS)}
+
+    def page(name: str):
+        """A UI page. Classic is the file untouched; another look is named on <html> for the page's head script."""
+        if cfg.look not in LOOKS or cfg.look == "classic":
+            return FileResponse(WEB_DIR / name, media_type="text/html")
+        html = (WEB_DIR / name).read_text(encoding="utf-8")
+        return HTMLResponse(html.replace('<html lang="en">', f'<html lang="en" data-look="{cfg.look}">', 1))
+
     @app.get("/stage", include_in_schema=False)
     def stage():
         """The demo stage: both devices and the hub on one screen (also at /web/stage.html)."""
-        return FileResponse(WEB_DIR / "stage.html", media_type="text/html")
+        return page("stage.html")
+
+    if cfg.look != "classic":
+        @app.get("/", include_in_schema=False)
+        def index():
+            """Only with a non-classic look; classic leaves "/" to the static mount below."""
+            return page("index.html")
 
 
     # Mounted last so /api/* wins. index.html uses relative asset paths, so the UI must resolve at
