@@ -146,6 +146,9 @@ def test_demo_inputs_and_inbox_fixtures():
     [email] = json.loads((FIXTURES / "inbox_lakshya.json").read_text(encoding="utf-8"))
     assert set(email) == {"id", "from", "subject", "text", "at"}
     assert resolve_date("16 October", date(2026, 10, 3)) == "2026-10-16"
+    # The note gets the wall-clock time when typed on demo day. The email must read as older, or
+    # the card shows the 16th arriving after the call that moved delivery to the 18th.
+    assert int(datetime.fromisoformat(email["at"]).timestamp() * 1000) < TODAY_MS
 
 
 def test_whatsapp_fixture_says_three_cutdowns_last():
