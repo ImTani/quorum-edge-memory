@@ -44,6 +44,7 @@ const fmtRate = n => `${fmtBytes(n)}/s`;
 const NAMES = { tanishk: 'Tanishk', lakshya: 'Lakshya' };
 const nameOf = id => NAMES[id] || capFirst(String(id || 'someone'));
 const isMe = id => id && id === state.device;
+const hasDevice = id => Object.hasOwn(NAMES, id);   // the two people running a device in the demo
 
 // "Rohit Sharma <rohit@x.com>" -> "Rohit Sharma": the address is noise on a card and pushes the date out.
 const dropAddress = a => String(a || '').replace(/\s*<[^>]*@[^>]*>\s*$/, '').trim() || String(a || '').trim();
@@ -346,7 +347,9 @@ function renderConflictCard() {
   claims.sort((a, b) => String(a.value).localeCompare(String(b.value)));  // earlier date on the left
   const lead = claims[0] || {};
   const resolved = cf.status === 'resolved';
-  const owner = isMe(cf.owner), ownerName = nameOf(cf.owner);
+  // Owners with no device in this demo (Aayat, Tushar) can't settle anything, so either device may.
+  const onBehalf = !isMe(cf.owner) && !hasDevice(cf.owner);
+  const owner = isMe(cf.owner) || onBehalf, ownerName = nameOf(cf.owner);
   const sim = (+cf.similarity || 0).toFixed(2);
   const winner = state.claims.get(cf.winner_claim_id);
   const subject = cf.entity ? (lead.entity === cf.entity ? entityPhrase(lead) : `the ${cf.entity}`) : entityPhrase(lead);
@@ -372,8 +375,12 @@ function renderConflictCard() {
   const draft = state.drafts.get(cf.conflict_id);
   let foot = '';
   if (!resolved && !owner) foot = `<span class="cf-wait"><i class="spin"></i>Waiting for ${esc(ownerName)}<span class="cf-why">${esc(ownerName)} owns this task</span></span><button class="btn ask" data-action="ask-owner">Ask ${esc(ownerName)}</button>`;
-  if (resolved) foot = `<span class="cf-note">Both devices agree now. Nothing was deleted.</span><button class="btn ghost" data-action="dismiss">Close</button>`;
-  const kickerNote = !resolved && owner ? '<span class="cf-own">You own this: keep the version that is true</span>' : '';
+  // A conflict involving a device-only claim is settled privately (conflicts.resolve), so say so.
+  const privately = state.claims.get(cf.resolution_claim_id)?.tier === 'device';
+  const settledNote = privately ? 'Settled on this device only: a private claim was involved.' : 'Both devices agree now.';
+  if (resolved) foot = `<span class="cf-note">${settledNote} Nothing was deleted.</span><button class="btn ghost" data-action="dismiss">Close</button>`;
+  const ownNote = onBehalf ? `${esc(ownerName)} isn't on Quorum: keep the version that is true` : 'You own this: keep the version that is true';
+  const kickerNote = !resolved && owner ? `<span class="cf-own">${ownNote}</span>` : '';
   const draftHtml = draft && !resolved ? `
     <div class="cf-draft">
       <div class="cf-draft-head">Draft to ${esc(nameOf(draft.to) || ownerName)} <span>nothing is sent until you choose</span>

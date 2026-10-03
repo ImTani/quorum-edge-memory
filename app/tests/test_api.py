@@ -2,11 +2,13 @@
 import asyncio
 import json
 import threading
+import time
 
 import pytest
 from fastapi.testclient import TestClient
 
 import edge.api
+import edge.conflicts
 import edge.extract
 from edge.config import Config
 from edge.events import EventBus
@@ -145,6 +147,55 @@ def test_only_the_owner_can_resolve(make_client):
     r = client.post(f"/api/conflicts/{conflict['conflict_id']}/resolve", json={"winner_claim_id": conflict["claim_ids"][0]})
     assert r.status_code == 403
     assert client.post("/api/conflicts/cfl_missing/resolve", json={"winner_claim_id": "x"}).status_code == 404
+
+
+def test_a_conflict_owned_by_someone_without_a_device_can_be_settled(make_client):
+    """Seeded tasks belong to Aayat and Tushar, who run no device in the demo."""
+    client, ctx = make_client("lakshya")
+    a = make_claim("Kapoor invoice", "due_date", "2026-10-08", "Kapoor invoice is due 8 Oct", owner="aayat")
+    b = make_claim("Kapoor invoice", "due_date", "2026-10-10", "Kapoor invoice is due 10 Oct", owner="aayat")
+    for c in (a, b):
+        ctx.memory.add_claim(c)
+    conflict = edge.conflicts.check(ctx, b, detected_on="ingest")
+    assert conflict["owner"] == "aayat"
+    r = client.post(f"/api/conflicts/{conflict['conflict_id']}/resolve", json={"winner_claim_id": b["claim_id"]})
+    assert r.status_code == 200 and r.json()["status"] == "resolved"
+    assert edge.api.can_settle({"owner": "tanishk"}, "lakshya") is False
+
+
+def test_receiving_the_same_email_twice_ingests_it_once(make_client, monkeypatch):
+    """A double click or a client retry while the slow extraction runs."""
+    def slow_extract(*args):
+        time.sleep(0.4)
+        return fake_extract_with_meta(*args)
+
+    client, ctx = make_client("lakshya")
+    monkeypatch.setattr(edge.extract, "extract_with_meta", slow_extract)
+    barrier = threading.Barrier(2)
+    codes = []
+
+    def click():
+        barrier.wait()
+        codes.append(client.post("/api/inbox/eml_sharma/receive").status_code)
+
+    threads = [threading.Thread(target=click) for _ in range(2)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert sorted(codes) == [200, 404]
+    assert len([c for c in ctx.memory.all_claims() if c["value"] == "2026-10-16"]) == 1
+
+
+def test_a_failed_receive_puts_the_email_back(make_client, monkeypatch):
+    def broken(*args):
+        raise RuntimeError("extractor crashed")
+
+    client, ctx = make_client("lakshya")
+    monkeypatch.setattr(edge.extract, "extract_with_meta", broken)
+    with pytest.raises(RuntimeError):
+        client.post("/api/inbox/eml_sharma/receive")
+    assert [e["id"] for e in client.get("/api/inbox").json()] == ["eml_sharma"]
 
 
 def test_device_tier_claims_stay_private(make_client):

@@ -1,6 +1,7 @@
 """HTTP API for one device: FastAPI app, SSE stream and the static UI."""
 import json
 import re
+import threading
 import time
 import urllib.parse
 from contextlib import asynccontextmanager
@@ -136,7 +137,7 @@ def create_app(cfg, *, embedder=None, store=None, sync=None) -> FastAPI:
     @app.post("/api/conflicts/{conflict_id}/resolve")
     def resolve(conflict_id: str, body: ResolveBody):
         conflict = _conflict_or_404(ctx, conflict_id)
-        if conflict["owner"] != cfg.device:
+        if not can_settle(conflict, cfg.device):
             raise HTTPException(403, f"Only {first_name(conflict['owner'])} can settle this")
         try:
             return conflicts.resolve(ctx, conflict_id, body.winner_claim_id, resolved_by=cfg.device)
@@ -153,18 +154,26 @@ def create_app(cfg, *, embedder=None, store=None, sync=None) -> FastAPI:
     def inbox():
         return _pending_inbox(ctx)
 
+    inbox_lock = threading.Lock()
+
     @app.post("/api/inbox/{email_id}/receive")
     def receive(email_id: str):
-        email = next((e for e in _pending_inbox(ctx) if e["id"] == email_id), None)
-        if email is None:
-            raise HTTPException(404, f"No pending email {email_id}")
+        # Claim the email before the slow extraction, so a double click or a retry gets a 404
+        # instead of ingesting it twice (two 16 Oct claims, two conflicts on the other device).
+        with inbox_lock:
+            email = next((e for e in _pending_inbox(ctx) if e["id"] == email_id), None)
+            if email is None:
+                raise HTTPException(404, f"No pending email {email_id}")
+            _mark_received(ctx, email_id, True)
         # "Re:"/"Fwd:" would otherwise be read as an entity name by the fallback extractor.
         subject = REPLY_PREFIX.sub("", email.get("subject") or "").strip()
         text = f"{subject}\n\n{email['text']}" if subject else email["text"]
-        result = ingest(ctx, "email", text, author=email.get("from"), ref=f"email:{email_id}", at=email.get("at"))
-        received = ctx.store.kv_get(INBOX_RECEIVED_KEY, []) or []
-        ctx.store.kv_set(INBOX_RECEIVED_KEY, sorted(set(received) | {email_id}))
-        return result
+        try:
+            return ingest(ctx, "email", text, author=email.get("from"), ref=f"email:{email_id}", at=email.get("at"))
+        except Exception:
+            with inbox_lock:
+                _mark_received(ctx, email_id, False)    # back in the inbox, so it can be retried
+            raise
 
     # ---- static UI -----------------------------------------------------------------------
 
@@ -248,6 +257,12 @@ def _claim_from_draft(ctx, draft: dict, source: dict) -> dict:
 # ---- helpers -----------------------------------------------------------------------------------
 
 
+def can_settle(conflict: dict, device: str) -> bool:
+    """The owner settles their conflict. Owners without a device in this demo (Aayat, Tushar own
+    seeded tasks) would leave it stuck on "Waiting for Aayat" forever, so any device may settle those."""
+    return conflict.get("owner") == device or conflict.get("owner") not in PEERS
+
+
 def _entity_audience(claims: list[dict]) -> dict[str, str]:
     """Entity (lowercased) -> the widest tier any claim about it has on this device."""
     widest: dict[str, str] = {}
@@ -323,6 +338,12 @@ def draft_message(ctx, conflict: dict) -> dict:
         "mailto": f"mailto:?subject={quote(subject)}&body={quote(text)}",
         "wa_link": f"https://wa.me/?text={quote(text)}",
     }
+
+
+def _mark_received(ctx, email_id: str, received: bool) -> None:
+    ids = set(ctx.store.kv_get(INBOX_RECEIVED_KEY, []) or [])
+    ids = ids | {email_id} if received else ids - {email_id}
+    ctx.store.kv_set(INBOX_RECEIVED_KEY, sorted(ids))
 
 
 def _pending_inbox(ctx) -> list[dict]:
