@@ -299,6 +299,44 @@ def test_ui_is_served_at_root_and_web(data_dir, embedder, monkeypatch):
         assert client.get("/api/state").json()["device"] == "tanishk"  # API routes still win
 
 
+def test_stage_is_served_at_slash_stage_and_under_web(data_dir, embedder, monkeypatch):
+    web = data_dir / "web"
+    web.mkdir()
+    (web / "index.html").write_text("<!doctype html><title>Quorum</title>", encoding="utf-8")
+    (web / "stage.html").write_text("<!doctype html><title>Quorum stage</title>", encoding="utf-8")
+    monkeypatch.setattr(edge.api, "WEB_DIR", web)
+    store = FakeStore()
+    app = edge.api.create_app(Config(device="tanishk", port=0, data_dir=data_dir), embedder=embedder,
+                              store=store, sync=FakeSync(store))
+    with TestClient(app) as client:
+        res = client.get("/stage")
+        assert res.status_code == 200 and res.headers["content-type"].startswith("text/html")
+        assert "Quorum stage" in res.text
+        assert "Quorum stage" in client.get("/web/stage.html").text
+        assert "<title>Quorum</title>" in client.get("/").text  # the single-device page is unchanged
+
+
+@pytest.mark.parametrize("origin", ["http://127.0.0.1:8001", "http://localhost:8002", "http://127.0.0.1:5173"])
+def test_cors_lets_a_local_stage_call_this_device(make_client, origin):
+    client, _ = make_client()
+    res = client.get("/api/state", headers={"Origin": origin})
+    assert res.headers["access-control-allow-origin"] == origin
+    pre = client.options("/api/ask", headers={"Origin": origin, "Access-Control-Request-Method": "POST",
+                                              "Access-Control-Request-Headers": "content-type"})
+    assert pre.status_code == 200
+    assert pre.headers["access-control-allow-origin"] == origin
+    assert "POST" in pre.headers["access-control-allow-methods"]
+
+
+@pytest.mark.parametrize("origin", ["http://evil.example", "https://127.0.0.1.evil.example", "http://127.0.0.1.nip.io:8001"])
+def test_cors_refuses_other_origins(make_client, origin):
+    client, _ = make_client()
+    res = client.get("/api/state", headers={"Origin": origin})
+    assert "access-control-allow-origin" not in res.headers
+    pre = client.options("/api/net", headers={"Origin": origin, "Access-Control-Request-Method": "POST"})
+    assert "access-control-allow-origin" not in pre.headers
+
+
 def test_event_bus_fans_out_across_threads_with_heartbeat():
     async def scenario():
         bus = EventBus()

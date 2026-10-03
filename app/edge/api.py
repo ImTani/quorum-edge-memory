@@ -9,7 +9,8 @@ from types import SimpleNamespace
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -26,6 +27,8 @@ SSE_HEARTBEAT_S = 15.0
 ACTIVITY_LIMIT = 60
 TIERS = ("device", "my_devices", "team")
 INBOX_RECEIVED_KEY = "inbox_received"
+# The demo stage (one page, both devices) calls each device's API from another local origin.
+LOCAL_ORIGINS = r"^http://(127\.0\.0\.1|localhost)(:\d+)?$"
 REPLY_PREFIX = re.compile(r"^(?:\s*(?:re|fwd?|fw)\s*:\s*)+", re.IGNORECASE)
 
 
@@ -76,6 +79,8 @@ def create_app(cfg, *, embedder=None, store=None, sync=None) -> FastAPI:
 
     app = FastAPI(title=f"Quorum · {cfg.display_name}", lifespan=lifespan)
     app.state.ctx = ctx
+    app.add_middleware(CORSMiddleware, allow_origin_regex=LOCAL_ORIGINS, allow_methods=["GET", "POST"],
+                       allow_headers=["Content-Type"])
 
     # ---- state + live stream --------------------------------------------------------------
 
@@ -176,6 +181,12 @@ def create_app(cfg, *, embedder=None, store=None, sync=None) -> FastAPI:
             raise
 
     # ---- static UI -----------------------------------------------------------------------
+
+    @app.get("/stage", include_in_schema=False)
+    def stage():
+        """The demo stage: both devices and the hub on one screen (also at /web/stage.html)."""
+        return FileResponse(WEB_DIR / "stage.html", media_type="text/html")
+
 
     # Mounted last so /api/* wins. index.html uses relative asset paths, so the UI must resolve at
     # the root ("/" -> index.html, "/app.js") as well as under /web.
