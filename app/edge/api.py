@@ -191,11 +191,14 @@ def ingest(ctx, kind: str, text: str, author: str | None = None, ref: str | None
         "excerpt": text.strip()[:280],
         "at": at,
     }
-    known = sorted({c["entity"] for c in ctx.memory.all_claims() if c.get("entity")})
+    existing = ctx.memory.all_claims()
+    audience = _entity_audience(existing)
+    known = sorted({c["entity"] for c in existing if c.get("entity")})
     drafts, extractor_used = extractor.extract_with_meta(text, source, cfg, known)
 
     created, opened = [], []
     for d in drafts:
+        d = dict(d, tier=_capped_tier(d.get("tier"), audience.get(d["entity"].strip().lower())))
         claim = _claim_from_draft(ctx, d, dict(source, excerpt=_best_excerpt(text, d["text"])))
         ctx.memory.add_claim(claim)
         if claim["tier"] != "device":
@@ -243,6 +246,27 @@ def _claim_from_draft(ctx, draft: dict, source: dict) -> dict:
 
 
 # ---- helpers -----------------------------------------------------------------------------------
+
+
+def _entity_audience(claims: list[dict]) -> dict[str, str]:
+    """Entity (lowercased) -> the widest tier any claim about it has on this device."""
+    widest: dict[str, str] = {}
+    for c in claims:
+        name = (c.get("entity") or "").strip().lower()
+        tier = c.get("tier") if c.get("tier") in TIERS else "device"
+        if name and (name not in widest or TIERS.index(tier) > TIERS.index(widest[name])):
+            widest[name] = tier
+    return widest
+
+
+def _capped_tier(tier: str | None, audience: str | None) -> str:
+    """A capture about a known entity never reaches a wider audience than the entity already has:
+    a follow-up about a friend's private news ("Kabir moves to Pune ...") stays on this device
+    even though the extractor promotes known entities to the team."""
+    tier = tier if tier in TIERS else "device"
+    if audience is not None and TIERS.index(tier) > TIERS.index(audience):
+        return audience
+    return tier
 
 
 def _best_excerpt(text: str, claim_text: str, limit: int = 280) -> str:

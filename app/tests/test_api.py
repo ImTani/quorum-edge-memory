@@ -159,6 +159,52 @@ def test_device_tier_claims_stay_private(make_client):
     assert claim["claim_id"] not in [h["claim"]["claim_id"] for h in team["hits"]]
 
 
+def test_follow_up_about_a_private_entity_stays_on_the_device(make_client, monkeypatch):
+    """The extractor promotes any known entity to team; a device-only entity must not be promoted."""
+    def extract_kabir(text, source, cfg, known_entities):
+        assert "Kabir" in known_entities              # snapping still sees private entities
+        return [_draft("Kabir", "due_date", "2026-10-12", "12 Oct", "Kabir is due 12 Oct")], "llm"
+
+    client, ctx = make_client()
+    ctx.memory.add_claim(make_claim("Kabir", "note", "got into FTII", "Kabir got into FTII, keep it quiet",
+                                    tier="device"))
+    ctx.memory.add_claim(make_claim("Riya", "birthday", "2026-10-09", "Riya's birthday is 9 Oct", tier="my_devices"))
+    monkeypatch.setattr(edge.extract, "extract_with_meta", extract_kabir)
+    claim = client.post("/api/ingest", json={"kind": "note", "text": "Kabir moves to Pune on 12 Oct"}).json()["claims"][0]
+    assert (claim["tier"], claim["sync"]) == ("device", "private")
+    assert ctx.store.outbox_len() == 0
+
+    assert edge.api._capped_tier("team", "my_devices") == "my_devices"
+    assert edge.api._capped_tier("team", "team") == "team"
+    assert edge.api._capped_tier("team", None) == "team"   # a new entity: the extractor's rules decide
+    assert edge.api._capped_tier("device", "team") == "device"
+
+
+@pytest.mark.parametrize("device,private_claim,note", [
+    ("tanishk", ("Kabir", "Kabir got into FTII screenwriting, not public yet"),
+     "Kabir moves to Pune for the FTII course on 12 Oct"),
+    ("lakshya", ("Meher", "Meher is quitting her agency job next month, manager doesn't know"),
+     "Meher's farewell lunch is on 30 Oct at Bastian"),
+])
+def test_private_entity_follow_up_on_the_real_fallback_extractor(data_dir, embedder, monkeypatch,
+                                                                  device, private_claim, note):
+    def llm_down(*a, **k):
+        raise edge.extract.LLMUnavailable("test: fallback path")
+
+    monkeypatch.setattr(edge.extract, "_ask_llm", llm_down)
+    store = FakeStore()
+    ctx = edge.api.build_ctx(Config(device=device, port=0, data_dir=data_dir), embedder=embedder,
+                             store=store, sync=FakeSync(store))
+    try:
+        entity, text = private_claim
+        ctx.memory.add_claim(make_claim(entity, "note", text, text, tier="device"))
+        claims = edge.api.ingest(ctx, "note", note)["claims"]
+        assert claims and all(c["tier"] == "device" for c in claims), claims
+        assert store.outbox_len() == 0
+    finally:
+        ctx.memory.close()
+
+
 def test_net_toggle_goes_to_the_sync_worker(make_client):
     client, ctx = make_client()
     assert client.post("/api/net", json={"online": False}).json()["online"] is False
