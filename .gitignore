@@ -29,6 +29,7 @@ models/
 .claude/worktrees/
 .claude/settings.local.json
 
-# app runtime: the hub binary (scripts/fetch_hub.ps1) and per-device shard/outbox data
+# app runtime: the hub binary and dashboard (scripts/fetch_hub.ps1) and per-device shard/outbox data
 app/hub/bin/
+app/hub/static/
 app/data/
