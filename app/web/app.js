@@ -200,7 +200,7 @@ function addActivity(a) {
 
 function onEvent(ev) {
   switch (ev.type) {
-    case 'claim': applyClaim(ev.data); break;
+    case 'claim': applyClaim(ev.data); dropReceivedMail(ev.data); break;
     case 'conflict': applyConflict(ev.data); break;
     case 'sync': applySync(ev.data); break;
     case 'activity': addActivity(ev.data); break;
@@ -526,6 +526,13 @@ function afterIngest(r, what) {
 
 async function loadInbox() {
   try { state.inbox = await api('GET', '/api/inbox'); } catch (err) { console.warn('inbox', err); state.inbox = []; }
+  renderInbox();
+}
+// A claim citing "email:<id>" means that email was received (maybe from another tab or a retry).
+function dropReceivedMail(c) {
+  const m = /^email:(.+)$/.exec(c?.source?.ref || '');
+  if (!m || !(state.inbox || []).some(x => x.id === m[1])) return;
+  state.inbox = state.inbox.filter(x => x.id !== m[1]);
   renderInbox();
 }
 function renderInbox() {
