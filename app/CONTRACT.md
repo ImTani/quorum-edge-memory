@@ -184,9 +184,28 @@ Activity kinds: `claim_added, search, sync_push, sync_pull, conflict_opened, con
 - **Draft:** same wording as the disputed answer ("the client's email says 16 Oct; Tanishk's note from the call says 18 Oct").
 - **Sync status:** `last_push` / `last_pull` are epoch ms. `set_online` logs the `net` activity itself.
 - **Hub env:** demo.ps1 also sets `QDRANT_INIT_FILE_PATH=data\hub\.qdrant-initialized` (else it lands in `app\`).
-- **Known limit:** the pull cursor is the max `modified_at` seen from other devices. With two devices this is safe;
+- **Known limit:** the pull cursor is the max `modified_at` seen from other devices. With two devices this is safe
+  (push sends each batch in `modified_at` order, so a peer pulling between batches can't skip ahead);
   with three or more, a claim captured offline (old `modified_at`) can be skipped by a peer whose cursor already
   moved past it via a third device. A push-time stamp on the hub (`synced_at`) would fix it.
+
+### Fix pass (3 Oct, after the UI walk-through and review)
+
+- **Durability:** `Memory` flushes the shard after every write; `memory.batch()` groups bulk writes (a sync pull)
+  under one flush. A hard kill (demo.ps1 stops with `taskkill /F`) loses nothing.
+- **Tier cap at ingest:** a new claim never gets a wider tier than the widest tier its entity already has on the
+  device, so a follow-up about a device-only entity stays `device` (the extractor still promotes known entities).
+- **Conflicts:** a conflict also needs the two entity names to share a distinctive word (`extract.same_subject`),
+  and unnamed fallback notes are named from their own words instead of "Note". `resolve()` is serialised by a lock
+  and the resolution claim takes the **narrowest** tier in the conflict: if a `device` claim is involved nothing is
+  enqueued and wider claims get local-only marks.
+- **Who may settle:** the owner, or any device when the owner runs no device in the demo (`api.can_settle`;
+  Aayat and Tushar own seeded tasks).
+- **Inbox receive** marks the email taken before extraction (put back on failure): a double submit gets 404.
+- **Sync status:** counters are throttled to 2/s; changes to `online`, `hub_ok`, `outbox`, `last_error` publish at once.
+- **Hub dashboard:** `fetch_hub.ps1` also fetches qdrant-web-ui into `app/hub/static`; demo.ps1 sets
+  `QDRANT__SERVICE__STATIC_CONTENT_DIR`. demo.ps1 stops only processes it started (PID files in `app/data/run`).
+- **Fixture:** the client email is dated 2 Oct 19:40, before the demo-day note.
 - **End-to-end check:** after `scripts\demo.ps1`, `app\.venv\Scripts\python scripts\demo_check.py [--until N]`
   drives the 8 steps over HTTP and queries the hub directly.
 
