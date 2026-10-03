@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Quorum v4</title>
+<style>
+@font-face { font-family: "Shantell Sans"; src: url(../../site/fonts/shantell-sans-vf.woff2) format("woff2-variations"), url(../../site/fonts/shantell-sans-vf.woff2) format("woff2"); font-weight: 300 800; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url(../../site/fonts/schibsted-grotesk-400.woff2) format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url(../../site/fonts/schibsted-grotesk-500.woff2) format("woff2"); font-weight: 500; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url(../../site/fonts/schibsted-grotesk-600.woff2) format("woff2"); font-weight: 600; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url(../../site/fonts/schibsted-grotesk-700.woff2) format("woff2"); font-weight: 700; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url(../../site/fonts/schibsted-grotesk-800.woff2) format("woff2"); font-weight: 800; font-display: block; }
+:root { --ink:#14171f; --ink-2:#3b4150; --ink-3:#656b7a; --paper:#eef0f3; --line:#dfe2e8; --blue:#1f4fd8; --red:#c81e34; --green:#14895a;
+  --yellow:#ffe14d; --sky:#9fd6ff; --kraft:#e2c08a; --kraft-2:#c9a165; --kraft-ink:#3a2a12; --tape:rgba(239,227,184,.88);
+  --hand:"Shantell Sans","Comic Sans MS",cursive; --ui:"Schibsted Grotesk",system-ui,sans-serif; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#cfd3da;color:var(--ink);font-family:var(--ui);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+/* ---- layers (bottom -> top): #world (camera), #hud, #cursor-layer, #cap, #paperfade ---- */
+#world{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0}
+.board{position:absolute;left:0;top:0;background-color:var(--paper);overflow:hidden}
+.board-tex{background-color:var(--paper);background-image:radial-gradient(140% 90% at 12% 0%,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),var(--tex);background-size:100% 100%,512px 512px}
+.board::after{content:"";position:absolute;inset:0;background:linear-gradient(112deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.28) 38%,rgba(255,255,255,0) 46%);pointer-events:none}
+.board-edge{position:absolute;left:-26px;top:-26px;border-radius:10px;z-index:-1;
+  background:linear-gradient(180deg,#f7f8fa 0,#c9ced6 3%,#b3b9c3 50%,#9ea5b0 97%,#7f8794 100%);box-shadow:0 40px 80px -30px rgba(20,23,31,.45)}
+.smudge{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(20,23,31,.03),rgba(20,23,31,0));pointer-events:none}
+.scene{position:absolute;width:0;height:0;overflow:visible}
+.scene > *{position:absolute}
+#hud,#cursor-layer,#cap{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#paperfade{position:absolute;inset:0;background:var(--paper);opacity:0;pointer-events:none}
+#fontwarm{position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap}
+
+/* ---- type ---- */
+.head{font-family:var(--ui);font-weight:800;letter-spacing:-.03em;color:var(--ink);white-space:nowrap}
+.hand{position:absolute;font-family:var(--hand);white-space:nowrap;line-height:1.15;transform-origin:0 70%}
+.ui{font-family:var(--ui)}
+
+/* ---- stickies, tape, tags ---- */
+.sticky{position:absolute;padding:30px 26px 22px;font-family:var(--hand);line-height:1.22;color:#1d1b16;box-shadow:0 10px 18px -8px rgba(20,23,31,.35),0 2px 3px rgba(20,23,31,.10)}
+.sticky::after{content:"";position:absolute;right:0;bottom:0;width:34px;height:34px;background:linear-gradient(135deg,rgba(0,0,0,0) 50%,rgba(0,0,0,.10) 50%,rgba(255,255,255,.35) 100%)}
+.sticky-meta{margin-top:16px;font:500 .55em/1.35 var(--ui);color:rgba(29,27,22,.72)}
+.sticky.kraft .sticky-meta{color:#5a4426}
+.tape{position:absolute;top:-14px;width:76px;height:26px;background:var(--tape);box-shadow:0 1px 2px rgba(0,0,0,.10);clip-path:polygon(3% 0,97% 6%,100% 50%,96% 100%,2% 94%,0 50%)}
+.tag{position:absolute;padding:8px 16px 10px;font-family:var(--hand);font-weight:600;white-space:nowrap;transform:rotate(var(--r,-2deg));box-shadow:0 6px 12px -8px rgba(20,23,31,.45)}
+.tag.kraft{background:linear-gradient(180deg,#ead0a0,var(--kraft) 45%,var(--kraft-2));color:var(--kraft-ink)}
+.tag.tape{background:var(--tape);color:#2a2620;box-shadow:0 1px 2px rgba(0,0,0,.12);clip-path:polygon(2% 0,98% 4%,100% 50%,97% 100%,3% 96%,0 50%)}
+.tag.paper{background:#fff;color:var(--ink);border:1px solid var(--line)}
+
+/* ---- whiteboard component ---- */
+.wb{position:absolute;border-radius:8px;background:linear-gradient(180deg,#f7f8fa 0,#c9ced6 6%,#b3b9c3 50%,#9ea5b0 94%,#7f8794 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(0,0,0,.25),0 26px 44px -24px rgba(20,23,31,.5),0 4px 10px rgba(20,23,31,.14)}
+.wb-surface{position:relative;width:100%;height:100%;border-radius:2px;overflow:hidden;
+  background:linear-gradient(112deg,rgba(255,255,255,0) 18%,rgba(255,255,255,.75) 27%,rgba(255,255,255,0) 36%),linear-gradient(112deg,rgba(255,255,255,0) 58%,rgba(255,255,255,.5) 62%,rgba(255,255,255,0) 67%),radial-gradient(120% 90% at 50% 40%,#fff 0,#f8f9fa 60%,#eceef1 100%);
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.14),inset 0 0 0 1px rgba(0,0,0,.06)}
+.wb-cap{position:absolute;z-index:3;width:30px;height:30px;border-radius:6px;background:linear-gradient(145deg,#5b616c,#2e3239);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 3px rgba(0,0,0,.3)}
+.wb-cap.tl{left:-4px;top:-4px}.wb-cap.tr{right:-4px;top:-4px}.wb-cap.bl{left:-4px;bottom:-4px}.wb-cap.br{right:-4px;bottom:-4px}
+.wb-tray{position:absolute;left:4%;right:4%;bottom:-60px;height:64px;display:flex;justify-content:center;border-radius:0 0 10px 10px;
+  background:linear-gradient(180deg,#f2f4f6 0,#d2d7de 9%,#b9bfc8 45%,#a1a8b3 80%,#848c98 100%);box-shadow:inset 0 1px 0 #fff,0 10px 16px -10px rgba(20,23,31,.5)}
+.wb-tools{transform:scale(1.5) translateY(-8px)}
+
+/* ---- eraser ---- */
+.erase-swath{position:absolute;z-index:50;box-shadow:18px 0 22px -10px rgba(238,240,243,.95)}
+.erase-block{position:absolute;left:0;z-index:51;width:110px;height:180px;border-radius:12px;background:linear-gradient(90deg,#2a2e35,#4a4f59 40%,#16181c);box-shadow:0 18px 26px -10px rgba(20,23,31,.55)}
+.erase-block i{position:absolute;right:-16px;top:6px;bottom:6px;width:22px;border-radius:0 8px 8px 0;background:linear-gradient(90deg,#ece7da,#cfc8b7)}
+
+/* ---- plates (captured UI pinned to the board) ---- */
+.plate{position:absolute;background:#fff;border-radius:14px;box-shadow:0 24px 40px -20px rgba(20,23,31,.35),0 0 0 1px #dfe2e8}
+.plate.none{background:none;box-shadow:none;border-radius:0}
+.plate-bar{position:absolute;left:0;right:0;top:0;border-radius:14px 14px 0 0;background:linear-gradient(180deg,#f6f7f9,#eceef1);border-bottom:1px solid #dfe2e8;display:flex;align-items:center;gap:10px;padding-left:22px}
+.plate-bar i{width:13px;height:13px;border-radius:50%;background:#c9ced6}
+.plate-vp{position:absolute;left:0;overflow:hidden;border-radius:0 0 14px 14px}
+.plate.card .plate-vp{border-radius:14px}
+.plate.none .plate-vp{border-radius:0}
+.plate-inner{position:absolute;left:0;top:0}
+.plate-img{position:absolute;left:0;top:0;width:1920px;height:1080px;display:block}
+.plate-overlay{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.plate-overlay > *{position:absolute}
+.plate-lift{position:absolute;border-radius:8px;background-repeat:no-repeat;transform-origin:50% 50%}
+.plate-tape{top:-16px;z-index:3;width:120px;height:34px}
+.plate-tape.l{left:60px;transform:rotate(-6deg)}.plate-tape.r{right:60px;transform:rotate(5deg)}
+
+/* ---- HUD ---- */
+.hud-ripple{position:absolute;left:0;top:0;width:140px;height:140px}
+.hud-spot{position:absolute;pointer-events:none}
+.hud-caret{position:absolute;width:3px;border-radius:2px;background:var(--blue);box-shadow:0 0 0 3px rgba(31,79,216,.12)}
+.cursor{position:absolute;left:0;top:0;width:48px;height:52px;margin:-2px 0 0 -2px;transform-origin:2px 2px;filter:drop-shadow(0 4px 5px rgba(20,23,31,.32))}
+.cursor svg{display:block;overflow:visible}
+
+/* ---- captions: handwritten on a taped paper strip, bottom-left ---- */
+.cap-strip{position:absolute;left:120px;bottom:72px;max-width:1400px;padding:14px 34px 18px 40px;background:rgba(255,255,255,.94);border:1px solid #dfe2e8;
+  border-radius:3px;box-shadow:0 10px 18px -12px rgba(20,23,31,.35);transform-origin:0 100%}
+.cap-text{display:block;font:600 46px/1.18 var(--hand);color:var(--ink);white-space:normal}
+.cap-tape{position:absolute;left:-26px;top:50%;width:64px;height:28px;margin-top:-14px;background:var(--tape);transform:rotate(-8deg);box-shadow:0 1px 2px rgba(0,0,0,.10);clip-path:polygon(3% 0,97% 6%,100% 50%,96% 100%,2% 94%,0 50%)}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <!-- dry-marker texture (site/index.html) -->
+  <filter id="dry" x="-2%" y="-40%" width="104%" height="180%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9 0.06" numOctaves="2" seed="3" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.2 1.45" result="streak"/>
+    <feComposite in="SourceGraphic" in2="streak" operator="in"/>
+  </filter>
+</defs></svg>
+<div id="world"></div>
+<div id="hud"></div>
+<div id="cursor-layer"></div>
+<div id="cap"></div>
+<div id="paperfade"></div>
+<div id="fontwarm"><span style="font-family:var(--hand);font-weight:600">Aa·…→✓✕ 0.85</span><span style="font-family:var(--hand);font-weight:400">Aa</span><span style="font-family:var(--hand);font-weight:700">Aa</span>
+  <span style="font-family:var(--ui);font-weight:800">Quorum</span><span style="font-family:var(--ui);font-weight:600">Aa</span><span style="font-family:var(--ui);font-weight:400">Aa</span><span style="font-family:var(--ui);font-weight:700">Aa</span></div>
+
+<script src="lib.js"></script>
+<script src="scenes/manifest.js"></script>
+<script>
+  // Scene loader: scenes/manifest.js lists SCENE_FILES (and DEMO_FILES). ?only=a,b loads just those
+  // files; ?demo=1 adds the demo files. Missing files are skipped (logged).
+  (function () {
+    const q = new URLSearchParams(location.search);
+    let files = q.get('only') ? q.get('only').split(',') : (window.SCENE_FILES || []).slice();
+    if (q.get('demo') === '1') files = files.concat(window.DEMO_FILES || []);
+    for (const f of files) document.write(`<script src="scenes/${f}.js" onerror="console.error('[loader] missing scenes/${f}.js')"><\/script>`);
+  })();
+</script>
+<script src="main.js"></script>
+</body></html>

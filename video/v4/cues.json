@@ -1,0 +1,3572 @@
+{
+ "version": "v4",
+ "note": "Single source of timing for Quorum showcase v4. Times in seconds of video time. See STORYBOARD.md. Do not move key-event times; the score is cut to them.",
+ "width": 1920,
+ "height": 1080,
+ "fps": 30,
+ "duration": 168,
+ "bpm": 120,
+ "beat": 0.5,
+ "bar": 2,
+ "scenes": [
+  {
+   "id": "S01",
+   "slug": "cold_open",
+   "title": "Cold open: two people, two dates",
+   "start": 0,
+   "end": 16,
+   "surface": "motion graphics only",
+   "keys": [
+    {
+     "t": 0,
+     "what": "Clean whiteboard (paper #eef0f3, faint ghost smudges). Camera z 1.04 -> 1.00 slow push over the scene."
+    },
+    {
+     "t": 0.5,
+     "what": "Black marker draws crossed-out signal bars top-left, then hand label \"on a shoot · no signal\"."
+    },
+    {
+     "t": 1.5,
+     "what": "Yellow sticky slaps in left (centre ~560,470, rot -4deg): \"Client just called: Sharma delivery moves to the 18th.\" meta \"call · heard by Tanishk\"."
+    },
+    {
+     "t": 3,
+     "what": "Hand label \"Tanishk\" + short arrow to the yellow sticky."
+    },
+    {
+     "t": 4,
+     "what": "Hand label top-right \"in the office · online\"."
+    },
+    {
+     "t": 4.5,
+     "what": "Sky-blue sticky slaps in right (centre ~1360,470, rot +4deg): \"Confirming final delivery of the Sharma wedding edit on 16 October.\" meta \"email · Rohit Sharma -> Lakshya\"."
+    },
+    {
+     "t": 6,
+     "what": "Hand label \"Lakshya\" + arrow to the blue sticky."
+    },
+    {
+     "t": 8,
+     "what": "Red marker circles \"the 18th\" on the yellow sticky."
+    },
+    {
+     "t": 8.5,
+     "what": "Red marker circles \"16 October\" on the blue sticky."
+    },
+    {
+     "t": 9,
+     "what": "Giant red handwritten \"18\" and \"16\" (Shantell 260px) scrawl out of the circles towards centre."
+    },
+    {
+     "t": 10,
+     "what": "Red \"?\" drops between them with a 4px board shake."
+    },
+    {
+     "t": 12,
+     "what": "Thin black marker line joins the two stickies, hand label \"same job\"."
+    },
+    {
+     "t": 13,
+     "what": "Everything but the caption dims 15%."
+    },
+    {
+     "t": 15,
+     "what": "Eraser swipe wipes the board left -> right (15.0-16.0)."
+    }
+   ],
+   "captions": [
+    {
+     "start": 2,
+     "end": 5.5,
+     "text": "Tanishk takes the client's call on set."
+    },
+    {
+     "start": 5.5,
+     "end": 9,
+     "text": "Lakshya gets the client's email in the office."
+    },
+    {
+     "start": 10,
+     "end": 13,
+     "text": "Same job. Two dates. Nobody notices…"
+    },
+    {
+     "start": 13,
+     "end": 15.5,
+     "text": "…until the client does."
+    }
+   ],
+   "capture_maps": {}
+  },
+  {
+   "id": "S02",
+   "slug": "title",
+   "title": "Quorum: title and promise",
+   "start": 16,
+   "end": 26,
+   "surface": "motion graphics + LANDING_HERO capture",
+   "keys": [
+    {
+     "t": 16,
+     "what": "IMPACT. Yellow \"Q\" sticky slaps centre; wordmark \"Quorum\" (Schibsted 800, 170px) writes in beside it."
+    },
+    {
+     "t": 17,
+     "what": "Blue marker underline boils in under the wordmark."
+    },
+    {
+     "t": 17.5,
+     "what": "Subtitle pops (Schibsted 600 40px, ink-2): \"Offline-first team memory on Qdrant Edge\"."
+    },
+    {
+     "t": 19,
+     "what": "Camera pans down the board to the LANDING_HERO capture, taped to the board in a browser card."
+    },
+    {
+     "t": 19.5,
+     "what": "Tape strips slap. The hero headline is the promise on screen: no caption over it."
+    },
+    {
+     "t": 20.5,
+     "what": "Blue hand tag beside the card: \"Code Cubicle 6.0 · Problem Statement 03\"."
+    },
+    {
+     "t": 22.5,
+     "what": "Camera eases from the headline (z 1.25) to show the hero whiteboard (z 1.0)."
+    },
+    {
+     "t": 23.5,
+     "what": "Drawn cursor enters and travels to \"Watch the demo\" (real hover state in the capture from ct 5.5)."
+    },
+    {
+     "t": 24.5,
+     "what": "Click ripple on \"Watch the demo\" (video-only click: the page is not navigated)."
+    },
+    {
+     "t": 25,
+     "what": "Camera dives down-right across the board to the stage region (transition into S03)."
+    }
+   ],
+   "captions": [
+    {
+     "start": 22.5,
+     "end": 25.8,
+     "text": "When two people disagree, it asks instead of guessing."
+    }
+   ],
+   "capture_maps": {
+    "LANDING_HERO": [
+     [
+      19,
+      0
+     ],
+     [
+      26,
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S03",
+   "slug": "stage_setup",
+   "title": "Two laptops, one hub (the stage)",
+   "start": 26,
+   "end": 34,
+   "surface": "STAGE capture (ct 0-4) + motion graphics",
+   "keys": [
+    {
+     "t": 26,
+     "what": "Camera lands WIDE (z 0.86) on the STAGE plate taped to the board. Groove starts. Plate holds frame ct 0 until 30.0."
+    },
+    {
+     "t": 27,
+     "what": "Marker label + arrow \"Tanishk's laptop · on a shoot\" -> left pane header."
+    },
+    {
+     "t": 28,
+     "what": "Marker label + arrow \"the team hub · a Qdrant server\" -> hub column."
+    },
+    {
+     "t": 29,
+     "what": "Marker label + arrow \"Lakshya's laptop · in the office\" -> right pane header."
+    },
+    {
+     "t": 30,
+     "what": "Capture plays 1:1 (ct 0 -> 4)."
+    },
+    {
+     "t": 32,
+     "what": "HONEST NOTE: small kraft tag slaps bottom-right: \"Two laptops shown as two device processes on one machine. Offline = a per-device hub switch.\" Shrinks to 70% in the corner at 34.0 and stays until 41.0."
+    }
+   ],
+   "captions": [
+    {
+     "start": 27.5,
+     "end": 30.5,
+     "text": "Two laptops. Each keeps its own memory."
+    },
+    {
+     "start": 30.5,
+     "end": 33.8,
+     "text": "The hub only relays what the team shares."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      26,
+      0
+     ],
+     [
+      30,
+      0
+     ],
+     [
+      34,
+      4
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S04",
+   "slug": "beat1_ask",
+   "title": "Beat 1: Lakshya asks, answered in 9 ms",
+   "start": 34,
+   "end": 44,
+   "surface": "STAGE capture",
+   "keys": [
+    {
+     "t": 34,
+     "what": "Camera WIDE -> R_ASK (Lakshya's Ask panel, z ~1.9), 0.9 s easeInOutCubic."
+    },
+    {
+     "t": 35,
+     "what": "Cursor enters from the right edge, heads for Lakshya's suggestion \"What's due this week?\"."
+    },
+    {
+     "t": 36,
+     "what": "CLICK (ct 6.0). The real UI fills the input and submits."
+    },
+    {
+     "t": 36.5,
+     "what": "Answer renders: \"3 things are due this week: …\" + 3 citation chips + \"9 ms, on this device\"."
+    },
+    {
+     "t": 37,
+     "what": "Blue marker circles \"9 ms, on this device\"."
+    },
+    {
+     "t": 37.5,
+     "what": "Blue hand note beside it: \"on the laptop · no cloud\"."
+    },
+    {
+     "t": 38.5,
+     "what": "Citation chips get tiny blue ticks, one each at 38.5 / 39.0 / 39.5."
+    },
+    {
+     "t": 40,
+     "what": "Camera drifts up to Lakshya's memory cloud (cited points glow in the capture)."
+    },
+    {
+     "t": 43.5,
+     "what": "Camera starts the whip to the left pane."
+    }
+   ],
+   "captions": [
+    {
+     "start": 37.5,
+     "end": 41,
+     "text": "Ask anything. Answered on the laptop in 9 ms."
+    },
+    {
+     "start": 41,
+     "end": 43.8,
+     "text": "Every line cites its source."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      34,
+      4
+     ],
+     [
+      44,
+      14
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S05",
+   "slug": "beat2_offline",
+   "title": "Beat 2: Tanishk loses the hub",
+   "start": 44,
+   "end": 52,
+   "surface": "STAGE capture",
+   "keys": [
+    {
+     "t": 44,
+     "what": "Whip-pan to L_SWITCH (Tanishk header: hub switch, Outbox, Hub traffic; z ~2.1), 0.6 s easeOutExpo."
+    },
+    {
+     "t": 44.5,
+     "what": "Cursor travels to Tanishk's hub switch, arrives 45.75, hovers."
+    },
+    {
+     "t": 46,
+     "what": "CLICK (ct 16.0). Switch -> \"No connection to hub\", pane tints amber, link dashed \"no connection\", \"0 B/s · frozen\". 3px shake. MUSIC: offline."
+    },
+    {
+     "t": 46.5,
+     "what": "Red marker slash across the dashed link."
+    },
+    {
+     "t": 47,
+     "what": "Hand note \"cut off from the hub\"."
+    },
+    {
+     "t": 47.5,
+     "what": "Marker circle around \"0 B/s · frozen\"."
+    },
+    {
+     "t": 48.5,
+     "what": "Camera eases to L_ASK (Tanishk Ask panel, z ~1.9); cursor heads for \"What's due this week?\"."
+    },
+    {
+     "t": 49.5,
+     "what": "CLICK (ct 19.5)."
+    },
+    {
+     "t": 50,
+     "what": "Answer renders with \"11 ms, on this device\"."
+    },
+    {
+     "t": 50.5,
+     "what": "Marker underline under \"11 ms\"."
+    }
+   ],
+   "captions": [
+    {
+     "start": 46.5,
+     "end": 49.5,
+     "text": "Tanishk loses the hub. No signal on set."
+    },
+    {
+     "start": 49.5,
+     "end": 51.8,
+     "text": "Still remembers. Still answers. 11 ms."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      44,
+      14
+     ],
+     [
+      52,
+      22
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S06",
+   "slug": "beat3_note",
+   "title": "Beat 3: Tanishk notes the call, offline",
+   "start": 52,
+   "end": 62,
+   "surface": "STAGE capture (speed ramp 4.5x over extraction)",
+   "keys": [
+    {
+     "t": 52,
+     "what": "Camera -> L_CAPTURE (Tanishk Capture + cloud bottom, z ~2.0)."
+    },
+    {
+     "t": 52.5,
+     "what": "Cursor -> note input, arrives 52.9."
+    },
+    {
+     "t": 53,
+     "what": "CLICK note input (ct 23.0)."
+    },
+    {
+     "t": 53.5,
+     "what": "Typing in the capture (ct 23.5-26.0, 54 chars, ~21.6 cps): \"Client just called: Sharma delivery moves to the 18th.\""
+    },
+    {
+     "t": 56,
+     "what": "Cursor -> Save, arrives 56.4."
+    },
+    {
+     "t": 56.5,
+     "what": "CLICK Save (ct 26.5). SPEED RAMP: capture ct 26.5 -> 31.0 (\"Reading…\", 4.5 s) plays in 1.0 s. Hand stamp at the input: \"▸▸ local model reading · 4.5 s\"."
+    },
+    {
+     "t": 57.5,
+     "what": "Claim lands (ct 31.0): amber point \"18 Oct · Note · queued · in outbox\", Outbox 0 -> 1."
+    },
+    {
+     "t": 58,
+     "what": "Marker arrow from the input to the amber point."
+    },
+    {
+     "t": 58.5,
+     "what": "Marker circle around \"Outbox 1\"."
+    },
+    {
+     "t": 59,
+     "what": "Camera pans right to the hub column (z ~1.8): \"18 claims on the hub\" unchanged."
+    },
+    {
+     "t": 59.5,
+     "what": "Hand note \"still 18 · nothing left the laptop\"."
+    },
+    {
+     "t": 61.5,
+     "what": "Camera starts across to Lakshya."
+    }
+   ],
+   "captions": [
+    {
+     "start": 53,
+     "end": 56,
+     "text": "He notes the client's call. Offline."
+    },
+    {
+     "start": 57.5,
+     "end": 61.8,
+     "text": "Turned into a claim, with its source. Queued, not sent."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      52,
+      22
+     ],
+     [
+      56.5,
+      26.5
+     ],
+     [
+      57.5,
+      31
+     ],
+     [
+      62,
+      35.5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S07",
+   "slug": "beat4_email",
+   "title": "Beat 4: the client email lands on Lakshya",
+   "start": 62,
+   "end": 72,
+   "surface": "STAGE capture (speed ramp 4.5x over extraction)",
+   "keys": [
+    {
+     "t": 62,
+     "what": "Camera -> R_INBOX (Lakshya Capture/Inbox, z ~1.9)."
+    },
+    {
+     "t": 63,
+     "what": "Marker arrow to the inbox item + hand note \"client email, just in\"."
+    },
+    {
+     "t": 63.5,
+     "what": "Cursor -> Receive, arrives 64.3."
+    },
+    {
+     "t": 64.5,
+     "what": "CLICK Receive (ct 38.0). SPEED RAMP ct 38.0 -> 42.5 in 1.0 s; stamp \"▸▸ reading · 4.5 s\"."
+    },
+    {
+     "t": 65.5,
+     "what": "Claim lands queued (ct 42.5), Lakshya Outbox 1."
+    },
+    {
+     "t": 66,
+     "what": "Push (ct 43.0): token on the right link \"sent 1 claim\", point turns green, Outbox 0. Camera pulls to R_HUB (right pane + hub, z ~1.3)."
+    },
+    {
+     "t": 66.5,
+     "what": "Hub total 18 -> 19 (ct 43.5); \"Latest to reach the hub\": Sharma wedding edit · 16 Oct · from Lakshya."
+    },
+    {
+     "t": 67.5,
+     "what": "Green marker tick by \"19\" + hand note \"synced to the team\"."
+    },
+    {
+     "t": 68.5,
+     "what": "Camera glides left to Tanishk's header (still \"No connection to hub\")."
+    },
+    {
+     "t": 69,
+     "what": "Dotted black marker arrow hub -> Tanishk, red \"×\" at 69.5, hand note \"can't see it yet\"."
+    }
+   ],
+   "captions": [
+    {
+     "start": 62.5,
+     "end": 65.5,
+     "text": "Meanwhile, the client emails Lakshya: the 16th."
+    },
+    {
+     "start": 66.5,
+     "end": 70,
+     "text": "Her laptop reads it and syncs it to the team."
+    },
+    {
+     "start": 70,
+     "end": 71.8,
+     "text": "Tanishk can't see it yet."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      62,
+      35.5
+     ],
+     [
+      64.5,
+      38
+     ],
+     [
+      65.5,
+      42.5
+     ],
+     [
+      72,
+      49
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S08",
+   "slug": "beat5_conflict",
+   "title": "Beat 5 (HERO): reconnect, both laptops catch the conflict",
+   "start": 72,
+   "end": 90,
+   "surface": "STAGE capture + motion graphics",
+   "keys": [
+    {
+     "t": 72,
+     "what": "Camera WIDE, then 72.5-73.3 push to L_SWITCH (z ~2.0). Music riser 72 -> 76."
+    },
+    {
+     "t": 73.5,
+     "what": "Cursor -> Tanishk's hub switch, arrives 74.4, small hover wobble."
+    },
+    {
+     "t": 75,
+     "what": "CLICK switch on (ct 52.0). MUSIC: reconnect. Camera snaps back to WIDE (z ~0.95, easeOutExpo 0.6 s)."
+    },
+    {
+     "t": 75.25,
+     "what": "Push: token \"sent 1 claim\" on the left link, Tanishk Outbox 1 -> 0."
+    },
+    {
+     "t": 75.5,
+     "what": "Tanishk detects (ct 52.5): two Sharma points turn red and pull together; conflict card opens on the left. Thin red flash on the left pane border."
+    },
+    {
+     "t": 76,
+     "what": "HIT. Lakshya detects (ct 53.0): same conflict card on the right. 10px shake decaying 0.4 s; red marker loops scribble around BOTH cards at once. Hub 19 -> 20."
+    },
+    {
+     "t": 76.5,
+     "what": "Hand label \"after reconnect:\" with stopwatch doodles \"+0.5 s\" over Tanishk (77.0) and \"+1.0 s\" over Lakshya (77.5)."
+    },
+    {
+     "t": 78,
+     "what": "BIG ZOOM: camera dives into Tanishk's cloud on the two red points + \"similarity 0.85\" tag (z 1.0 -> 2.6, 78.0-79.5)."
+    },
+    {
+     "t": 79.5,
+     "what": "Marker ruler draws under the points (screen space): 0.70 ... 1.00; threshold tick \"0.82\" at 80.0."
+    },
+    {
+     "t": 80.5,
+     "what": "Red needle rolls 0.70 -> 0.85 (80.5-81.25); \"0.85\" label pops at 81.5."
+    },
+    {
+     "t": 82.5,
+     "what": "Camera eases to L_CARD text: \"Found 2 claims about the Sharma wedding edit, similarity 0.85. Dates disagree.\""
+    },
+    {
+     "t": 83,
+     "what": "Red marker underlines \"16 Oct\" (83.0) and \"18 Oct\" (83.5)."
+    },
+    {
+     "t": 85,
+     "what": "Camera pulls to BOTH_CARDS (z ~1.15)."
+    },
+    {
+     "t": 86,
+     "what": "Hand note on the left card: \"Tanishk owns this\" -> \"You own this\"."
+    },
+    {
+     "t": 87,
+     "what": "Hand note on the right card: \"Lakshya waits for him\" -> \"Waiting for Tanishk\"."
+    },
+    {
+     "t": 88,
+     "what": "Hand note centre: \"same conflict id on both · worked out apart\"."
+    }
+   ],
+   "captions": [
+    {
+     "start": 76.5,
+     "end": 80,
+     "text": "Both laptops catch the same conflict. On their own."
+    },
+    {
+     "start": 80,
+     "end": 84.5,
+     "text": "Qdrant says same job: 0.85, over the 0.82 bar."
+    },
+    {
+     "start": 84.5,
+     "end": 89.5,
+     "text": "Nothing is overwritten. Nothing wins by default."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      72,
+      49
+     ],
+     [
+      90,
+      67
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S09",
+   "slug": "beat6_disputed",
+   "title": "Beat 6: ask again, \"Disputed\"",
+   "start": 90,
+   "end": 98,
+   "surface": "STAGE capture",
+   "keys": [
+    {
+     "t": 90,
+     "what": "Camera -> L_ASK (Tanishk Ask panel, z ~1.9)."
+    },
+    {
+     "t": 90.5,
+     "what": "Cursor -> \"When is the Sharma delivery?\" (Tanishk), arrives 91.3."
+    },
+    {
+     "t": 91.5,
+     "what": "CLICK (ct 68.5)."
+    },
+    {
+     "t": 92,
+     "what": "Answer: \"Disputed: the client's email says 16 Oct; Tanishk's note from the call says 18 Oct. Tanishk owns this. Settle it?\" + both citations + \"8 ms, on this device\"."
+    },
+    {
+     "t": 92.5,
+     "what": "Red marker underline under \"Disputed\"."
+    },
+    {
+     "t": 93.5,
+     "what": "Marker circles the email citation (93.5) and the note citation (94.0)."
+    },
+    {
+     "t": 97.5,
+     "what": "Camera pulls out."
+    }
+   ],
+   "captions": [
+    {
+     "start": 92,
+     "end": 95.5,
+     "text": "Ask again: it won't guess. Disputed, with both sources."
+    },
+    {
+     "start": 95.5,
+     "end": 97.8,
+     "text": "Who said what, and where."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      90,
+      67
+     ],
+     [
+      98,
+      75
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S10",
+   "slug": "beat7_settle",
+   "title": "Beat 7: Lakshya asks, the owner settles",
+   "start": 98,
+   "end": 108,
+   "surface": "STAGE capture",
+   "keys": [
+    {
+     "t": 98,
+     "what": "Camera -> Lakshya's conflict card (z ~1.3)."
+    },
+    {
+     "t": 98.5,
+     "what": "Cursor -> \"Ask Tanishk\" (Lakshya), arrives 99.3."
+    },
+    {
+     "t": 99.5,
+     "what": "CLICK (ct 76.5)."
+    },
+    {
+     "t": 100,
+     "what": "Draft appears: \"Hi Tanishk, two sources disagree on the Sharma wedding edit … Which one is right? - Lakshya\" with Open in email / Open in WhatsApp / Copy."
+    },
+    {
+     "t": 100.5,
+     "what": "Hand note \"drafted · nothing sent\"."
+    },
+    {
+     "t": 102,
+     "what": "Camera -> L_CARD (z ~1.9); cursor -> \"Keep 18 Oct\", arrives 103.3, hovers."
+    },
+    {
+     "t": 104,
+     "what": "CLICK Keep 18 Oct (ct 81.0). MUSIC: resolve. Card -> \"Resolved: 18 Oct · chosen by you\"; 16 Oct \"Superseded · kept for history\"."
+    },
+    {
+     "t": 104.5,
+     "what": "Push \"sent 3 claims\" on the left link. Light marker strike over \"16 Oct\" + hand note \"kept for history\"."
+    },
+    {
+     "t": 105,
+     "what": "Lakshya applies the decision (ct 82.0, one second later). Camera pulls WIDE (z ~0.95)."
+    },
+    {
+     "t": 105.5,
+     "what": "Green marker checks on both panes (105.5, 106.0)."
+    }
+   ],
+   "captions": [
+    {
+     "start": 99.5,
+     "end": 102.5,
+     "text": "Lakshya can ask. Only the owner decides."
+    },
+    {
+     "start": 104,
+     "end": 107.8,
+     "text": "Tanishk keeps the 18th. Everyone has it a second later."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      98,
+      75
+     ],
+     [
+      108,
+      85
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S11",
+   "slug": "beat8_privacy",
+   "title": "Beat 8: Team view, zero private notes on the hub",
+   "start": 108,
+   "end": 116,
+   "surface": "STAGE capture",
+   "keys": [
+    {
+     "t": 108,
+     "what": "Camera -> L_CLOUD with the Mine / Team view toggle (z ~1.8)."
+    },
+    {
+     "t": 108.5,
+     "what": "Cursor -> \"Team view\", arrives 109.3."
+    },
+    {
+     "t": 109.5,
+     "what": "CLICK Team view (ct 86.5). Private (violet) points leave the cloud."
+    },
+    {
+     "t": 110,
+     "what": "Kraft tag with a lock doodle pops where they were: \"only on this laptop\"."
+    },
+    {
+     "t": 111,
+     "what": "Camera -> HUB privacy block (z ~2.0): \"Device-only claims on the hub: 0\"."
+    },
+    {
+     "t": 111.5,
+     "what": "Marker circle around the 0."
+    },
+    {
+     "t": 112.5,
+     "what": "Hand note \"counted live from Qdrant\"."
+    },
+    {
+     "t": 115.5,
+     "what": "Camera pulls far out and travels across the board (transition)."
+    }
+   ],
+   "captions": [
+    {
+     "start": 109.5,
+     "end": 112.5,
+     "text": "Private notes never leave the laptop."
+    },
+    {
+     "start": 112.5,
+     "end": 115.8,
+     "text": "Device-only claims on the hub: 0. Counted live."
+    }
+   ],
+   "capture_maps": {
+    "STAGE": [
+     [
+      108,
+      85
+     ],
+     [
+      116,
+      93
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S12",
+   "slug": "how_it_works",
+   "title": "How it works: the architecture flow (deck slide 5)",
+   "start": 116,
+   "end": 128,
+   "surface": "DECK_ARCH capture",
+   "keys": [
+    {
+     "t": 116,
+     "what": "Camera lands on the deck page (slide 5) taped to the board. MUSIC: explain section."
+    },
+    {
+     "t": 116.5,
+     "what": "Tape slap."
+    },
+    {
+     "t": 117.5,
+     "what": "Cursor -> flow button \"Sync and conflict\", arrives 118.3."
+    },
+    {
+     "t": 118.5,
+     "what": "CLICK (ct 2.5). The real slide lights one step every 0.9 s (as captured): 118.6 Store, 119.5 Memory, 120.4 Team hub, 121.3 Lakshya's device, 122.2 Conflict engine, 123.1 Browser UI. Camera follows the lit part (z ~1.35)."
+    },
+    {
+     "t": 123.5,
+     "what": "Camera settles on the info panel step list."
+    },
+    {
+     "t": 124.5,
+     "what": "Hand note on the hub box: \"relays only · no logic\"."
+    },
+    {
+     "t": 126,
+     "what": "Hand note on Lakshya's device: \"same code, own shard\"."
+    }
+   ],
+   "captions": [
+    {
+     "start": 116.5,
+     "end": 120,
+     "text": "Under the hood: every laptop is a full edge node."
+    },
+    {
+     "start": 120,
+     "end": 124,
+     "text": "Qdrant Edge on the laptop. A Qdrant server as the hub."
+    },
+    {
+     "start": 124,
+     "end": 127.8,
+     "text": "Sync is an outbox. Laptops pull what changed."
+    }
+   ],
+   "capture_maps": {
+    "DECK_ARCH": [
+     [
+      116,
+      0
+     ],
+     [
+      128,
+      12
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S13",
+   "slug": "key_vector",
+   "title": "The key vector and the 0.82 bar",
+   "start": 128,
+   "end": 138,
+   "surface": "motion graphics (layout and copy from deck slide 9)",
+   "keys": [
+    {
+     "t": 128,
+     "what": "Camera arrives on a clean board area."
+    },
+    {
+     "t": 128.5,
+     "what": "Yellow sticky slaps (the call note); blue sticky at 129.0 (the email)."
+    },
+    {
+     "t": 129.5,
+     "what": "Blue marker box around \"Sharma delivery\" (129.5) and \"Sharma wedding edit\" (130.0)."
+    },
+    {
+     "t": 130.5,
+     "what": "Grey strike through \"the 18th\" and \"16 October\" + hand note \"not the value\"."
+    },
+    {
+     "t": 131,
+     "what": "Key lines write under each sticky: \"key: Sharma delivery · due date\" (131.0), \"key: Sharma wedding edit · due date\" (131.5)."
+    },
+    {
+     "t": 132,
+     "what": "Ruler draws 0.70 -> 1.00; threshold tick \"0.82\" at 132.5."
+    },
+    {
+     "t": 133,
+     "what": "Grey dot drops at 0.74, labelled \"an unrelated deadline\"."
+    },
+    {
+     "t": 134,
+     "what": "Red dot rolls to 0.85 (134.0-134.5); label \"0.85 · same thing\" pops at 134.5; zone above 0.82 hatched in marker blue."
+    },
+    {
+     "t": 135.5,
+     "what": "Red hand note \"different value -> conflict\"."
+    },
+    {
+     "t": 136.5,
+     "what": "Sticky slaps: \"Ask the owner.\""
+    },
+    {
+     "t": 137.5,
+     "what": "Camera starts the move to the next page."
+    }
+   ],
+   "captions": [
+    {
+     "start": 128.5,
+     "end": 132,
+     "text": "The trick: a vector of what a claim is about."
+    },
+    {
+     "start": 132,
+     "end": 135.5,
+     "text": "Same task, worded differently: 0.85. The bar is 0.82."
+    },
+    {
+     "start": 135.5,
+     "end": 137.8,
+     "text": "Same thing, different value: a conflict."
+    }
+   ],
+   "capture_maps": {}
+  },
+  {
+   "id": "S14",
+   "slug": "vision",
+   "title": "Where it is going: a private assistant (deck slides 6 and 7)",
+   "start": 138,
+   "end": 154,
+   "surface": "DECK_ASSIST + DECK_DAY captures (stills) + motion graphics",
+   "keys": [
+    {
+     "t": 138,
+     "what": "Camera lands on DECK_ASSIST (slide 6, stickies hidden variant). MUSIC: vision section."
+    },
+    {
+     "t": 139.5,
+     "what": "Blue marker ticks beside each input: email 139.5, WhatsApp 140.0, calls and notes 140.5, what you're working on 141.0, the phone in your pocket 141.5."
+    },
+    {
+     "t": 142,
+     "what": "Camera pushes to the \"your laptop · Quorum\" box (z ~1.5)."
+    },
+    {
+     "t": 143,
+     "what": "The four stickies slap in from the full still: hyperfocus nudge 143.0, deadline reminder 143.5, a person 144.0, a pattern 144.5."
+    },
+    {
+     "t": 145,
+     "what": "Slow pan across the stickies."
+    },
+    {
+     "t": 146,
+     "what": "Camera pans right on the board to DECK_DAY (slide 7)."
+    },
+    {
+     "t": 146.5,
+     "what": "Timeline stops reveal with their stickies: morning 146.5, the shoot 147.5, afternoon 148.5, reconnect 149.5, evening 150.5."
+    },
+    {
+     "t": 151.5,
+     "what": "Marker underline under \"Tanishk at BKA, a four-person production house and developer group\"."
+    }
+   ],
+   "captions": [
+    {
+     "start": 138.5,
+     "end": 142,
+     "text": "Where it's going: a private assistant on every laptop."
+    },
+    {
+     "start": 142,
+     "end": 146,
+     "text": "It knows you, because nothing leaves your laptop."
+    },
+    {
+     "start": 146.5,
+     "end": 150.5,
+     "text": "The direction, not the demo: phone, voice and nudges come next."
+    },
+    {
+     "start": 150.5,
+     "end": 153.8,
+     "text": "Only team work is shared. Everything else stays yours."
+    }
+   ],
+   "capture_maps": {
+    "DECK_ASSIST": [
+     [
+      138,
+      0
+     ],
+     [
+      146.5,
+      0
+     ]
+    ],
+    "DECK_DAY": [
+     [
+      146,
+      0
+     ],
+     [
+      154,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S15",
+   "slug": "close",
+   "title": "Close: BKA, per team per month, repo, logo",
+   "start": 154,
+   "end": 168,
+   "surface": "motion graphics",
+   "keys": [
+    {
+     "t": 154,
+     "what": "Camera pulls far out: the whole board with every scene region of the film visible as miniatures. MUSIC: close build."
+    },
+    {
+     "t": 158.5,
+     "what": "Kraft card slaps: \"Customer zero: BKA, a four-person production house and developer group.\""
+    },
+    {
+     "t": 159.5,
+     "what": "Eraser swipe clears the centre of the board (the BKA card slides to bottom-left and stays)."
+    },
+    {
+     "t": 160,
+     "what": "LOGO HIT: \"Q\" sticky + \"Quorum\" wordmark slam in centre. MUSIC: close."
+    },
+    {
+     "t": 161,
+     "what": "\"Priced per team, per month · early access\" pops under the wordmark."
+    },
+    {
+     "t": 162,
+     "what": "\"github.com/ImTani/quorum-edge-memory\" writes in blue marker."
+    },
+    {
+     "t": 163,
+     "what": "\"Code Cubicle 6.0 · Problem Statement 03 · built on Qdrant Edge\" (small, ink-3)."
+    },
+    {
+     "t": 166,
+     "what": "Slow push z 1.00 -> 1.03; boil continues."
+    },
+    {
+     "t": 167,
+     "what": "Fade to clean paper by 168.0 (not black)."
+    }
+   ],
+   "captions": [
+    {
+     "start": 154.5,
+     "end": 158.5,
+     "text": "Shared memory for small teams that work where the signal doesn't."
+    }
+   ],
+   "capture_maps": {}
+  }
+ ],
+ "captions": [
+  {
+   "start": 2,
+   "end": 5.5,
+   "text": "Tanishk takes the client's call on set.",
+   "scene": "S01"
+  },
+  {
+   "start": 5.5,
+   "end": 9,
+   "text": "Lakshya gets the client's email in the office.",
+   "scene": "S01"
+  },
+  {
+   "start": 10,
+   "end": 13,
+   "text": "Same job. Two dates. Nobody notices…",
+   "scene": "S01"
+  },
+  {
+   "start": 13,
+   "end": 15.5,
+   "text": "…until the client does.",
+   "scene": "S01"
+  },
+  {
+   "start": 22.5,
+   "end": 25.8,
+   "text": "When two people disagree, it asks instead of guessing.",
+   "scene": "S02"
+  },
+  {
+   "start": 27.5,
+   "end": 30.5,
+   "text": "Two laptops. Each keeps its own memory.",
+   "scene": "S03"
+  },
+  {
+   "start": 30.5,
+   "end": 33.8,
+   "text": "The hub only relays what the team shares.",
+   "scene": "S03"
+  },
+  {
+   "start": 37.5,
+   "end": 41,
+   "text": "Ask anything. Answered on the laptop in 9 ms.",
+   "scene": "S04"
+  },
+  {
+   "start": 41,
+   "end": 43.8,
+   "text": "Every line cites its source.",
+   "scene": "S04"
+  },
+  {
+   "start": 46.5,
+   "end": 49.5,
+   "text": "Tanishk loses the hub. No signal on set.",
+   "scene": "S05"
+  },
+  {
+   "start": 49.5,
+   "end": 51.8,
+   "text": "Still remembers. Still answers. 11 ms.",
+   "scene": "S05"
+  },
+  {
+   "start": 53,
+   "end": 56,
+   "text": "He notes the client's call. Offline.",
+   "scene": "S06"
+  },
+  {
+   "start": 57.5,
+   "end": 61.8,
+   "text": "Turned into a claim, with its source. Queued, not sent.",
+   "scene": "S06"
+  },
+  {
+   "start": 62.5,
+   "end": 65.5,
+   "text": "Meanwhile, the client emails Lakshya: the 16th.",
+   "scene": "S07"
+  },
+  {
+   "start": 66.5,
+   "end": 70,
+   "text": "Her laptop reads it and syncs it to the team.",
+   "scene": "S07"
+  },
+  {
+   "start": 70,
+   "end": 71.8,
+   "text": "Tanishk can't see it yet.",
+   "scene": "S07"
+  },
+  {
+   "start": 76.5,
+   "end": 80,
+   "text": "Both laptops catch the same conflict. On their own.",
+   "scene": "S08"
+  },
+  {
+   "start": 80,
+   "end": 84.5,
+   "text": "Qdrant says same job: 0.85, over the 0.82 bar.",
+   "scene": "S08"
+  },
+  {
+   "start": 84.5,
+   "end": 89.5,
+   "text": "Nothing is overwritten. Nothing wins by default.",
+   "scene": "S08"
+  },
+  {
+   "start": 92,
+   "end": 95.5,
+   "text": "Ask again: it won't guess. Disputed, with both sources.",
+   "scene": "S09"
+  },
+  {
+   "start": 95.5,
+   "end": 97.8,
+   "text": "Who said what, and where.",
+   "scene": "S09"
+  },
+  {
+   "start": 99.5,
+   "end": 102.5,
+   "text": "Lakshya can ask. Only the owner decides.",
+   "scene": "S10"
+  },
+  {
+   "start": 104,
+   "end": 107.8,
+   "text": "Tanishk keeps the 18th. Everyone has it a second later.",
+   "scene": "S10"
+  },
+  {
+   "start": 109.5,
+   "end": 112.5,
+   "text": "Private notes never leave the laptop.",
+   "scene": "S11"
+  },
+  {
+   "start": 112.5,
+   "end": 115.8,
+   "text": "Device-only claims on the hub: 0. Counted live.",
+   "scene": "S11"
+  },
+  {
+   "start": 116.5,
+   "end": 120,
+   "text": "Under the hood: every laptop is a full edge node.",
+   "scene": "S12"
+  },
+  {
+   "start": 120,
+   "end": 124,
+   "text": "Qdrant Edge on the laptop. A Qdrant server as the hub.",
+   "scene": "S12"
+  },
+  {
+   "start": 124,
+   "end": 127.8,
+   "text": "Sync is an outbox. Laptops pull what changed.",
+   "scene": "S12"
+  },
+  {
+   "start": 128.5,
+   "end": 132,
+   "text": "The trick: a vector of what a claim is about.",
+   "scene": "S13"
+  },
+  {
+   "start": 132,
+   "end": 135.5,
+   "text": "Same task, worded differently: 0.85. The bar is 0.82.",
+   "scene": "S13"
+  },
+  {
+   "start": 135.5,
+   "end": 137.8,
+   "text": "Same thing, different value: a conflict.",
+   "scene": "S13"
+  },
+  {
+   "start": 138.5,
+   "end": 142,
+   "text": "Where it's going: a private assistant on every laptop.",
+   "scene": "S14"
+  },
+  {
+   "start": 142,
+   "end": 146,
+   "text": "It knows you, because nothing leaves your laptop.",
+   "scene": "S14"
+  },
+  {
+   "start": 146.5,
+   "end": 150.5,
+   "text": "The direction, not the demo: phone, voice and nudges come next.",
+   "scene": "S14"
+  },
+  {
+   "start": 150.5,
+   "end": 153.8,
+   "text": "Only team work is shared. Everything else stays yours.",
+   "scene": "S14"
+  },
+  {
+   "start": 154.5,
+   "end": 158.5,
+   "text": "Shared memory for small teams that work where the signal doesn't.",
+   "scene": "S15"
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.5,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "signal bars stroke",
+   "dur": 0.4
+  },
+  {
+   "t": 1,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "\"on a shoot · no signal\"",
+   "dur": 0.5
+  },
+  {
+   "t": 1.5,
+   "type": "sticky_slap",
+   "scene": "S01",
+   "label": "yellow sticky (call) lands"
+  },
+  {
+   "t": 3,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "\"Tanishk\" label",
+   "dur": 0.35
+  },
+  {
+   "t": 4,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "\"in the office · online\"",
+   "dur": 0.5
+  },
+  {
+   "t": 4.5,
+   "type": "sticky_slap",
+   "scene": "S01",
+   "label": "blue sticky (email) lands"
+  },
+  {
+   "t": 6,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "\"Lakshya\" label",
+   "dur": 0.35
+  },
+  {
+   "t": 8,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "red circle around \"the 18th\"",
+   "dur": 0.4
+  },
+  {
+   "t": 8.5,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "red circle around \"16 October\"",
+   "dur": 0.4
+  },
+  {
+   "t": 9,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "giant 18 / 16 scrawl",
+   "dur": 0.7
+  },
+  {
+   "t": 9,
+   "type": "paper_whoosh",
+   "scene": "S01",
+   "label": "giant 18 / 16 fly to centre"
+  },
+  {
+   "t": 10,
+   "type": "ui_pop",
+   "scene": "S01",
+   "label": "red \"?\" drops"
+  },
+  {
+   "t": 12,
+   "type": "marker_squeak",
+   "scene": "S01",
+   "label": "\"same job\" line",
+   "dur": 0.5
+  },
+  {
+   "t": 15,
+   "type": "paper_whoosh",
+   "scene": "S01",
+   "label": "eraser wipe"
+  },
+  {
+   "t": 16,
+   "type": "sticky_slap",
+   "scene": "S02",
+   "label": "Q sticky lands (under the music impact)"
+  },
+  {
+   "t": 17,
+   "type": "marker_squeak",
+   "scene": "S02",
+   "label": "wordmark underline",
+   "dur": 0.45
+  },
+  {
+   "t": 17.5,
+   "type": "ui_pop",
+   "scene": "S02",
+   "label": "subtitle"
+  },
+  {
+   "t": 19,
+   "type": "paper_whoosh",
+   "scene": "S02",
+   "label": "pan to landing card"
+  },
+  {
+   "t": 19.5,
+   "type": "sticky_slap",
+   "scene": "S02",
+   "label": "tape strips (soft)",
+   "gain": 0.5
+  },
+  {
+   "t": 20.5,
+   "type": "marker_squeak",
+   "scene": "S02",
+   "label": "\"Code Cubicle 6.0 · PS 03\" tag",
+   "dur": 0.5
+  },
+  {
+   "t": 24.5,
+   "type": "click_down",
+   "scene": "S02",
+   "label": "Watch the demo"
+  },
+  {
+   "t": 24.6,
+   "type": "click_up",
+   "scene": "S02",
+   "label": "Watch the demo"
+  },
+  {
+   "t": 25,
+   "type": "paper_whoosh",
+   "scene": "S02",
+   "label": "dive to the stage"
+  },
+  {
+   "t": 26,
+   "type": "sticky_slap",
+   "scene": "S03",
+   "label": "stage plate tape lands",
+   "gain": 0.6
+  },
+  {
+   "t": 27,
+   "type": "marker_squeak",
+   "scene": "S03",
+   "label": "label Tanishk",
+   "dur": 0.5
+  },
+  {
+   "t": 28,
+   "type": "marker_squeak",
+   "scene": "S03",
+   "label": "label hub",
+   "dur": 0.5
+  },
+  {
+   "t": 29,
+   "type": "marker_squeak",
+   "scene": "S03",
+   "label": "label Lakshya",
+   "dur": 0.5
+  },
+  {
+   "t": 31,
+   "type": "marker_squeak",
+   "scene": "S03",
+   "label": "relay doodle over the left link",
+   "dur": 0.45
+  },
+  {
+   "t": 31.25,
+   "type": "marker_squeak",
+   "scene": "S03",
+   "label": "relay doodle over the right link",
+   "dur": 0.45
+  },
+  {
+   "t": 32,
+   "type": "ui_pop",
+   "scene": "S03",
+   "label": "honest-note kraft tag"
+  },
+  {
+   "t": 34,
+   "type": "paper_whoosh",
+   "scene": "S04",
+   "label": "push into Lakshya"
+  },
+  {
+   "t": 36,
+   "type": "click_down",
+   "scene": "S04",
+   "label": "suggestion What's due"
+  },
+  {
+   "t": 36.1,
+   "type": "click_up",
+   "scene": "S04",
+   "label": "suggestion What's due"
+  },
+  {
+   "t": 36.5,
+   "type": "ui_pop",
+   "scene": "S04",
+   "label": "answer appears"
+  },
+  {
+   "t": 37,
+   "type": "marker_squeak",
+   "scene": "S04",
+   "label": "circle 9 ms",
+   "dur": 0.4
+  },
+  {
+   "t": 37.5,
+   "type": "marker_squeak",
+   "scene": "S04",
+   "label": "\"on the laptop · no cloud\"",
+   "dur": 0.5
+  },
+  {
+   "t": 38.5,
+   "type": "ui_pop",
+   "scene": "S04",
+   "label": "citation tick 1",
+   "gain": 0.5
+  },
+  {
+   "t": 39,
+   "type": "ui_pop",
+   "scene": "S04",
+   "label": "citation tick 2",
+   "gain": 0.5
+  },
+  {
+   "t": 39.5,
+   "type": "ui_pop",
+   "scene": "S04",
+   "label": "citation tick 3",
+   "gain": 0.5
+  },
+  {
+   "t": 44,
+   "type": "paper_whoosh",
+   "scene": "S05",
+   "label": "whip-pan to Tanishk"
+  },
+  {
+   "t": 46,
+   "type": "click_down",
+   "scene": "S05",
+   "label": "hub switch"
+  },
+  {
+   "t": 46,
+   "type": "disconnect_thud",
+   "scene": "S05",
+   "label": "cut off from the hub"
+  },
+  {
+   "t": 46.03,
+   "type": "toggle_clack",
+   "scene": "S05",
+   "label": "hub switch off"
+  },
+  {
+   "t": 46.1,
+   "type": "click_up",
+   "scene": "S05",
+   "label": "hub switch"
+  },
+  {
+   "t": 46.5,
+   "type": "marker_squeak",
+   "scene": "S05",
+   "label": "slash over link",
+   "dur": 0.3
+  },
+  {
+   "t": 47,
+   "type": "marker_squeak",
+   "scene": "S05",
+   "label": "\"cut off from the hub\"",
+   "dur": 0.5
+  },
+  {
+   "t": 47.5,
+   "type": "marker_squeak",
+   "scene": "S05",
+   "label": "circle 0 B/s",
+   "dur": 0.4
+  },
+  {
+   "t": 49.5,
+   "type": "click_down",
+   "scene": "S05",
+   "label": "suggestion What's due (Tanishk)"
+  },
+  {
+   "t": 49.6,
+   "type": "click_up",
+   "scene": "S05",
+   "label": "suggestion What's due (Tanishk)"
+  },
+  {
+   "t": 50,
+   "type": "ui_pop",
+   "scene": "S05",
+   "label": "offline answer appears"
+  },
+  {
+   "t": 50.5,
+   "type": "marker_squeak",
+   "scene": "S05",
+   "label": "underline 11 ms",
+   "dur": 0.3
+  },
+  {
+   "t": 50.75,
+   "type": "marker_squeak",
+   "scene": "S05",
+   "label": "\"no hub, still answers\"",
+   "dur": 0.45
+  },
+  {
+   "t": 52,
+   "type": "paper_whoosh",
+   "scene": "S06",
+   "label": "move to Capture",
+   "gain": 0.5
+  },
+  {
+   "t": 53,
+   "type": "click_down",
+   "scene": "S06",
+   "label": "note input"
+  },
+  {
+   "t": 53.1,
+   "type": "click_up",
+   "scene": "S06",
+   "label": "note input"
+  },
+  {
+   "t": 53.5,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"C\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 53.546,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"l\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 53.593,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"i\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 53.639,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"e\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 53.685,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"n\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 53.731,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"t\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 53.778,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 2
+  },
+  {
+   "t": 53.824,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"j\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 53.87,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"u\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 53.917,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"s\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 53.963,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"t\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 54.009,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 3
+  },
+  {
+   "t": 54.056,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"c\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 54.102,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"a\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 54.148,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"l\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 54.194,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"l\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 54.241,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"e\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 54.287,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"d\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 54.333,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \":\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 54.38,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 3
+  },
+  {
+   "t": 54.426,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"S\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 54.472,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"h\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 54.519,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"a\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 54.565,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"r\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 54.611,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"m\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 54.657,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"a\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 54.704,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 2
+  },
+  {
+   "t": 54.75,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"d\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 54.796,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"e\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 54.843,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"l\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 54.889,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"i\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 54.935,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"v\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 54.981,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"e\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 55.028,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"r\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 55.074,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"y\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 55.12,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 3
+  },
+  {
+   "t": 55.167,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"m\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 55.213,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"o\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 55.259,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"v\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 55.306,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"e\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 55.352,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"s\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 55.398,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 1
+  },
+  {
+   "t": 55.444,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"t\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 55.491,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"o\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 55.537,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 0
+  },
+  {
+   "t": 55.583,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"t\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 55.63,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"h\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 55.676,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"e\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 55.722,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \" \"",
+   "gain": 0.55,
+   "variant": 0
+  },
+  {
+   "t": 55.769,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"1\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 55.815,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"8\"",
+   "gain": 0.8,
+   "variant": 2
+  },
+  {
+   "t": 55.861,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"t\"",
+   "gain": 0.8,
+   "variant": 3
+  },
+  {
+   "t": 55.907,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \"h\"",
+   "gain": 0.8,
+   "variant": 0
+  },
+  {
+   "t": 55.954,
+   "type": "key_tick",
+   "scene": "S06",
+   "label": "type \".\"",
+   "gain": 0.8,
+   "variant": 1
+  },
+  {
+   "t": 56.5,
+   "type": "click_down",
+   "scene": "S06",
+   "label": "Save"
+  },
+  {
+   "t": 56.6,
+   "type": "click_up",
+   "scene": "S06",
+   "label": "Save"
+  },
+  {
+   "t": 56.6,
+   "type": "ui_pop",
+   "scene": "S06",
+   "label": "fast-forward stamp",
+   "gain": 0.5
+  },
+  {
+   "t": 57.5,
+   "type": "counter_tick",
+   "scene": "S06",
+   "label": "Outbox 0 -> 1"
+  },
+  {
+   "t": 57.5,
+   "type": "ui_pop",
+   "scene": "S06",
+   "label": "claim lands (amber point)"
+  },
+  {
+   "t": 58,
+   "type": "marker_squeak",
+   "scene": "S06",
+   "label": "arrow input -> point",
+   "dur": 0.45
+  },
+  {
+   "t": 58.5,
+   "type": "marker_squeak",
+   "scene": "S06",
+   "label": "circle Outbox 1",
+   "dur": 0.4
+  },
+  {
+   "t": 59,
+   "type": "paper_whoosh",
+   "scene": "S06",
+   "label": "pan to hub",
+   "gain": 0.5
+  },
+  {
+   "t": 59.5,
+   "type": "marker_squeak",
+   "scene": "S06",
+   "label": "\"still 18 · nothing left the laptop\"",
+   "dur": 0.6
+  },
+  {
+   "t": 62,
+   "type": "paper_whoosh",
+   "scene": "S07",
+   "label": "across to Lakshya"
+  },
+  {
+   "t": 63,
+   "type": "marker_squeak",
+   "scene": "S07",
+   "label": "\"client email, just in\"",
+   "dur": 0.5
+  },
+  {
+   "t": 64.5,
+   "type": "click_down",
+   "scene": "S07",
+   "label": "Receive"
+  },
+  {
+   "t": 64.6,
+   "type": "click_up",
+   "scene": "S07",
+   "label": "Receive"
+  },
+  {
+   "t": 64.6,
+   "type": "ui_pop",
+   "scene": "S07",
+   "label": "fast-forward stamp",
+   "gain": 0.5
+  },
+  {
+   "t": 65.5,
+   "type": "counter_tick",
+   "scene": "S07",
+   "label": "Lakshya Outbox 0 -> 1"
+  },
+  {
+   "t": 65.5,
+   "type": "ui_pop",
+   "scene": "S07",
+   "label": "claim lands (queued)"
+  },
+  {
+   "t": 66,
+   "type": "sync_whoosh",
+   "scene": "S07",
+   "label": "push to hub (right link)"
+  },
+  {
+   "t": 66.5,
+   "type": "counter_tick",
+   "scene": "S07",
+   "label": "hub 18 -> 19"
+  },
+  {
+   "t": 67.5,
+   "type": "marker_squeak",
+   "scene": "S07",
+   "label": "green tick + \"synced to the team\"",
+   "dur": 0.5
+  },
+  {
+   "t": 67.8,
+   "type": "marker_squeak",
+   "scene": "S07",
+   "label": "green arrow to the 19",
+   "dur": 0.3
+  },
+  {
+   "t": 68.5,
+   "type": "paper_whoosh",
+   "scene": "S07",
+   "label": "glide to Tanishk",
+   "gain": 0.5
+  },
+  {
+   "t": 69,
+   "type": "marker_squeak",
+   "scene": "S07",
+   "label": "dotted arrow",
+   "dur": 0.4
+  },
+  {
+   "t": 69.5,
+   "type": "marker_squeak",
+   "scene": "S07",
+   "label": "red ×",
+   "dur": 0.25
+  },
+  {
+   "t": 69.75,
+   "type": "marker_squeak",
+   "scene": "S07",
+   "label": "\"can't see it yet\"",
+   "dur": 0.45
+  },
+  {
+   "t": 72.5,
+   "type": "paper_whoosh",
+   "scene": "S08",
+   "label": "push to Tanishk switch",
+   "gain": 0.5
+  },
+  {
+   "t": 75,
+   "type": "click_down",
+   "scene": "S08",
+   "label": "hub switch"
+  },
+  {
+   "t": 75,
+   "type": "paper_whoosh",
+   "scene": "S08",
+   "label": "snap back to wide",
+   "gain": 0.6
+  },
+  {
+   "t": 75.03,
+   "type": "toggle_clack",
+   "scene": "S08",
+   "label": "hub switch on"
+  },
+  {
+   "t": 75.1,
+   "type": "click_up",
+   "scene": "S08",
+   "label": "hub switch"
+  },
+  {
+   "t": 75.25,
+   "type": "counter_tick",
+   "scene": "S08",
+   "label": "Tanishk Outbox 1 -> 0"
+  },
+  {
+   "t": 75.25,
+   "type": "sync_whoosh",
+   "scene": "S08",
+   "label": "outbox drains to hub"
+  },
+  {
+   "t": 75.5,
+   "type": "ui_pop",
+   "scene": "S08",
+   "label": "Tanishk conflict card opens"
+  },
+  {
+   "t": 76,
+   "type": "alert_chime",
+   "scene": "S08",
+   "label": "dissonant bell tail on the hit"
+  },
+  {
+   "t": 76,
+   "type": "conflict_hit",
+   "scene": "S08",
+   "label": "BOTH laptops: conflict (hero hit)"
+  },
+  {
+   "t": 76,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "red loops around both cards",
+   "dur": 0.6
+  },
+  {
+   "t": 76.5,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "\"after reconnect:\"",
+   "dur": 0.45
+  },
+  {
+   "t": 77,
+   "type": "ui_pop",
+   "scene": "S08",
+   "label": "stopwatch +0.5 s"
+  },
+  {
+   "t": 77.5,
+   "type": "ui_pop",
+   "scene": "S08",
+   "label": "stopwatch +1.0 s"
+  },
+  {
+   "t": 78,
+   "type": "paper_whoosh",
+   "scene": "S08",
+   "label": "big zoom into the cloud"
+  },
+  {
+   "t": 79.5,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "ruler line",
+   "dur": 0.5
+  },
+  {
+   "t": 80,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "threshold tick 0.82",
+   "dur": 0.25
+  },
+  {
+   "t": 80.5,
+   "type": "counter_tick",
+   "scene": "S08",
+   "label": "needle 0.70 -> 0.75"
+  },
+  {
+   "t": 80.75,
+   "type": "counter_tick",
+   "scene": "S08",
+   "label": "needle -> 0.80"
+  },
+  {
+   "t": 81,
+   "type": "counter_tick",
+   "scene": "S08",
+   "label": "needle -> 0.82"
+  },
+  {
+   "t": 81.25,
+   "type": "counter_tick",
+   "scene": "S08",
+   "label": "needle -> 0.85"
+  },
+  {
+   "t": 81.5,
+   "type": "ui_pop",
+   "scene": "S08",
+   "label": "\"0.85\" label"
+  },
+  {
+   "t": 82.5,
+   "type": "paper_whoosh",
+   "scene": "S08",
+   "label": "to the conflict card",
+   "gain": 0.5
+  },
+  {
+   "t": 83,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "underline 16 Oct",
+   "dur": 0.3
+  },
+  {
+   "t": 83.5,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "underline 18 Oct",
+   "dur": 0.3
+  },
+  {
+   "t": 84,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "circle 0.85 in the card text",
+   "dur": 0.35
+  },
+  {
+   "t": 85,
+   "type": "paper_whoosh",
+   "scene": "S08",
+   "label": "pull to both cards",
+   "gain": 0.5
+  },
+  {
+   "t": 86,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "\"Tanishk owns this\"",
+   "dur": 0.5
+  },
+  {
+   "t": 87,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "\"Lakshya waits for him\"",
+   "dur": 0.5
+  },
+  {
+   "t": 88,
+   "type": "marker_squeak",
+   "scene": "S08",
+   "label": "\"same conflict id on both\"",
+   "dur": 0.6
+  },
+  {
+   "t": 90,
+   "type": "paper_whoosh",
+   "scene": "S09",
+   "label": "to Tanishk Ask"
+  },
+  {
+   "t": 91.5,
+   "type": "click_down",
+   "scene": "S09",
+   "label": "suggestion Sharma delivery"
+  },
+  {
+   "t": 91.6,
+   "type": "click_up",
+   "scene": "S09",
+   "label": "suggestion Sharma delivery"
+  },
+  {
+   "t": 92,
+   "type": "ui_pop",
+   "scene": "S09",
+   "label": "disputed answer"
+  },
+  {
+   "t": 92.5,
+   "type": "marker_squeak",
+   "scene": "S09",
+   "label": "underline Disputed",
+   "dur": 0.35
+  },
+  {
+   "t": 93.5,
+   "type": "marker_squeak",
+   "scene": "S09",
+   "label": "circle email citation",
+   "dur": 0.4
+  },
+  {
+   "t": 94,
+   "type": "marker_squeak",
+   "scene": "S09",
+   "label": "circle note citation",
+   "dur": 0.4
+  },
+  {
+   "t": 94.5,
+   "type": "marker_squeak",
+   "scene": "S09",
+   "label": "\"both sources, both dates\"",
+   "dur": 0.55
+  },
+  {
+   "t": 98,
+   "type": "paper_whoosh",
+   "scene": "S10",
+   "label": "to Lakshya card",
+   "gain": 0.6
+  },
+  {
+   "t": 99.5,
+   "type": "click_down",
+   "scene": "S10",
+   "label": "Ask Tanishk"
+  },
+  {
+   "t": 99.6,
+   "type": "click_up",
+   "scene": "S10",
+   "label": "Ask Tanishk"
+  },
+  {
+   "t": 100,
+   "type": "ui_pop",
+   "scene": "S10",
+   "label": "draft appears"
+  },
+  {
+   "t": 100.5,
+   "type": "marker_squeak",
+   "scene": "S10",
+   "label": "\"drafted · nothing sent\"",
+   "dur": 0.5
+  },
+  {
+   "t": 102,
+   "type": "paper_whoosh",
+   "scene": "S10",
+   "label": "to Tanishk card",
+   "gain": 0.5
+  },
+  {
+   "t": 104,
+   "type": "click_down",
+   "scene": "S10",
+   "label": "Keep 18 Oct"
+  },
+  {
+   "t": 104,
+   "type": "resolve_chime",
+   "scene": "S10",
+   "label": "owner settles"
+  },
+  {
+   "t": 104.1,
+   "type": "click_up",
+   "scene": "S10",
+   "label": "Keep 18 Oct"
+  },
+  {
+   "t": 104.5,
+   "type": "marker_squeak",
+   "scene": "S10",
+   "label": "strike 16 Oct + \"kept for history\"",
+   "dur": 0.5
+  },
+  {
+   "t": 104.5,
+   "type": "sync_whoosh",
+   "scene": "S10",
+   "label": "resolution pushed (3 claims)"
+  },
+  {
+   "t": 105,
+   "type": "resolve_chime",
+   "scene": "S10",
+   "label": "echo on Lakshya (softer, higher)",
+   "gain": 0.45,
+   "variant": 1
+  },
+  {
+   "t": 105,
+   "type": "ui_pop",
+   "scene": "S10",
+   "label": "Lakshya card resolves"
+  },
+  {
+   "t": 105.5,
+   "type": "marker_squeak",
+   "scene": "S10",
+   "label": "green check left",
+   "dur": 0.25
+  },
+  {
+   "t": 106,
+   "type": "marker_squeak",
+   "scene": "S10",
+   "label": "green check right",
+   "dur": 0.25
+  },
+  {
+   "t": 108,
+   "type": "paper_whoosh",
+   "scene": "S11",
+   "label": "to Tanishk cloud"
+  },
+  {
+   "t": 109.5,
+   "type": "click_down",
+   "scene": "S11",
+   "label": "Team view"
+  },
+  {
+   "t": 109.53,
+   "type": "toggle_clack",
+   "scene": "S11",
+   "label": "view toggle (soft)",
+   "gain": 0.5
+  },
+  {
+   "t": 109.6,
+   "type": "click_up",
+   "scene": "S11",
+   "label": "Team view"
+  },
+  {
+   "t": 110,
+   "type": "ui_pop",
+   "scene": "S11",
+   "label": "kraft \"only on this laptop\" tag"
+  },
+  {
+   "t": 110.5,
+   "type": "marker_squeak",
+   "scene": "S11",
+   "label": "circle \"Private 0\" in the legend",
+   "dur": 0.35
+  },
+  {
+   "t": 111,
+   "type": "counter_tick",
+   "scene": "S11",
+   "label": "camera lands on the 0"
+  },
+  {
+   "t": 111,
+   "type": "paper_whoosh",
+   "scene": "S11",
+   "label": "to hub privacy block",
+   "gain": 0.5
+  },
+  {
+   "t": 111.5,
+   "type": "marker_squeak",
+   "scene": "S11",
+   "label": "circle the 0",
+   "dur": 0.4
+  },
+  {
+   "t": 112.5,
+   "type": "marker_squeak",
+   "scene": "S11",
+   "label": "\"counted live from Qdrant\"",
+   "dur": 0.5
+  },
+  {
+   "t": 115.5,
+   "type": "paper_whoosh",
+   "scene": "S11",
+   "label": "travel to the deck page"
+  },
+  {
+   "t": 116.5,
+   "type": "sticky_slap",
+   "scene": "S12",
+   "label": "deck page tape",
+   "gain": 0.5
+  },
+  {
+   "t": 118.5,
+   "type": "click_down",
+   "scene": "S12",
+   "label": "Sync and conflict"
+  },
+  {
+   "t": 118.6,
+   "type": "ui_pop",
+   "scene": "S12",
+   "label": "flow step 1 lights",
+   "gain": 0.45
+  },
+  {
+   "t": 118.6,
+   "type": "click_up",
+   "scene": "S12",
+   "label": "Sync and conflict"
+  },
+  {
+   "t": 119.5,
+   "type": "ui_pop",
+   "scene": "S12",
+   "label": "flow step 2 lights",
+   "gain": 0.45
+  },
+  {
+   "t": 120.4,
+   "type": "ui_pop",
+   "scene": "S12",
+   "label": "flow step 3 lights",
+   "gain": 0.45
+  },
+  {
+   "t": 121.3,
+   "type": "ui_pop",
+   "scene": "S12",
+   "label": "flow step 4 lights",
+   "gain": 0.45
+  },
+  {
+   "t": 122.2,
+   "type": "ui_pop",
+   "scene": "S12",
+   "label": "flow step 5 lights",
+   "gain": 0.45
+  },
+  {
+   "t": 123.1,
+   "type": "ui_pop",
+   "scene": "S12",
+   "label": "flow step 6 lights",
+   "gain": 0.45
+  },
+  {
+   "t": 124.5,
+   "type": "marker_squeak",
+   "scene": "S12",
+   "label": "\"relays only · no logic\"",
+   "dur": 0.5
+  },
+  {
+   "t": 125.05,
+   "type": "marker_squeak",
+   "scene": "S12",
+   "label": "underline under the hub note",
+   "dur": 0.25
+  },
+  {
+   "t": 126,
+   "type": "marker_squeak",
+   "scene": "S12",
+   "label": "\"same code, own shard\"",
+   "dur": 0.5
+  },
+  {
+   "t": 128,
+   "type": "paper_whoosh",
+   "scene": "S13",
+   "label": "arrive on clean board",
+   "gain": 0.6
+  },
+  {
+   "t": 128.5,
+   "type": "sticky_slap",
+   "scene": "S13",
+   "label": "call sticky"
+  },
+  {
+   "t": 129,
+   "type": "sticky_slap",
+   "scene": "S13",
+   "label": "email sticky"
+  },
+  {
+   "t": 129.5,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "box Sharma delivery",
+   "dur": 0.4
+  },
+  {
+   "t": 130,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "box Sharma wedding edit",
+   "dur": 0.4
+  },
+  {
+   "t": 130.5,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "strike values + \"not the value\"",
+   "dur": 0.5
+  },
+  {
+   "t": 131,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "key line 1",
+   "dur": 0.45
+  },
+  {
+   "t": 131.5,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "key line 2",
+   "dur": 0.45
+  },
+  {
+   "t": 132,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "ruler",
+   "dur": 0.5
+  },
+  {
+   "t": 132.5,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "threshold tick",
+   "dur": 0.25
+  },
+  {
+   "t": 133,
+   "type": "ui_pop",
+   "scene": "S13",
+   "label": "unrelated deadline dot 0.74"
+  },
+  {
+   "t": 134,
+   "type": "counter_tick",
+   "scene": "S13",
+   "label": "dot -> 0.78"
+  },
+  {
+   "t": 134.25,
+   "type": "counter_tick",
+   "scene": "S13",
+   "label": "dot -> 0.82"
+  },
+  {
+   "t": 134.5,
+   "type": "counter_tick",
+   "scene": "S13",
+   "label": "dot -> 0.85"
+  },
+  {
+   "t": 134.5,
+   "type": "ui_pop",
+   "scene": "S13",
+   "label": "\"0.85 · same thing\""
+  },
+  {
+   "t": 134.5,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "hatch the zone above the bar",
+   "dur": 0.6
+  },
+  {
+   "t": 135.5,
+   "type": "marker_squeak",
+   "scene": "S13",
+   "label": "\"different value -> conflict\"",
+   "dur": 0.5
+  },
+  {
+   "t": 136.5,
+   "type": "sticky_slap",
+   "scene": "S13",
+   "label": "\"Ask the owner.\""
+  },
+  {
+   "t": 137.5,
+   "type": "paper_whoosh",
+   "scene": "S13",
+   "label": "move to the assistant page"
+  },
+  {
+   "t": 138,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "deck page tape",
+   "gain": 0.5
+  },
+  {
+   "t": 139.5,
+   "type": "marker_squeak",
+   "scene": "S14",
+   "label": "input tick 1",
+   "dur": 0.2
+  },
+  {
+   "t": 140,
+   "type": "marker_squeak",
+   "scene": "S14",
+   "label": "input tick 2",
+   "dur": 0.2
+  },
+  {
+   "t": 140.5,
+   "type": "marker_squeak",
+   "scene": "S14",
+   "label": "input tick 3",
+   "dur": 0.2
+  },
+  {
+   "t": 141,
+   "type": "marker_squeak",
+   "scene": "S14",
+   "label": "input tick 4",
+   "dur": 0.2
+  },
+  {
+   "t": 141.5,
+   "type": "marker_squeak",
+   "scene": "S14",
+   "label": "input tick 5",
+   "dur": 0.2
+  },
+  {
+   "t": 142,
+   "type": "paper_whoosh",
+   "scene": "S14",
+   "label": "push to the laptop box",
+   "gain": 0.5
+  },
+  {
+   "t": 143,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "assistant sticky 1",
+   "gain": 0.8
+  },
+  {
+   "t": 143.5,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "assistant sticky 2",
+   "gain": 0.8
+  },
+  {
+   "t": 144,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "assistant sticky 3",
+   "gain": 0.8
+  },
+  {
+   "t": 144.5,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "assistant sticky 4",
+   "gain": 0.8
+  },
+  {
+   "t": 146,
+   "type": "paper_whoosh",
+   "scene": "S14",
+   "label": "pan to a day with Quorum"
+  },
+  {
+   "t": 146.5,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "timeline stop 1",
+   "gain": 0.6
+  },
+  {
+   "t": 147.5,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "timeline stop 2",
+   "gain": 0.6
+  },
+  {
+   "t": 148.5,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "timeline stop 3",
+   "gain": 0.6
+  },
+  {
+   "t": 149.5,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "timeline stop 4",
+   "gain": 0.6
+  },
+  {
+   "t": 150.5,
+   "type": "sticky_slap",
+   "scene": "S14",
+   "label": "timeline stop 5",
+   "gain": 0.6
+  },
+  {
+   "t": 151.5,
+   "type": "marker_squeak",
+   "scene": "S14",
+   "label": "underline BKA line",
+   "dur": 0.6
+  },
+  {
+   "t": 154,
+   "type": "paper_whoosh",
+   "scene": "S15",
+   "label": "pull out to the whole board"
+  },
+  {
+   "t": 155.35,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "region number 1 on the whole board",
+   "gain": 0.4
+  },
+  {
+   "t": 155.55,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "region number 2 on the whole board",
+   "gain": 0.4
+  },
+  {
+   "t": 155.75,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "region number 3 on the whole board",
+   "gain": 0.4
+  },
+  {
+   "t": 155.95,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "region number 4 on the whole board",
+   "gain": 0.4
+  },
+  {
+   "t": 156.15,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "region number 5 on the whole board",
+   "gain": 0.4
+  },
+  {
+   "t": 156.35,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "region number 6 on the whole board",
+   "gain": 0.4
+  },
+  {
+   "t": 156.55,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "region number 7 on the whole board",
+   "gain": 0.4
+  },
+  {
+   "t": 158.5,
+   "type": "sticky_slap",
+   "scene": "S15",
+   "label": "BKA kraft card"
+  },
+  {
+   "t": 159.5,
+   "type": "paper_whoosh",
+   "scene": "S15",
+   "label": "eraser swipe"
+  },
+  {
+   "t": 160,
+   "type": "logo_hit",
+   "scene": "S15",
+   "label": "Quorum logo"
+  },
+  {
+   "t": 161,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "per team, per month"
+  },
+  {
+   "t": 162,
+   "type": "marker_squeak",
+   "scene": "S15",
+   "label": "repo URL",
+   "dur": 0.8
+  },
+  {
+   "t": 163,
+   "type": "ui_pop",
+   "scene": "S15",
+   "label": "event line",
+   "gain": 0.5
+  }
+ ],
+ "sfx_types": {
+  "click_down": "mouse button press: short plastic tick, ~8 ms, bright",
+  "click_up": "release: softer, slightly higher, ~6 ms",
+  "key_tick": "laptop key, 4 variants (field \"variant\"), +-1.5 dB / +-3% pitch jitter; space bar duller",
+  "toggle_clack": "switch clack with a tiny slide before it",
+  "sticky_slap": "paper slap + low felt thump, 60-90 ms; field \"gain\"",
+  "marker_squeak": "felt marker on whiteboard; field \"dur\" = stroke length in s; vary pitch per stroke",
+  "paper_whoosh": "airy paper swish 0.4-0.6 s, peak at t+0.2",
+  "disconnect_thud": "muffled low thud + short downward blip (power-off feel)",
+  "sync_whoosh": "rising airy whoosh with a soft sparkle, 0.4 s",
+  "conflict_hit": "deep hit: kick + low tom + snare crack, short reverb",
+  "alert_chime": "dissonant two-bell tail (tritone) under the conflict hit, 1.2 s",
+  "resolve_chime": "bright major-third two-note chime; variant 1 = higher, softer echo",
+  "ui_pop": "small bubble pop; field \"gain\"",
+  "counter_tick": "mechanical counter tick",
+  "logo_hit": "big warm hit + chime + cymbal swell, 2.5 s ring"
+ },
+ "music": [
+  {
+   "t": 0,
+   "mark": "intro",
+   "label": "sparse: clock-like ticks, felt piano, a little unease"
+  },
+  {
+   "t": 14,
+   "mark": "swell",
+   "label": "tension swell into the title"
+  },
+  {
+   "t": 16,
+   "mark": "impact",
+   "label": "title impact: full kit enters, bright"
+  },
+  {
+   "t": 26,
+   "mark": "groove",
+   "label": "demo groove: light kit, plucks, marimba"
+  },
+  {
+   "t": 46,
+   "mark": "offline",
+   "label": "Tanishk offline: low-pass the bed, drums to muffled kick only"
+  },
+  {
+   "t": 72,
+   "mark": "riser",
+   "label": "riser 72 -> 76, filter opening"
+  },
+  {
+   "t": 75,
+   "mark": "reconnect",
+   "label": "filter fully open, one-beat breath before the hit"
+  },
+  {
+   "t": 76,
+   "mark": "conflict",
+   "label": "HERO HIT: stop-time on bar 39, then tense minor groove"
+  },
+  {
+   "t": 104,
+   "mark": "resolve",
+   "label": "resolution: lift to major, full groove"
+  },
+  {
+   "t": 116,
+   "mark": "explain",
+   "label": "thinner, curious: plucks + shaker"
+  },
+  {
+   "t": 138,
+   "mark": "vision",
+   "label": "warm pads, slower feel, same tempo"
+  },
+  {
+   "t": 154,
+   "mark": "close_build",
+   "label": "build to the logo"
+  },
+  {
+   "t": 160,
+   "mark": "close",
+   "label": "logo hit, final chord rings"
+  },
+  {
+   "t": 168,
+   "mark": "end",
+   "label": "tail done; silence"
+  }
+ ],
+ "music_sections": [
+  {
+   "start": 0,
+   "end": 16,
+   "name": "intro"
+  },
+  {
+   "start": 16,
+   "end": 26,
+   "name": "title"
+  },
+  {
+   "start": 26,
+   "end": 46,
+   "name": "demo_a"
+  },
+  {
+   "start": 46,
+   "end": 72,
+   "name": "demo_offline"
+  },
+  {
+   "start": 72,
+   "end": 76,
+   "name": "riser"
+  },
+  {
+   "start": 76,
+   "end": 104,
+   "name": "conflict"
+  },
+  {
+   "start": 104,
+   "end": 116,
+   "name": "resolved"
+  },
+  {
+   "start": 116,
+   "end": 138,
+   "name": "explain"
+  },
+  {
+   "start": 138,
+   "end": 154,
+   "name": "vision"
+  },
+  {
+   "start": 154,
+   "end": 168,
+   "name": "close"
+  }
+ ],
+ "captures": {
+  "STAGE": {
+   "surface": "stage-replica",
+   "page": "video/v4/capture/stage/index.html (copy of app/web/stage.html + stage.js + device.js + cloud.js + styles.css + stage.css + looks/studio.css + looks/fonts, with stage.js wired to an in-page fake backend; data-look=\"studio\")",
+   "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "deviceScaleFactor": 2
+   },
+   "fps": 30,
+   "ct_end": 93,
+   "output": "clips/STAGE/f%05d.jpg (frame k = ct k/30, 3840x2160, JPEG q90) + clips/STAGE/meta.json",
+   "actions": [
+    {
+     "ct": 0,
+     "do": "load",
+     "note": "fake backend seeded; wait for fonts + both panes ready; then start the virtual clock at ct 0"
+    },
+    {
+     "ct": 6,
+     "do": "click",
+     "sel": "[data-pane=\"right\"] .suggestions [data-q=\"What's due this week?\"]"
+    },
+    {
+     "ct": 16,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] [data-el=\"hub-switch\"]"
+    },
+    {
+     "ct": 19.5,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] .suggestions [data-q=\"What's due this week?\"]"
+    },
+    {
+     "ct": 23,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] [data-el=\"note-input\"]"
+    },
+    {
+     "ct": 23.5,
+     "do": "type",
+     "sel": "[data-pane=\"left\"] [data-el=\"note-input\"]",
+     "text": "Client just called: Sharma delivery moves to the 18th.",
+     "until": 26,
+     "note": "one char every 2.5/54 s (~46 ms), via page.keyboard.type per char at its ct"
+    },
+    {
+     "ct": 26.5,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] .note-form button[type=\"submit\"]"
+    },
+    {
+     "ct": 38,
+     "do": "click",
+     "sel": "[data-pane=\"right\"] [data-receive]"
+    },
+    {
+     "ct": 52,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] [data-el=\"hub-switch\"]"
+    },
+    {
+     "ct": 68.5,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] .suggestions [data-q=\"When is the Sharma delivery?\"]"
+    },
+    {
+     "ct": 76.5,
+     "do": "click",
+     "sel": "[data-pane=\"right\"] [data-action=\"ask-owner\"]"
+    },
+    {
+     "ct": 81,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] [data-keep]",
+     "text_match": "18 Oct"
+    },
+    {
+     "ct": 86.5,
+     "do": "click",
+     "sel": "[data-pane=\"left\"] [data-view=\"team\"]"
+    }
+   ],
+   "backend": [
+    {
+     "ct": 0,
+     "what": "both online; Tanishk 20 claims (17 team + 2 device + 1 my_devices), Lakshya 20 (17 team + 3 device); Lakshya inbox has eml_sharma_final_delivery; hub total 18, device-only on hub 0; no Sharma due date anywhere"
+    },
+    {
+     "ct": 6,
+     "what": "Lakshya POST /api/ask \"What's due this week?\" -> took_ms 9, 3 citations (Mehta reel cutdowns 6 Oct, Ladakh drone permit 7 Oct, Kapoor invoice 8 Oct)"
+    },
+    {
+     "ct": 16,
+     "what": "Tanishk POST /api/net {online:false}: sync status offline, byte totals freeze, rate 0 B/s"
+    },
+    {
+     "ct": 19.5,
+     "what": "Tanishk POST /api/ask \"What's due this week?\" -> took_ms 11"
+    },
+    {
+     "ct": 26.5,
+     "what": "Tanishk POST /api/ingest note -> respond at ct 31.0 (4.5 s \"Reading…\"): claim entity \"Sharma delivery\", attribute due_date, value 2026-10-18, label \"18 Oct\", tier team, sync queued, owner tanishk; Outbox 1; no conflict"
+    },
+    {
+     "ct": 38,
+     "what": "Lakshya POST /api/inbox/eml_sharma_final_delivery/receive -> respond at ct 42.5: claim entity \"Sharma wedding edit\", due_date 2026-10-16, \"16 Oct\", tier team, queued, owner tanishk; Outbox 1"
+    },
+    {
+     "ct": 43,
+     "what": "Lakshya push: claim synced (green), Outbox 0, link token \"sent 1 claim\""
+    },
+    {
+     "ct": 43.5,
+     "what": "hub poll: total 19, latest \"Sharma wedding edit · 16 Oct · from Lakshya · Team\""
+    },
+    {
+     "ct": 52,
+     "what": "Tanishk POST /api/net {online:true}"
+    },
+    {
+     "ct": 52.25,
+     "what": "Tanishk push: note synced, Outbox 0, token \"sent 1 claim\""
+    },
+    {
+     "ct": 52.5,
+     "what": "Tanishk pulls the email claim, conflict opened: similarity 0.85, owner tanishk, both claims disputed, token \"pulled 1 claim\""
+    },
+    {
+     "ct": 53,
+     "what": "Lakshya pulls the note, SAME conflict_id opened (similarity 0.85); hub total 20"
+    },
+    {
+     "ct": 68.5,
+     "what": "Tanishk POST /api/ask \"When is the Sharma delivery?\" -> took_ms 8, disputed answer, both citations"
+    },
+    {
+     "ct": 76.5,
+     "what": "Lakshya POST /api/conflicts/{id}/draft -> draft text + mailto + wa.me"
+    },
+    {
+     "ct": 81,
+     "what": "Tanishk POST /api/conflicts/{id}/resolve winner = note (18 Oct): winner active, loser superseded, resolution claim"
+    },
+    {
+     "ct": 81.5,
+     "what": "Tanishk push: token \"sent 3 claims\""
+    },
+    {
+     "ct": 82,
+     "what": "Lakshya applies the resolution (resolved card, 16 Oct superseded); hub total 21, latest \"Decision: Sharma wedding edit · 18 Oct\""
+    },
+    {
+     "ct": 86.5,
+     "what": "Team view is client-side; no backend call needed"
+    }
+   ],
+   "rects": [
+    "L.header",
+    "L.switch",
+    "L.outbox",
+    "L.rate",
+    "L.cloud",
+    "L.noteInput",
+    "L.save",
+    "L.suggestDue",
+    "L.suggestSharma",
+    "L.answer",
+    "L.answerTook",
+    "L.cites",
+    "L.conflictCard",
+    "L.keep16",
+    "L.keep18",
+    "L.viewTeam",
+    "L.simTag",
+    "R.header",
+    "R.cloud",
+    "R.inbox",
+    "R.receive",
+    "R.suggestDue",
+    "R.answer",
+    "R.answerTook",
+    "R.cites",
+    "R.conflictCard",
+    "R.askOwner",
+    "R.draft",
+    "HUB.node",
+    "HUB.total",
+    "HUB.privacy",
+    "HUB.device",
+    "HUB.recent",
+    "LINK.left",
+    "LINK.right"
+   ]
+  },
+  "LANDING_HERO": {
+   "surface": "landing",
+   "page": "site/index.html (file://)",
+   "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "deviceScaleFactor": 2
+   },
+   "fps": 30,
+   "ct_end": 7,
+   "output": "clips/LANDING_HERO/f%05d.jpg + meta.json",
+   "actions": [
+    {
+     "ct": 0,
+     "do": "load",
+     "note": "scrollY 0; wait for fonts; boil runs on the virtual clock"
+    },
+    {
+     "ct": 5.5,
+     "do": "hover",
+     "sel": "a.btn.quiet, .nav .btn.quiet",
+     "note": "\"Watch the demo\": page.mouse.move only, never click (it would navigate)"
+    }
+   ],
+   "rects": [
+    "heroTitle (#hero-title)",
+    "board (#board)",
+    "watchDemo",
+    "cta (#early-access)"
+   ]
+  },
+  "DECK_ARCH": {
+   "surface": "deck",
+   "page": "site/deck.html#5 (file://)",
+   "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "deviceScaleFactor": 2
+   },
+   "fps": 30,
+   "ct_end": 12,
+   "inject_css": ".hud{display:none!important}",
+   "output": "clips/DECK_ARCH/f%05d.jpg + meta.json",
+   "actions": [
+    {
+     "ct": 0,
+     "do": "load"
+    },
+    {
+     "ct": 2.5,
+     "do": "click",
+     "sel": ".flows button[data-flow=\"sync\"]",
+     "note": "steps light every 900 ms from ct 2.5"
+    }
+   ],
+   "rects": [
+    "flowSync",
+    "comp.store",
+    "comp.memory",
+    "comp.hub",
+    "comp.lakshya",
+    "comp.conflicts",
+    "comp.ui",
+    "info (#arch-info)"
+   ]
+  },
+  "DECK_ASSIST": {
+   "surface": "deck",
+   "page": "site/deck.html#6 (file://)",
+   "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "deviceScaleFactor": 2
+   },
+   "still": true,
+   "inject_css": ".hud{display:none!important}",
+   "output": "clips/DECK_ASSIST/still.png + still_nostk.png (.stk hidden) + meta.json (rect of every .stk and .inp)"
+  },
+  "DECK_DAY": {
+   "surface": "deck",
+   "page": "site/deck.html#7 (file://)",
+   "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "deviceScaleFactor": 2
+   },
+   "still": true,
+   "inject_css": ".hud{display:none!important}",
+   "output": "clips/DECK_DAY/still.png + still_nostk.png + meta.json (rect of every .stk, timeline stop and label)"
+  }
+ }
+}

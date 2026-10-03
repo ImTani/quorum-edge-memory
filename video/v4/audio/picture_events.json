@@ -1,0 +1,4043 @@
+{
+ "items": [
+  {
+   "kind": "strokeSeq",
+   "scene": "S01",
+   "color": "ink",
+   "width": 7,
+   "out": null,
+   "parts": [
+    {
+     "t0": 0.5,
+     "dur": 0.09,
+     "len": 20
+    },
+    {
+     "t0": 0.61,
+     "dur": 0.09,
+     "len": 34
+    },
+    {
+     "t0": 0.72,
+     "dur": 0.09,
+     "len": 50
+    },
+    {
+     "t0": 0.83,
+     "dur": 0.09,
+     "len": 66
+    }
+   ],
+   "t0": 0.5,
+   "end": 0.92
+  },
+  {
+   "kind": "markerSlash",
+   "scene": "S01",
+   "color": "red",
+   "width": 6,
+   "out": null,
+   "t0": 0.9,
+   "dur": 0.2,
+   "len": 142.917
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "ink",
+   "width": null,
+   "out": null,
+   "t0": 1,
+   "dur": 0.5,
+   "size": 44,
+   "text": "on a shoot · no signal"
+  },
+  {
+   "kind": "strokeSeq",
+   "scene": "S01",
+   "color": "ink",
+   "width": 6,
+   "out": null,
+   "parts": [
+    {
+     "t0": 3.9,
+     "dur": 0.08,
+     "len": 89.764
+    },
+    {
+     "t0": 3.995,
+     "dur": 0.08,
+     "len": 63.236
+    },
+    {
+     "t0": 4.09,
+     "dur": 0.08,
+     "len": 8
+    }
+   ],
+   "t0": 3.9,
+   "end": 4.17
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "ink",
+   "width": null,
+   "out": null,
+   "t0": 4,
+   "dur": 0.5,
+   "size": 44,
+   "text": "in the office · online"
+  },
+  {
+   "kind": "sticky",
+   "scene": "S01",
+   "color": "yellow",
+   "width": null,
+   "out": null,
+   "t0": 1.5,
+   "w": 440,
+   "h": null,
+   "stickyColor": "yellow"
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "ink",
+   "width": null,
+   "out": null,
+   "t0": 3,
+   "dur": 0.35,
+   "size": 46,
+   "text": "Tanishk"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S01",
+   "color": "ink",
+   "width": 4,
+   "out": null,
+   "parts": [
+    {
+     "t0": 3.3,
+     "dur": 0.25,
+     "len": 122.394
+    },
+    {
+     "t0": 3.57,
+     "dur": 0.25,
+     "len": 41.938
+    }
+   ],
+   "t0": 3.3,
+   "end": 3.82
+  },
+  {
+   "kind": "sticky",
+   "scene": "S01",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 4.5,
+   "w": 460,
+   "h": null,
+   "stickyColor": "blue"
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "ink",
+   "width": null,
+   "out": null,
+   "t0": 6,
+   "dur": 0.35,
+   "size": 46,
+   "text": "Lakshya"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S01",
+   "color": "ink",
+   "width": 4,
+   "out": null,
+   "parts": [
+    {
+     "t0": 6.3,
+     "dur": 0.25,
+     "len": 86.808
+    },
+    {
+     "t0": 6.57,
+     "dur": 0.25,
+     "len": 41.949
+    }
+   ],
+   "t0": 6.3,
+   "end": 6.82
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S01",
+   "color": "red",
+   "width": 6,
+   "out": null,
+   "t0": 8,
+   "dur": 0.4,
+   "len": 527.1
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S01",
+   "color": "red",
+   "width": 6,
+   "out": null,
+   "t0": 8.5,
+   "dur": 0.4,
+   "len": 641.997
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "red",
+   "width": null,
+   "out": null,
+   "t0": 9,
+   "dur": 0.45,
+   "size": 230,
+   "text": "18"
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "red",
+   "width": null,
+   "out": null,
+   "t0": 9.15,
+   "dur": 0.45,
+   "size": 230,
+   "text": "16"
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "red",
+   "width": null,
+   "out": null,
+   "t0": 9.95,
+   "dur": 0.12,
+   "size": 190,
+   "text": "?"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S01",
+   "color": "ink",
+   "width": 3.5,
+   "out": null,
+   "t0": 12,
+   "dur": 0.45,
+   "len": 390.894
+  },
+  {
+   "kind": "handText",
+   "scene": "S01",
+   "color": "ink",
+   "width": null,
+   "out": null,
+   "t0": 12.25,
+   "dur": 0.35,
+   "size": 36,
+   "text": "same job"
+  },
+  {
+   "kind": "eraser",
+   "scene": "S01",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 15,
+   "dur": 1,
+   "w": 2000
+  },
+  {
+   "kind": "sticky",
+   "scene": "S02",
+   "color": "yellow",
+   "width": null,
+   "out": null,
+   "t0": 16,
+   "w": 210,
+   "h": 210,
+   "stickyColor": "yellow"
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S02",
+   "color": "blue",
+   "width": 9,
+   "out": null,
+   "t0": 17,
+   "dur": 0.45,
+   "len": 647.155
+  },
+  {
+   "kind": "KIT.popper",
+   "scene": "S02",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 17.5,
+   "t1": null,
+   "text": "",
+   "popKind": "show"
+  },
+  {
+   "kind": "KIT.plateDrop",
+   "scene": "S02",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 19.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S02",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 20.5,
+   "dur": 1.2,
+   "size": 25,
+   "text": "Code Cubicle 6.0 · Problem Statement 03",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "KIT.plateDrop",
+   "scene": "S03",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 26,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "handText",
+   "scene": "S03",
+   "color": "blue",
+   "width": null,
+   "out": 33.6,
+   "t0": 27,
+   "dur": 0.5,
+   "size": 36,
+   "text": "Tanishk’s laptop · on a shoot"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S03",
+   "color": "blue",
+   "width": 5,
+   "out": 33.6,
+   "parts": [
+    {
+     "t0": 27.35,
+     "dur": 0.25,
+     "len": 192.752
+    },
+    {
+     "t0": 27.62,
+     "dur": 0.25,
+     "len": 37.364
+    }
+   ],
+   "t0": 27.35,
+   "end": 27.87
+  },
+  {
+   "kind": "handText",
+   "scene": "S03",
+   "color": "blue",
+   "width": null,
+   "out": 33.6,
+   "t0": 28,
+   "dur": 0.5,
+   "size": 36,
+   "text": "the team hub · a Qdrant server"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S03",
+   "color": "blue",
+   "width": 5,
+   "out": 33.6,
+   "parts": [
+    {
+     "t0": 28.35,
+     "dur": 0.25,
+     "len": 223.294
+    },
+    {
+     "t0": 28.62,
+     "dur": 0.25,
+     "len": 37.337
+    }
+   ],
+   "t0": 28.35,
+   "end": 28.87
+  },
+  {
+   "kind": "handText",
+   "scene": "S03",
+   "color": "blue",
+   "width": null,
+   "out": 33.6,
+   "t0": 29,
+   "dur": 0.5,
+   "size": 36,
+   "text": "Lakshya’s laptop · in the office"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S03",
+   "color": "blue",
+   "width": 5,
+   "out": 33.6,
+   "parts": [
+    {
+     "t0": 29.35,
+     "dur": 0.25,
+     "len": 189.891
+    },
+    {
+     "t0": 29.62,
+     "dur": 0.25,
+     "len": 37.377
+    }
+   ],
+   "t0": 29.35,
+   "end": 29.87
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S03",
+   "color": "blue",
+   "width": 3.5,
+   "out": 33.6,
+   "parts": [
+    {
+     "t0": 31,
+     "dur": 0.25,
+     "len": 81.768
+    },
+    {
+     "t0": 31.27,
+     "dur": 0.25,
+     "len": 21.036
+    }
+   ],
+   "t0": 31,
+   "end": 31.52
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S03",
+   "color": "blue",
+   "width": 3.5,
+   "out": 33.6,
+   "parts": [
+    {
+     "t0": 31.15,
+     "dur": 0.25,
+     "len": 81.768
+    },
+    {
+     "t0": 31.42,
+     "dur": 0.25,
+     "len": 21.036
+    }
+   ],
+   "t0": 31.15,
+   "end": 31.67
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S03",
+   "color": "blue",
+   "width": 3.5,
+   "out": 33.6,
+   "parts": [
+    {
+     "t0": 31.25,
+     "dur": 0.25,
+     "len": 81.768
+    },
+    {
+     "t0": 31.52,
+     "dur": 0.25,
+     "len": 21.036
+    }
+   ],
+   "t0": 31.25,
+   "end": 31.77
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S03",
+   "color": "blue",
+   "width": 3.5,
+   "out": 33.6,
+   "parts": [
+    {
+     "t0": 31.4,
+     "dur": 0.25,
+     "len": 81.768
+    },
+    {
+     "t0": 31.67,
+     "dur": 0.25,
+     "len": 21.036
+    }
+   ],
+   "t0": 31.4,
+   "end": 31.92
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S04",
+   "color": "blue",
+   "width": 3,
+   "out": 43.7,
+   "t0": 37,
+   "dur": 0.4,
+   "len": 389.325
+  },
+  {
+   "kind": "handText",
+   "scene": "S04",
+   "color": "blue",
+   "width": null,
+   "out": 43.7,
+   "t0": 37.5,
+   "dur": 0.5,
+   "size": 22,
+   "text": "on the laptop · no cloud"
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S04",
+   "color": "blue",
+   "width": 3,
+   "out": 43.7,
+   "t0": 41.3,
+   "dur": 0.2,
+   "len": 21.812
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S04",
+   "color": "blue",
+   "width": 3,
+   "out": 43.7,
+   "t0": 41.65,
+   "dur": 0.2,
+   "len": 21.812
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S04",
+   "color": "blue",
+   "width": 3,
+   "out": 43.7,
+   "t0": 42,
+   "dur": 0.2,
+   "len": 21.812
+  },
+  {
+   "kind": "markerSlash",
+   "scene": "S05",
+   "color": "red",
+   "width": 5,
+   "out": 51.7,
+   "t0": 46.5,
+   "dur": 0.28,
+   "len": 77.041
+  },
+  {
+   "kind": "handText",
+   "scene": "S05",
+   "color": "red",
+   "width": null,
+   "out": 51.7,
+   "t0": 47,
+   "dur": 0.5,
+   "size": 19,
+   "text": "cut off from the hub"
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S05",
+   "color": "red",
+   "width": 3,
+   "out": 51.7,
+   "t0": 47.5,
+   "dur": 0.4,
+   "len": 292.32
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S05",
+   "color": "blue",
+   "width": 3,
+   "out": 51.7,
+   "t0": 50.5,
+   "dur": 0.3,
+   "len": 43.168
+  },
+  {
+   "kind": "handText",
+   "scene": "S05",
+   "color": "blue",
+   "width": null,
+   "out": 51.7,
+   "t0": 50.75,
+   "dur": 0.45,
+   "size": 20,
+   "text": "no hub, still answers"
+  },
+  {
+   "kind": "KIT.ffStamp",
+   "scene": "S06",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 56.6,
+   "t1": 57.45,
+   "text": "local model reading · 4.5 s",
+   "popKind": null
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S06",
+   "color": "blue",
+   "width": 3.5,
+   "out": 61.7,
+   "parts": [
+    {
+     "t0": 58,
+     "dur": 0.25,
+     "len": 336.983
+    },
+    {
+     "t0": 58.27,
+     "dur": 0.25,
+     "len": 27.953
+    }
+   ],
+   "t0": 58,
+   "end": 58.52
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S06",
+   "color": "blue",
+   "width": 3.5,
+   "out": 61.7,
+   "t0": 58.5,
+   "dur": 0.4,
+   "len": 333.653
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S06",
+   "color": "blue",
+   "width": 3.5,
+   "out": 61.7,
+   "t0": 59.4,
+   "dur": 0.25,
+   "len": 57.33
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S06",
+   "color": "blue",
+   "width": null,
+   "out": 61.7,
+   "t0": 59.5,
+   "dur": 1.2,
+   "size": 17,
+   "text": "still 18 · nothing left the laptop",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "handText",
+   "scene": "S07",
+   "color": "blue",
+   "width": null,
+   "out": 71.7,
+   "t0": 63,
+   "dur": 0.5,
+   "size": 22,
+   "text": "client email, just in"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S07",
+   "color": "blue",
+   "width": 3.5,
+   "out": 71.7,
+   "parts": [
+    {
+     "t0": 63.3,
+     "dur": 0.25,
+     "len": 121.536
+    },
+    {
+     "t0": 63.57,
+     "dur": 0.25,
+     "len": 27.978
+    }
+   ],
+   "t0": 63.3,
+   "end": 63.82
+  },
+  {
+   "kind": "KIT.ffStamp",
+   "scene": "S07",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 64.6,
+   "t1": 65.45,
+   "text": "reading · 4.5 s",
+   "popKind": null
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S07",
+   "color": "green",
+   "width": 4.5,
+   "out": 71.7,
+   "t0": 67.5,
+   "dur": 0.25,
+   "len": 34.276
+  },
+  {
+   "kind": "handText",
+   "scene": "S07",
+   "color": "green",
+   "width": null,
+   "out": 71.7,
+   "t0": 67.55,
+   "dur": 0.5,
+   "size": 26,
+   "text": "synced to the team"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S07",
+   "color": "green",
+   "width": 3.5,
+   "out": 71.7,
+   "parts": [
+    {
+     "t0": 67.8,
+     "dur": 0.25,
+     "len": 171.256
+    },
+    {
+     "t0": 68.07,
+     "dur": 0.25,
+     "len": 28.03
+    }
+   ],
+   "t0": 67.8,
+   "end": 68.32
+  },
+  {
+   "kind": "strokeSeq",
+   "scene": "S07",
+   "color": "ink",
+   "width": 3.5,
+   "out": 71.7,
+   "parts": [
+    {
+     "t0": 69,
+     "dur": 0.035,
+     "len": 16.278
+    },
+    {
+     "t0": 69.047,
+     "dur": 0.035,
+     "len": 16.183
+    },
+    {
+     "t0": 69.094,
+     "dur": 0.035,
+     "len": 16.012
+    },
+    {
+     "t0": 69.141,
+     "dur": 0.035,
+     "len": 15.991
+    },
+    {
+     "t0": 69.188,
+     "dur": 0.035,
+     "len": 15.931
+    },
+    {
+     "t0": 69.235,
+     "dur": 0.035,
+     "len": 16
+    },
+    {
+     "t0": 69.282,
+     "dur": 0.035,
+     "len": 16.02
+    },
+    {
+     "t0": 69.329,
+     "dur": 0.035,
+     "len": 16.08
+    },
+    {
+     "t0": 69.376,
+     "dur": 0.035,
+     "len": 16.278
+    },
+    {
+     "t0": 69.423,
+     "dur": 0.035,
+     "len": 27.903
+    }
+   ],
+   "t0": 69,
+   "end": 69.458
+  },
+  {
+   "kind": "markerCross",
+   "scene": "S07",
+   "color": "red",
+   "width": 5,
+   "out": 71.7,
+   "parts": [
+    {
+     "t0": 69.5,
+     "dur": 0.12,
+     "len": 41.379
+    },
+    {
+     "t0": 69.66,
+     "dur": 0.12,
+     "len": 41.379
+    }
+   ],
+   "t0": 69.5,
+   "end": 69.78
+  },
+  {
+   "kind": "handText",
+   "scene": "S07",
+   "color": "red",
+   "width": null,
+   "out": 71.7,
+   "t0": 69.75,
+   "dur": 0.45,
+   "size": 24,
+   "text": "can’t see it yet"
+  },
+  {
+   "kind": "KIT.flashRect",
+   "scene": "S08",
+   "color": "red",
+   "width": 5,
+   "out": null,
+   "t0": 75.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "KIT.flashRect",
+   "scene": "S08",
+   "color": "red",
+   "width": 5,
+   "out": null,
+   "t0": 76,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerScribble",
+   "scene": "S08",
+   "color": "red",
+   "width": 6,
+   "out": 77.85,
+   "t0": 76,
+   "dur": 0.6,
+   "len": 2781.644
+  },
+  {
+   "kind": "markerScribble",
+   "scene": "S08",
+   "color": "red",
+   "width": 6,
+   "out": 77.85,
+   "t0": 76,
+   "dur": 0.6,
+   "len": 2867.7
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "ink",
+   "width": null,
+   "out": 89.6,
+   "t0": 76.5,
+   "dur": 0.45,
+   "size": 46,
+   "text": "after reconnect:"
+  },
+  {
+   "kind": "strokeSeq",
+   "scene": "S08",
+   "color": "ink",
+   "width": 3,
+   "out": 89.6,
+   "parts": [
+    {
+     "t0": 76.95,
+     "dur": 0.14,
+     "len": 131.699
+    },
+    {
+     "t0": 77.11,
+     "dur": 0.14,
+     "len": 18.26
+    },
+    {
+     "t0": 77.27,
+     "dur": 0.14,
+     "len": 15.634
+    }
+   ],
+   "t0": 76.95,
+   "end": 77.41
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "red",
+   "width": null,
+   "out": 89.6,
+   "t0": 77,
+   "dur": 0.3,
+   "size": 50,
+   "text": "+0.5 s"
+  },
+  {
+   "kind": "strokeSeq",
+   "scene": "S08",
+   "color": "ink",
+   "width": 3,
+   "out": 89.6,
+   "parts": [
+    {
+     "t0": 77.45,
+     "dur": 0.14,
+     "len": 131.7
+    },
+    {
+     "t0": 77.61,
+     "dur": 0.14,
+     "len": 18.26
+    },
+    {
+     "t0": 77.77,
+     "dur": 0.14,
+     "len": 15.634
+    }
+   ],
+   "t0": 77.45,
+   "end": 77.91
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "red",
+   "width": null,
+   "out": 89.6,
+   "t0": 77.5,
+   "dur": 0.3,
+   "size": 50,
+   "text": "+1.0 s"
+  },
+  {
+   "kind": "KIT.popper",
+   "scene": "S08",
+   "color": null,
+   "width": null,
+   "out": 82.5,
+   "t0": 79.3,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S08",
+   "color": "ink",
+   "width": 2.4,
+   "out": 82.45,
+   "t0": 79.5,
+   "dur": 0.45,
+   "len": 316.023
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S08",
+   "color": "ink",
+   "width": 1.92,
+   "out": 82.45,
+   "t0": 79.5,
+   "dur": 0.12,
+   "len": 6.42
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "ink3",
+   "width": null,
+   "out": 82.45,
+   "t0": 79.55,
+   "dur": 0.2,
+   "size": 10,
+   "text": "0.70"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S08",
+   "color": "ink",
+   "width": 1.92,
+   "out": 82.45,
+   "t0": 79.635,
+   "dur": 0.12,
+   "len": 6.42
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "ink3",
+   "width": null,
+   "out": 82.45,
+   "t0": 79.685,
+   "dur": 0.2,
+   "size": 10,
+   "text": "0.80"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S08",
+   "color": "ink",
+   "width": 1.92,
+   "out": 82.45,
+   "t0": 79.77,
+   "dur": 0.12,
+   "len": 6.42
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "ink3",
+   "width": null,
+   "out": 82.45,
+   "t0": 79.82,
+   "dur": 0.2,
+   "size": 10,
+   "text": "0.90"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S08",
+   "color": "ink",
+   "width": 1.92,
+   "out": 82.45,
+   "t0": 79.905,
+   "dur": 0.12,
+   "len": 6.42
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "ink3",
+   "width": null,
+   "out": 82.45,
+   "t0": 79.955,
+   "dur": 0.2,
+   "size": 10,
+   "text": "1.00"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S08",
+   "color": "blue",
+   "width": 2.6,
+   "out": 82.45,
+   "t0": 80,
+   "dur": 0.2,
+   "len": 27.005
+  },
+  {
+   "kind": "handText",
+   "scene": "S08",
+   "color": "blue",
+   "width": null,
+   "out": 82.45,
+   "t0": 80.1,
+   "dur": 0.25,
+   "size": 9.5,
+   "text": "0.82 bar"
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S08",
+   "color": "red",
+   "width": 3.5,
+   "out": 89.6,
+   "t0": 83,
+   "dur": 0.3,
+   "len": 91.59
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S08",
+   "color": "red",
+   "width": 3.5,
+   "out": 89.6,
+   "t0": 83.5,
+   "dur": 0.3,
+   "len": 91.69
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S08",
+   "color": "red",
+   "width": 3,
+   "out": 89.6,
+   "t0": 84,
+   "dur": 0.35,
+   "len": 176.263
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S08",
+   "color": "blue",
+   "width": null,
+   "out": 89.6,
+   "t0": 86,
+   "dur": 0.654,
+   "size": 27,
+   "text": "Tanishk owns this",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S08",
+   "color": "blue",
+   "width": 3.5,
+   "out": 89.6,
+   "parts": [
+    {
+     "t0": 86.35,
+     "dur": 0.25,
+     "len": 59.512
+    },
+    {
+     "t0": 86.62,
+     "dur": 0.25,
+     "len": 25.697
+    }
+   ],
+   "t0": 86.35,
+   "end": 86.87
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S08",
+   "color": "blue",
+   "width": null,
+   "out": 89.6,
+   "t0": 87,
+   "dur": 0.808,
+   "size": 27,
+   "text": "Lakshya waits for him",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S08",
+   "color": "blue",
+   "width": 3.5,
+   "out": 89.6,
+   "parts": [
+    {
+     "t0": 87.35,
+     "dur": 0.25,
+     "len": 85.425
+    },
+    {
+     "t0": 87.62,
+     "dur": 0.25,
+     "len": 25.698
+    }
+   ],
+   "t0": 87.35,
+   "end": 87.87
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S08",
+   "color": "red",
+   "width": null,
+   "out": 89.6,
+   "t0": 88,
+   "dur": 1.2,
+   "size": 24,
+   "text": "same conflict id on both · worked out apart",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S08",
+   "color": "red",
+   "width": 3.5,
+   "out": 89.6,
+   "parts": [
+    {
+     "t0": 88.45,
+     "dur": 0.25,
+     "len": 53.72
+    },
+    {
+     "t0": 88.72,
+     "dur": 0.25,
+     "len": 25.666
+    }
+   ],
+   "t0": 88.45,
+   "end": 88.97
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S08",
+   "color": "red",
+   "width": 3.5,
+   "out": 89.6,
+   "parts": [
+    {
+     "t0": 88.55,
+     "dur": 0.25,
+     "len": 55.282
+    },
+    {
+     "t0": 88.82,
+     "dur": 0.25,
+     "len": 25.697
+    }
+   ],
+   "t0": 88.55,
+   "end": 89.07
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S09",
+   "color": "red",
+   "width": 3.5,
+   "out": 97.6,
+   "t0": 92.5,
+   "dur": 0.3,
+   "len": 89.794
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S09",
+   "color": "blue",
+   "width": 3,
+   "out": 97.6,
+   "t0": 93.5,
+   "dur": 0.4,
+   "len": 569.113
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S09",
+   "color": "blue",
+   "width": 3,
+   "out": 97.6,
+   "t0": 94,
+   "dur": 0.4,
+   "len": 474.179
+  },
+  {
+   "kind": "handText",
+   "scene": "S09",
+   "color": "blue",
+   "width": null,
+   "out": 97.6,
+   "t0": 94.5,
+   "dur": 0.55,
+   "size": 20,
+   "text": "both sources, both dates"
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S10",
+   "color": "blue",
+   "width": null,
+   "out": 102.2,
+   "t0": 100.5,
+   "dur": 0.846,
+   "size": 24,
+   "text": "drafted · nothing sent",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S10",
+   "color": "blue",
+   "width": 3.5,
+   "out": 107.7,
+   "parts": [
+    {
+     "t0": 100.85,
+     "dur": 0.25,
+     "len": 57.128
+    },
+    {
+     "t0": 101.12,
+     "dur": 0.25,
+     "len": 25.708
+    }
+   ],
+   "t0": 100.85,
+   "end": 101.37
+  },
+  {
+   "kind": "KIT.flashRect",
+   "scene": "S10",
+   "color": "green",
+   "width": 4,
+   "out": null,
+   "t0": 104.2,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerSlash",
+   "scene": "S10",
+   "color": "red",
+   "width": 3,
+   "out": 107.7,
+   "t0": 104.5,
+   "dur": 0.22,
+   "len": 95.74
+  },
+  {
+   "kind": "handText",
+   "scene": "S10",
+   "color": "red",
+   "width": null,
+   "out": 107.7,
+   "t0": 104.6,
+   "dur": 0.45,
+   "size": 22,
+   "text": "kept for history"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S10",
+   "color": "red",
+   "width": 3,
+   "out": 107.7,
+   "parts": [
+    {
+     "t0": 104.85,
+     "dur": 0.25,
+     "len": 68.493
+    },
+    {
+     "t0": 105.12,
+     "dur": 0.25,
+     "len": 20.966
+    }
+   ],
+   "t0": 104.85,
+   "end": 105.37
+  },
+  {
+   "kind": "KIT.flashRect",
+   "scene": "S10",
+   "color": "green",
+   "width": 4,
+   "out": null,
+   "t0": 105,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S10",
+   "color": "green",
+   "width": 6,
+   "out": 107.7,
+   "t0": 105.5,
+   "dur": 0.25,
+   "len": 49.856
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S10",
+   "color": "green",
+   "width": 6,
+   "out": 107.7,
+   "t0": 106,
+   "dur": 0.25,
+   "len": 49.856
+  },
+  {
+   "kind": "KIT.popper",
+   "scene": "S11",
+   "color": null,
+   "width": null,
+   "out": 115.4,
+   "t0": 110,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S11",
+   "color": "blue",
+   "width": 3,
+   "out": 115.4,
+   "t0": 110.5,
+   "dur": 0.35,
+   "len": 279.078
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S11",
+   "color": "blue",
+   "width": 4,
+   "out": 115.4,
+   "t0": 111.5,
+   "dur": 0.4,
+   "len": 146.209
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S11",
+   "color": "blue",
+   "width": null,
+   "out": 115.4,
+   "t0": 112.5,
+   "dur": 0.923,
+   "size": 18,
+   "text": "counted live from Qdrant",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S11",
+   "color": "blue",
+   "width": 3,
+   "out": 115.4,
+   "parts": [
+    {
+     "t0": 112.85,
+     "dur": 0.25,
+     "len": 44.651
+    },
+    {
+     "t0": 113.12,
+     "dur": 0.25,
+     "len": 20.973
+    }
+   ],
+   "t0": 112.85,
+   "end": 113.37
+  },
+  {
+   "kind": "KIT.plateDrop",
+   "scene": "S12",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 116.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "handText",
+   "scene": "S12",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 124.5,
+   "dur": 0.5,
+   "size": 32,
+   "text": "relays only · no logic"
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S12",
+   "color": "blue",
+   "width": 4,
+   "out": null,
+   "t0": 125.05,
+   "dur": 0.25,
+   "len": 156.115
+  },
+  {
+   "kind": "handText",
+   "scene": "S12",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 126,
+   "dur": 0.5,
+   "size": 32,
+   "text": "same code, own shard"
+  },
+  {
+   "kind": "sticky",
+   "scene": "S13",
+   "color": "yellow",
+   "width": null,
+   "out": null,
+   "t0": 128.5,
+   "w": 420,
+   "h": null,
+   "stickyColor": "yellow"
+  },
+  {
+   "kind": "sticky",
+   "scene": "S13",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 129,
+   "w": 420,
+   "h": null,
+   "stickyColor": "blue"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "blue",
+   "width": 4.5,
+   "out": null,
+   "t0": 129.5,
+   "dur": 0.4,
+   "len": 690.523
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "blue",
+   "width": 4.5,
+   "out": null,
+   "t0": 130,
+   "dur": 0.4,
+   "len": 863.273
+  },
+  {
+   "kind": "markerSlash",
+   "scene": "S13",
+   "color": "ink3",
+   "width": 4,
+   "out": null,
+   "t0": 130.5,
+   "dur": 0.22,
+   "len": 149.9
+  },
+  {
+   "kind": "markerSlash",
+   "scene": "S13",
+   "color": "ink3",
+   "width": 4,
+   "out": null,
+   "t0": 130.65,
+   "dur": 0.22,
+   "len": 185.864
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "ink3",
+   "width": null,
+   "out": null,
+   "t0": 130.75,
+   "dur": 0.45,
+   "size": 34,
+   "text": "not the value"
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S13",
+   "color": "ink3",
+   "width": 3,
+   "out": null,
+   "parts": [
+    {
+     "t0": 131,
+     "dur": 0.25,
+     "len": 240.081
+    },
+    {
+     "t0": 131.27,
+     "dur": 0.25,
+     "len": 25.712
+    }
+   ],
+   "t0": 131,
+   "end": 131.52
+  },
+  {
+   "kind": "markerArrow",
+   "scene": "S13",
+   "color": "ink3",
+   "width": 3,
+   "out": null,
+   "parts": [
+    {
+     "t0": 131.05,
+     "dur": 0.25,
+     "len": 211.305
+    },
+    {
+     "t0": 131.32,
+     "dur": 0.25,
+     "len": 25.638
+    }
+   ],
+   "t0": 131.05,
+   "end": 131.57
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 131,
+   "dur": 0.45,
+   "size": 33,
+   "text": "key: Sharma delivery · due date"
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 131.5,
+   "dur": 0.45,
+   "size": 33,
+   "text": "key: Sharma wedding edit · due date"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "ink",
+   "width": 5,
+   "out": null,
+   "t0": 132,
+   "dur": 0.5,
+   "len": 1216.006
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "ink",
+   "width": 4,
+   "out": null,
+   "t0": 132,
+   "dur": 0.12,
+   "len": 15.368
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "ink3",
+   "width": null,
+   "out": null,
+   "t0": 132.05,
+   "dur": 0.2,
+   "size": 24,
+   "text": "0.70"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "ink",
+   "width": 4,
+   "out": null,
+   "t0": 132.15,
+   "dur": 0.12,
+   "len": 15.368
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "ink3",
+   "width": null,
+   "out": null,
+   "t0": 132.2,
+   "dur": 0.2,
+   "size": 24,
+   "text": "0.80"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "ink",
+   "width": 4,
+   "out": null,
+   "t0": 132.3,
+   "dur": 0.12,
+   "len": 15.368
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "ink3",
+   "width": null,
+   "out": null,
+   "t0": 132.35,
+   "dur": 0.2,
+   "size": 24,
+   "text": "0.90"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "ink",
+   "width": 4,
+   "out": null,
+   "t0": 132.45,
+   "dur": 0.12,
+   "len": 15.368
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "ink3",
+   "width": null,
+   "out": null,
+   "t0": 132.5,
+   "dur": 0.2,
+   "size": 24,
+   "text": "1.00"
+  },
+  {
+   "kind": "markerPath",
+   "scene": "S13",
+   "color": "blue",
+   "width": 6,
+   "out": null,
+   "t0": 132.5,
+   "dur": 0.2,
+   "len": 60.008
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 132.6,
+   "dur": 0.3,
+   "size": 28,
+   "text": "0.82 · the bar"
+  },
+  {
+   "kind": "strokeSeq",
+   "scene": "S13",
+   "color": "blue",
+   "width": 3,
+   "out": null,
+   "parts": [
+    {
+     "t0": 134.5,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.526,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.552,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.578,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.604,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.63,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.656,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.682,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.708,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.734,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.76,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.786,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.812,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.838,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.864,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.89,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.916,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.942,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.968,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 134.994,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 135.02,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 135.046,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 135.072,
+     "dur": 0.022,
+     "len": 30
+    },
+    {
+     "t0": 135.098,
+     "dur": 0.022,
+     "len": 30
+    }
+   ],
+   "t0": 134.5,
+   "end": 135.12
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "ink3",
+   "width": null,
+   "out": null,
+   "t0": 133.15,
+   "dur": 0.45,
+   "size": 28,
+   "text": "an unrelated deadline"
+  },
+  {
+   "kind": "KIT.popper",
+   "scene": "S13",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 134.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "handText",
+   "scene": "S13",
+   "color": "red",
+   "width": null,
+   "out": null,
+   "t0": 135.5,
+   "dur": 0.5,
+   "size": 32,
+   "text": "different value → conflict"
+  },
+  {
+   "kind": "sticky",
+   "scene": "S13",
+   "color": "yellow",
+   "width": null,
+   "out": null,
+   "t0": 136.5,
+   "w": 250,
+   "h": 170,
+   "stickyColor": "yellow"
+  },
+  {
+   "kind": "KIT.plateDrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 138,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S14",
+   "color": "blue",
+   "width": 5,
+   "out": null,
+   "t0": 139.5,
+   "dur": 0.2,
+   "len": 34.276
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S14",
+   "color": "blue",
+   "width": 5,
+   "out": null,
+   "t0": 140,
+   "dur": 0.2,
+   "len": 34.276
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S14",
+   "color": "blue",
+   "width": 5,
+   "out": null,
+   "t0": 140.5,
+   "dur": 0.2,
+   "len": 34.276
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S14",
+   "color": "blue",
+   "width": 5,
+   "out": null,
+   "t0": 141,
+   "dur": 0.2,
+   "len": 34.276
+  },
+  {
+   "kind": "markerTick",
+   "scene": "S14",
+   "color": "blue",
+   "width": 5,
+   "out": null,
+   "t0": 141.5,
+   "dur": 0.2,
+   "len": 34.276
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 143,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 143.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 144,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 144.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S14",
+   "color": "red",
+   "width": 4,
+   "out": null,
+   "t0": 146.45,
+   "dur": 0.3,
+   "len": 141.976
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 146.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S14",
+   "color": "red",
+   "width": 4,
+   "out": null,
+   "t0": 147.45,
+   "dur": 0.3,
+   "len": 141.834
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 147.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S14",
+   "color": "red",
+   "width": 4,
+   "out": null,
+   "t0": 148.45,
+   "dur": 0.3,
+   "len": 141.504
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 148.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S14",
+   "color": "red",
+   "width": 4,
+   "out": null,
+   "t0": 149.45,
+   "dur": 0.3,
+   "len": 142.052
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 149.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerCircle",
+   "scene": "S14",
+   "color": "red",
+   "width": 4,
+   "out": null,
+   "t0": 150.45,
+   "dur": 0.3,
+   "len": 141.718
+  },
+  {
+   "kind": "KIT.slapCrop",
+   "scene": "S14",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 150.5,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S14",
+   "color": "blue",
+   "width": 5,
+   "out": null,
+   "t0": 151.5,
+   "dur": 0.6,
+   "len": 806.141
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": 157.5,
+   "t0": 155.35,
+   "dur": 0.3,
+   "size": 96,
+   "text": "1 · two dates",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": 157.53,
+   "t0": 155.55,
+   "dur": 0.3,
+   "size": 96,
+   "text": "2 · the promise",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": 157.56,
+   "t0": 155.75,
+   "dur": 0.3,
+   "size": 96,
+   "text": "3 · the demo",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": 157.59,
+   "t0": 155.95,
+   "dur": 0.3,
+   "size": 96,
+   "text": "4 · how it works",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": 157.62,
+   "t0": 156.15,
+   "dur": 0.3,
+   "size": 96,
+   "text": "5 · the key vector",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": 157.65,
+   "t0": 156.35,
+   "dur": 0.3,
+   "size": 96,
+   "text": "6 · the assistant",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "KIT.note",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": 157.68,
+   "t0": 156.55,
+   "dur": 0.3,
+   "size": 96,
+   "text": "7 · a day with it",
+   "noteKind": "paper"
+  },
+  {
+   "kind": "eraser",
+   "scene": "S15",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 159.5,
+   "dur": 0.5,
+   "w": 2000
+  },
+  {
+   "kind": "sticky",
+   "scene": "S15",
+   "color": "kraft",
+   "width": null,
+   "out": null,
+   "t0": 158.5,
+   "w": 660,
+   "h": 300,
+   "stickyColor": "kraft"
+  },
+  {
+   "kind": "sticky",
+   "scene": "S15",
+   "color": "yellow",
+   "width": null,
+   "out": null,
+   "t0": 160,
+   "w": 220,
+   "h": 220,
+   "stickyColor": "yellow"
+  },
+  {
+   "kind": "markerUnderline",
+   "scene": "S15",
+   "color": "blue",
+   "width": 9,
+   "out": null,
+   "t0": 160.35,
+   "dur": 0.4,
+   "len": 688.146
+  },
+  {
+   "kind": "KIT.popper",
+   "scene": "S15",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 161,
+   "t1": null,
+   "text": "",
+   "popKind": null
+  },
+  {
+   "kind": "handText",
+   "scene": "S15",
+   "color": "blue",
+   "width": null,
+   "out": null,
+   "t0": 162,
+   "dur": 0.8,
+   "size": 56,
+   "text": "github.com/ImTani/quorum-edge-memory"
+  },
+  {
+   "kind": "KIT.popper",
+   "scene": "S15",
+   "color": null,
+   "width": null,
+   "out": null,
+   "t0": 163,
+   "t1": null,
+   "text": "",
+   "popKind": "show"
+  }
+ ],
+ "cursor": [
+  {
+   "t": 23.5,
+   "kind": "enter",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S02"
+  },
+  {
+   "t": 24.5,
+   "kind": "click",
+   "target": "watchDemo",
+   "color": null,
+   "dwell": 0.35,
+   "scene": "S02"
+  },
+  {
+   "t": 25.35,
+   "kind": "exit",
+   "target": "bottom",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S02"
+  },
+  {
+   "t": 35,
+   "kind": "enter",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S04"
+  },
+  {
+   "t": 36,
+   "kind": "click",
+   "target": "R.suggestDue",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S04"
+  },
+  {
+   "t": 37.4,
+   "kind": "at",
+   "target": "R.answer",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S04"
+  },
+  {
+   "t": 40.4,
+   "kind": "exit",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S04"
+  },
+  {
+   "t": 44.6,
+   "kind": "enter",
+   "target": "left",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S05"
+  },
+  {
+   "t": 45.75,
+   "kind": "at",
+   "target": "L.switch",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S05"
+  },
+  {
+   "t": 46,
+   "kind": "click",
+   "target": "L.switch",
+   "color": "red",
+   "dwell": 0.2,
+   "scene": "S05"
+  },
+  {
+   "t": 49.5,
+   "kind": "click",
+   "target": "L.suggestDue",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S05"
+  },
+  {
+   "t": 50.8,
+   "kind": "at",
+   "target": "L.answer",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S05"
+  },
+  {
+   "t": 53,
+   "kind": "click",
+   "target": "L.noteInput",
+   "color": null,
+   "dwell": 0.1,
+   "scene": "S06"
+  },
+  {
+   "t": 56.5,
+   "kind": "click",
+   "target": "L.save",
+   "color": null,
+   "dwell": 0.1,
+   "scene": "S06"
+  },
+  {
+   "t": 57.7,
+   "kind": "exit",
+   "target": "bottom",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S06"
+  },
+  {
+   "t": 63.4,
+   "kind": "enter",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S07"
+  },
+  {
+   "t": 64.5,
+   "kind": "click",
+   "target": "R.receive",
+   "color": null,
+   "dwell": 0.2,
+   "scene": "S07"
+  },
+  {
+   "t": 65.6,
+   "kind": "exit",
+   "target": "bottom",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S07"
+  },
+  {
+   "t": 73.5,
+   "kind": "enter",
+   "target": "left",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S08"
+  },
+  {
+   "t": 74.4,
+   "kind": "at",
+   "target": "L.switch",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S08"
+  },
+  {
+   "t": 74.62,
+   "kind": "at",
+   "target": "L.switch",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S08"
+  },
+  {
+   "t": 75,
+   "kind": "click",
+   "target": "L.switch",
+   "color": "green",
+   "dwell": 0.2,
+   "scene": "S08"
+  },
+  {
+   "t": 76.7,
+   "kind": "exit",
+   "target": "left",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S08"
+  },
+  {
+   "t": 90.5,
+   "kind": "enter",
+   "target": "bottom",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S09"
+  },
+  {
+   "t": 91.5,
+   "kind": "click",
+   "target": "L.suggestSharma",
+   "color": null,
+   "dwell": 0.2,
+   "scene": "S09"
+  },
+  {
+   "t": 92.7,
+   "kind": "at",
+   "target": "L.answer",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S09"
+  },
+  {
+   "t": 94.6,
+   "kind": "exit",
+   "target": "bottom",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S09"
+  },
+  {
+   "t": 98.5,
+   "kind": "enter",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S10"
+  },
+  {
+   "t": 99.5,
+   "kind": "click",
+   "target": "R.askOwner",
+   "color": null,
+   "dwell": 0.2,
+   "scene": "S10"
+  },
+  {
+   "t": 104,
+   "kind": "click",
+   "target": "L.keep18",
+   "color": "green",
+   "dwell": 0.7,
+   "scene": "S10"
+  },
+  {
+   "t": 105.4,
+   "kind": "exit",
+   "target": "bottom",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S10"
+  },
+  {
+   "t": 108.4,
+   "kind": "enter",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S11"
+  },
+  {
+   "t": 109.5,
+   "kind": "click",
+   "target": "L.viewTeam",
+   "color": null,
+   "dwell": 0.2,
+   "scene": "S11"
+  },
+  {
+   "t": 110.5,
+   "kind": "exit",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S11"
+  },
+  {
+   "t": 117.5,
+   "kind": "enter",
+   "target": "right",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S12"
+  },
+  {
+   "t": 118.5,
+   "kind": "click",
+   "target": "flowSync",
+   "color": null,
+   "dwell": 0.2,
+   "scene": "S12"
+  },
+  {
+   "t": 119.7,
+   "kind": "exit",
+   "target": "bottom",
+   "color": null,
+   "dwell": 0.3,
+   "scene": "S12"
+  }
+ ],
+ "lifts": [
+  {
+   "clip": "STAGE",
+   "name": "R.answer",
+   "t0": 36.5,
+   "opt": {
+    "dur": 0.55,
+    "scale": 1.035
+   },
+   "scene": "S04"
+  },
+  {
+   "clip": "STAGE",
+   "name": "L.answer",
+   "t0": 50,
+   "opt": {
+    "dur": 0.55,
+    "scale": 1.035
+   },
+   "scene": "S05"
+  },
+  {
+   "clip": "STAGE",
+   "name": "L.outboxNum",
+   "t0": 57.5,
+   "opt": {
+    "dur": 0.6,
+    "scale": 1.5
+   },
+   "scene": "S06"
+  },
+  {
+   "clip": "STAGE",
+   "name": "R.outboxNum",
+   "t0": 65.5,
+   "opt": {
+    "dur": 0.55,
+    "scale": 1.5
+   },
+   "scene": "S07"
+  },
+  {
+   "clip": "STAGE",
+   "name": "HUB.totalNum",
+   "t0": 66.5,
+   "opt": {
+    "dur": 0.6,
+    "scale": 1.35
+   },
+   "scene": "S07"
+  },
+  {
+   "clip": "STAGE",
+   "name": "L.outboxNum",
+   "t0": 75.25,
+   "opt": {
+    "dur": 0.5,
+    "scale": 1.5
+   },
+   "scene": "S08"
+  },
+  {
+   "clip": "STAGE",
+   "name": "HUB.totalNum",
+   "t0": 76,
+   "opt": {
+    "dur": 0.6,
+    "scale": 1.35
+   },
+   "scene": "S08"
+  },
+  {
+   "clip": "STAGE",
+   "name": "L.answer",
+   "t0": 92,
+   "opt": {
+    "dur": 0.55,
+    "scale": 1.03
+   },
+   "scene": "S09"
+  },
+  {
+   "clip": "STAGE",
+   "name": "HUB.totalNum",
+   "t0": 105,
+   "opt": {
+    "dur": 0.6,
+    "scale": 1.35
+   },
+   "scene": "S10"
+  }
+ ],
+ "scenes": [
+  {
+   "id": "S01",
+   "start": 0,
+   "end": 16,
+   "fixture": false,
+   "keys": [
+    [
+     0,
+     null,
+     {
+      "x": 1920,
+      "y": 1080,
+      "z": 1.045
+     }
+    ],
+    [
+     9,
+     "easeInOutSine",
+     {
+      "x": 1926,
+      "y": 1080,
+      "z": 1.02
+     }
+    ],
+    [
+     14.6,
+     "easeInOutSine",
+     {
+      "x": 1920,
+      "y": 1080,
+      "z": 1
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     1.5,
+     2,
+     0.25
+    ],
+    [
+     4.5,
+     2,
+     0.25
+    ],
+    [
+     10,
+     4,
+     0.35
+    ]
+   ],
+   "punches": [
+    [
+     10,
+     0.018,
+     0.35
+    ]
+   ],
+   "broken": false
+  },
+  {
+   "id": "S02",
+   "start": 16,
+   "end": 26,
+   "fixture": false,
+   "keys": [
+    [
+     16,
+     null,
+     {
+      "x": 1920,
+      "y": 1080,
+      "z": 1
+     }
+    ],
+    [
+     18.9,
+     "easeInOutSine",
+     {
+      "x": 1920,
+      "y": 1080,
+      "z": 1.025
+     }
+    ],
+    [
+     19.9,
+     "easeInOutCubic",
+     {
+      "x": 3744,
+      "y": 1978.7,
+      "z": 1.25
+     }
+    ],
+    [
+     22.4,
+     "easeInOutSine",
+     {
+      "x": 3754,
+      "y": 1982.7,
+      "z": 1.275
+     }
+    ],
+    [
+     23.3,
+     "easeInOutCubic",
+     {
+      "x": 3840,
+      "y": 2090,
+      "z": 1
+     }
+    ],
+    [
+     24.9,
+     "easeInOutSine",
+     {
+      "x": 3840,
+      "y": 2090,
+      "z": 1.02
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     16,
+     6,
+     0.4
+    ],
+    [
+     19.5,
+     2,
+     0.2
+    ]
+   ],
+   "punches": [
+    [
+     16,
+     0.05,
+     0.45
+    ]
+   ],
+   "broken": false
+  },
+  {
+   "id": "S03",
+   "start": 26,
+   "end": 34,
+   "fixture": false,
+   "keys": [
+    [
+     26,
+     null,
+     {
+      "x": 5760,
+      "y": 2088,
+      "z": 0.8
+     }
+    ],
+    [
+     33.9,
+     "easeInOutSine",
+     {
+      "x": 5760,
+      "y": 2096,
+      "z": 0.83
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     26,
+     3,
+     0.3
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S04",
+   "start": 34,
+   "end": 44,
+   "fixture": false,
+   "keys": [
+    [
+     34.9,
+     "easeInOutCubic",
+     {
+      "x": 6234.736842105263,
+      "y": 2525.7894736842104,
+      "z": 1.9
+     }
+    ],
+    [
+     39.6,
+     "easeInOutSine",
+     {
+      "x": 6234.736842105263,
+      "y": 2525.7894736842104,
+      "z": 1.9
+     }
+    ],
+    [
+     40.9,
+     "easeInOutCubic",
+     {
+      "x": 6234.736842105263,
+      "y": 2525.7894736842104,
+      "z": 1.9
+     }
+    ],
+    [
+     43.55,
+     "easeInOutSine",
+     {
+      "x": 6254.17004048583,
+      "y": 2536.7206477732793,
+      "z": 1.976
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     36,
+     2,
+     0.25
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S05",
+   "start": 44,
+   "end": 52,
+   "fixture": false,
+   "keys": [
+    [
+     44.5,
+     "easeOutExpo",
+     {
+      "x": 5239.5,
+      "y": 1995.142857142857,
+      "z": 2.1
+     }
+    ],
+    [
+     48.45,
+     "easeInOutSine",
+     {
+      "x": 5249.5,
+      "y": 1987.6532593619972,
+      "z": 2.1630000000000003
+     }
+    ],
+    [
+     49.25,
+     "easeInOutCubic",
+     {
+      "x": 5352.85,
+      "y": 2525.7894736842104,
+      "z": 1.9
+     }
+    ],
+    [
+     51.95,
+     "easeInOutSine",
+     {
+      "x": 5352.85,
+      "y": 2534.0674501788453,
+      "z": 1.9569999999999999
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     46,
+     3,
+     0.3
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S06",
+   "start": 52,
+   "end": 62,
+   "fixture": false,
+   "keys": [
+    [
+     52.85,
+     "easeInOutCubic",
+     {
+      "x": 5260,
+      "y": 2408.3,
+      "z": 2
+     }
+    ],
+    [
+     56.95,
+     "easeInOutSine",
+     {
+      "x": 5241.538461538462,
+      "y": 2408.3,
+      "z": 2.08
+     }
+    ],
+    [
+     57.75,
+     "easeInOutCubic",
+     {
+      "x": 5507.49010989011,
+      "y": 2176.4131868131867,
+      "z": 1.3196055684454753
+     }
+    ],
+    [
+     58.95,
+     "easeInOutSine",
+     {
+      "x": 5493.2255979314805,
+      "y": 2176.4131868131867,
+      "z": 1.345997679814385
+     }
+    ],
+    [
+     59.75,
+     "easeInOutCubic",
+     {
+      "x": 5820,
+      "y": 2062.5222222222224,
+      "z": 1.8
+     }
+    ],
+    [
+     61.5,
+     "easeInOutSine",
+     {
+      "x": 5820,
+      "y": 2062.5222222222224,
+      "z": 1.854
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     57.5,
+     2,
+     0.25
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S07",
+   "start": 62,
+   "end": 72,
+   "fixture": false,
+   "keys": [
+    [
+     62.85,
+     "easeInOutCubic",
+     {
+      "x": 6037.35,
+      "y": 2525.7894736842104,
+      "z": 1.9
+     }
+    ],
+    [
+     65.55,
+     "easeInOutSine",
+     {
+      "x": 6037.35,
+      "y": 2533.7368421052633,
+      "z": 1.9569999999999999
+     }
+    ],
+    [
+     66.35,
+     "easeInOutCubic",
+     {
+      "x": 6001.538461538462,
+      "y": 2153.3846153846152,
+      "z": 1.3
+     }
+    ],
+    [
+     68.45,
+     "easeInOutSine",
+     {
+      "x": 6023.047050037341,
+      "y": 2141.2860343539955,
+      "z": 1.3390000000000002
+     }
+    ],
+    [
+     69.2,
+     "easeInOutCubic",
+     {
+      "x": 5350.5,
+      "y": 2058.90625,
+      "z": 1.6827344434706397
+     }
+    ],
+    [
+     71.6,
+     "easeInOutSine",
+     {
+      "x": 5337.5,
+      "y": 2049.5594660194174,
+      "z": 1.7332164767747589
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     65.5,
+     2,
+     0.25
+    ],
+    [
+     66.5,
+     2,
+     0.25
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S08",
+   "start": 72,
+   "end": 90,
+   "fixture": false,
+   "keys": [
+    [
+     72.45,
+     "easeInOutCubic",
+     {
+      "x": 5760,
+      "y": 2200,
+      "z": 0.9
+     }
+    ],
+    [
+     73.3,
+     "easeInOutCubic",
+     {
+      "x": 5260,
+      "y": 2008,
+      "z": 2
+     }
+    ],
+    [
+     74.95,
+     "easeInOutSine",
+     {
+      "x": 5253.5,
+      "y": 1995.142857142857,
+      "z": 2.1
+     }
+    ],
+    [
+     75.6,
+     "easeOutExpo",
+     {
+      "x": 5760,
+      "y": 2168.421052631579,
+      "z": 0.95
+     }
+    ],
+    [
+     76.3,
+     "linear",
+     {
+      "x": 5760,
+      "y": 2165.4450261780103,
+      "z": 0.955
+     }
+    ],
+    [
+     77.05,
+     "easeInOutCubic",
+     {
+      "x": 5760,
+      "y": 2102,
+      "z": 0.845
+     }
+    ],
+    [
+     77.95,
+     "easeInOutSine",
+     {
+      "x": 5760,
+      "y": 2102,
+      "z": 0.85
+     }
+    ],
+    [
+     79.5,
+     "easeInOutCubic",
+     {
+      "x": 5149.2307692307695,
+      "y": 2108.492307692308,
+      "z": 2.6
+     }
+    ],
+    [
+     82.45,
+     "easeInOutSine",
+     {
+      "x": 5140.225140712945,
+      "y": 2108.492307692308,
+      "z": 2.665
+     }
+    ],
+    [
+     83.15,
+     "easeInOutCubic",
+     {
+      "x": 5285.263157894737,
+      "y": 2333.2368421052633,
+      "z": 1.9
+     }
+    ],
+    [
+     84.95,
+     "easeInOutSine",
+     {
+      "x": 5270.5467552376085,
+      "y": 2333.2368421052633,
+      "z": 1.9569999999999999
+     }
+    ],
+    [
+     85.8,
+     "easeInOutCubic",
+     {
+      "x": 5760,
+      "y": 2274,
+      "z": 0.9766022380467956
+     }
+    ],
+    [
+     89.6,
+     "easeInOutSine",
+     {
+      "x": 5760,
+      "y": 2274,
+      "z": 1.0059003051881994
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     75,
+     3,
+     0.25
+    ],
+    [
+     75.5,
+     3,
+     0.25
+    ],
+    [
+     76,
+     10,
+     0.4
+    ]
+   ],
+   "punches": [
+    [
+     75.5,
+     0.018,
+     0.3
+    ],
+    [
+     76,
+     0.075,
+     0.45
+    ]
+   ],
+   "broken": false
+  },
+  {
+   "id": "S09",
+   "start": 90,
+   "end": 98,
+   "fixture": false,
+   "keys": [
+    [
+     90.8,
+     "easeInOutCubic",
+     {
+      "x": 5285.263157894737,
+      "y": 2525.7894736842104,
+      "z": 1.9
+     }
+    ],
+    [
+     97.4,
+     "easeInOutSine",
+     {
+      "x": 5265.82995951417,
+      "y": 2536.7206477732793,
+      "z": 1.976
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     92,
+     2,
+     0.25
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S10",
+   "start": 98,
+   "end": 108,
+   "fixture": false,
+   "keys": [
+    [
+     98.8,
+     "easeInOutCubic",
+     {
+      "x": 6001.538461538462,
+      "y": 2301.5346153846153,
+      "z": 1.3
+     }
+    ],
+    [
+     101.95,
+     "easeInOutSine",
+     {
+      "x": 6023.047050037341,
+      "y": 2301.5346153846153,
+      "z": 1.3390000000000002
+     }
+    ],
+    [
+     102.75,
+     "easeInOutCubic",
+     {
+      "x": 5285.263157894737,
+      "y": 2333.2368421052633,
+      "z": 1.9
+     }
+    ],
+    [
+     104.95,
+     "easeInOutSine",
+     {
+      "x": 5270.5467552376085,
+      "y": 2333.2368421052633,
+      "z": 1.9569999999999999
+     }
+    ],
+    [
+     105.75,
+     "easeInOutCubic",
+     {
+      "x": 5760,
+      "y": 2168.421052631579,
+      "z": 0.95
+     }
+    ],
+    [
+     107.6,
+     "easeInOutSine",
+     {
+      "x": 5760,
+      "y": 2160,
+      "z": 0.975
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     104,
+     3,
+     0.3
+    ],
+    [
+     105,
+     2,
+     0.25
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S11",
+   "start": 108,
+   "end": 116,
+   "fixture": false,
+   "keys": [
+    [
+     108.8,
+     "easeInOutCubic",
+     {
+      "x": 5313.333333333333,
+      "y": 2141.822222222222,
+      "z": 1.8
+     }
+    ],
+    [
+     110.6,
+     "easeInOutSine",
+     {
+      "x": 5297.799352750809,
+      "y": 2141.822222222222,
+      "z": 1.854
+     }
+    ],
+    [
+     111.4,
+     "easeInOutCubic",
+     {
+      "x": 5760,
+      "y": 2003.4,
+      "z": 2
+     }
+    ],
+    [
+     115.3,
+     "easeInOutSine",
+     {
+      "x": 5760,
+      "y": 2003.4,
+      "z": 2.1
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     109.5,
+     2,
+     0.2
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S12",
+   "start": 116,
+   "end": 128,
+   "fixture": false,
+   "keys": [
+    [
+     116.6,
+     "easeInOutCubic",
+     {
+      "x": 5760,
+      "y": 3340.0000000000005,
+      "z": 1
+     }
+    ],
+    [
+     118.15,
+     "easeInOutSine",
+     {
+      "x": 5760,
+      "y": 3340.0000000000005,
+      "z": 1.025
+     }
+    ],
+    [
+     119,
+     "easeInOutSine",
+     {
+      "x": 5678.69625,
+      "y": 3447.7615,
+      "z": 1.35
+     }
+    ],
+    [
+     119.9,
+     "easeInOutSine",
+     {
+      "x": 5678.69625,
+      "y": 3320.2495,
+      "z": 1.35
+     }
+    ],
+    [
+     120.80000000000001,
+     "easeInOutSine",
+     {
+      "x": 5895.8775000000005,
+      "y": 3456.127,
+      "z": 1.35
+     }
+    ],
+    [
+     121.7,
+     "easeInOutSine",
+     {
+      "x": 5895.8775000000005,
+      "y": 3323.04625,
+      "z": 1.35
+     }
+    ],
+    [
+     122.60000000000001,
+     "easeInOutSine",
+     {
+      "x": 5678.69625,
+      "y": 3387.619,
+      "z": 1.35
+     }
+    ],
+    [
+     123.5,
+     "easeInOutSine",
+     {
+      "x": 5470.44975,
+      "y": 3262.35925,
+      "z": 1.35
+     }
+    ],
+    [
+     124.2,
+     "easeInOutCubic",
+     {
+      "x": 6183.63,
+      "y": 3464.524725274726,
+      "z": 1.314269208549971
+     }
+    ],
+    [
+     127.55,
+     "easeInOutSine",
+     {
+      "x": 6183.63,
+      "y": 3464.524725274726,
+      "z": 1.3536972848064701
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     116.5,
+     2,
+     0.2
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S13",
+   "start": 128,
+   "end": 138,
+   "fixture": false,
+   "keys": [
+    [
+     128.6,
+     "easeInOutCubic",
+     {
+      "x": 3840,
+      "y": 3240,
+      "z": 1
+     }
+    ],
+    [
+     137.45,
+     "easeInOutSine",
+     {
+      "x": 3840,
+      "y": 3230,
+      "z": 1.035
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     128.5,
+     2,
+     0.2
+    ],
+    [
+     129,
+     2,
+     0.2
+    ],
+    [
+     136.5,
+     3,
+     0.25
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S14",
+   "start": 138,
+   "end": 154,
+   "fixture": false,
+   "keys": [
+    [
+     138.6,
+     "easeInOutCubic",
+     {
+      "x": 1920,
+      "y": 3240.0000000000005,
+      "z": 1
+     }
+    ],
+    [
+     139.45,
+     "easeInOutCubic",
+     {
+      "x": 1597.035,
+      "y": 3196.62,
+      "z": 1.45
+     }
+    ],
+    [
+     141.75,
+     "easeInOutSine",
+     {
+      "x": 1597.035,
+      "y": 3196.62,
+      "z": 1.4935
+     }
+    ],
+    [
+     142.65,
+     "easeInOutCubic",
+     {
+      "x": 1786.395,
+      "y": 3191.535,
+      "z": 1.6
+     }
+    ],
+    [
+     143.2,
+     "easeInOutSine",
+     {
+      "x": 1816.395,
+      "y": 3191.535,
+      "z": 1.6
+     }
+    ],
+    [
+     145.85,
+     "easeInOutSine",
+     {
+      "x": 2332.4700000000003,
+      "y": 3294.5706896551724,
+      "z": 1.45
+     }
+    ],
+    [
+     146.95,
+     "easeInOutCubic",
+     {
+      "x": 1915.14,
+      "y": 2194.97,
+      "z": 1.25
+     }
+    ],
+    [
+     150.6,
+     "easeInOutSine",
+     {
+      "x": 1935.14,
+      "y": 2194.97,
+      "z": 1.28125
+     }
+    ],
+    [
+     153.9,
+     "easeInOutSine",
+     {
+      "x": 1905.14,
+      "y": 2194.97,
+      "z": 1.3125
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     138,
+     2,
+     0.2
+    ],
+    [
+     143,
+     1.5,
+     0.2
+    ],
+    [
+     143.5,
+     1.5,
+     0.2
+    ],
+    [
+     144,
+     1.5,
+     0.2
+    ],
+    [
+     144.5,
+     1.5,
+     0.2
+    ]
+   ],
+   "punches": [],
+   "broken": false
+  },
+  {
+   "id": "S15",
+   "start": 154,
+   "end": 168,
+   "fixture": false,
+   "keys": [
+    [
+     155.3,
+     "easeInOutCubic",
+     {
+      "x": 3840,
+      "y": 2300,
+      "z": 0.333
+     }
+    ],
+    [
+     157.2,
+     "easeInOutSine",
+     {
+      "x": 3840,
+      "y": 2290,
+      "z": 0.343
+     }
+    ],
+    [
+     158.3,
+     "easeInOutCubic",
+     {
+      "x": 3840,
+      "y": 2160,
+      "z": 1
+     }
+    ],
+    [
+     165.95,
+     "linear",
+     {
+      "x": 3840,
+      "y": 2160,
+      "z": 1
+     }
+    ],
+    [
+     168,
+     "easeInOutSine",
+     {
+      "x": 3840,
+      "y": 2160,
+      "z": 1.03
+     }
+    ]
+   ],
+   "shakes": [
+    [
+     158.5,
+     3,
+     0.25
+    ],
+    [
+     160,
+     8,
+     0.4
+    ]
+   ],
+   "punches": [
+    [
+     160,
+     0.055,
+     0.45
+    ]
+   ],
+   "broken": false
+  }
+ ],
+ "captions": [
+  {
+   "start": 2,
+   "end": 5.5,
+   "text": "Tanishk takes the client's call on set.",
+   "wdur": 0.8666666666666667
+  },
+  {
+   "start": 5.5,
+   "end": 9,
+   "text": "Lakshya gets the client's email in the office.",
+   "wdur": 1.0222222222222221
+  },
+  {
+   "start": 10,
+   "end": 13,
+   "text": "Same job. Two dates. Nobody notices…",
+   "wdur": 0.8
+  },
+  {
+   "start": 13,
+   "end": 15.5,
+   "text": "…until the client does.",
+   "wdur": 0.5111111111111111
+  },
+  {
+   "start": 22.5,
+   "end": 25.8,
+   "text": "When two people disagree, it asks instead of guessing.",
+   "wdur": 1.2
+  },
+  {
+   "start": 27.5,
+   "end": 30.5,
+   "text": "Two laptops. Each keeps its own memory.",
+   "wdur": 0.8666666666666667
+  },
+  {
+   "start": 30.5,
+   "end": 33.8,
+   "text": "The hub only relays what the team shares.",
+   "wdur": 0.9111111111111111
+  },
+  {
+   "start": 37.5,
+   "end": 41,
+   "text": "Ask anything. Answered on the laptop in 9 ms.",
+   "wdur": 1
+  },
+  {
+   "start": 41,
+   "end": 43.8,
+   "text": "Every line cites its source.",
+   "wdur": 0.6222222222222222
+  },
+  {
+   "start": 46.5,
+   "end": 49.5,
+   "text": "Tanishk loses the hub. No signal on set.",
+   "wdur": 0.8888888888888888
+  },
+  {
+   "start": 49.5,
+   "end": 51.8,
+   "text": "Still remembers. Still answers. 11 ms.",
+   "wdur": 0.8444444444444444
+  },
+  {
+   "start": 53,
+   "end": 56,
+   "text": "He notes the client's call. Offline.",
+   "wdur": 0.8
+  },
+  {
+   "start": 57.5,
+   "end": 61.8,
+   "text": "Turned into a claim, with its source. Queued, not sent.",
+   "wdur": 1.2222222222222223
+  },
+  {
+   "start": 62.5,
+   "end": 65.5,
+   "text": "Meanwhile, the client emails Lakshya: the 16th.",
+   "wdur": 1.0444444444444445
+  },
+  {
+   "start": 66.5,
+   "end": 70,
+   "text": "Her laptop reads it and syncs it to the team.",
+   "wdur": 1
+  },
+  {
+   "start": 70,
+   "end": 71.8,
+   "text": "Tanishk can't see it yet.",
+   "wdur": 0.5555555555555556
+  },
+  {
+   "start": 76.5,
+   "end": 80,
+   "text": "Both laptops catch the same conflict. On their own.",
+   "wdur": 1.1333333333333333
+  },
+  {
+   "start": 80,
+   "end": 84.5,
+   "text": "Qdrant says same job: 0.85, over the 0.82 bar.",
+   "wdur": 1.0222222222222221
+  },
+  {
+   "start": 84.5,
+   "end": 89.5,
+   "text": "Nothing is overwritten. Nothing wins by default.",
+   "wdur": 1.0666666666666667
+  },
+  {
+   "start": 92,
+   "end": 95.5,
+   "text": "Ask again: it won't guess. Disputed, with both sources.",
+   "wdur": 1.2222222222222223
+  },
+  {
+   "start": 95.5,
+   "end": 97.8,
+   "text": "Who said what, and where.",
+   "wdur": 0.5555555555555556
+  },
+  {
+   "start": 99.5,
+   "end": 102.5,
+   "text": "Lakshya can ask. Only the owner decides.",
+   "wdur": 0.8888888888888888
+  },
+  {
+   "start": 104,
+   "end": 107.8,
+   "text": "Tanishk keeps the 18th. Everyone has it a second later.",
+   "wdur": 1.2222222222222223
+  },
+  {
+   "start": 109.5,
+   "end": 112.5,
+   "text": "Private notes never leave the laptop.",
+   "wdur": 0.8222222222222222
+  },
+  {
+   "start": 112.5,
+   "end": 115.8,
+   "text": "Device-only claims on the hub: 0. Counted live.",
+   "wdur": 1.0444444444444445
+  },
+  {
+   "start": 116.5,
+   "end": 120,
+   "text": "Under the hood: every laptop is a full edge node.",
+   "wdur": 1.0888888888888888
+  },
+  {
+   "start": 120,
+   "end": 124,
+   "text": "Qdrant Edge on the laptop. A Qdrant server as the hub.",
+   "wdur": 1.2
+  },
+  {
+   "start": 124,
+   "end": 127.8,
+   "text": "Sync is an outbox. Laptops pull what changed.",
+   "wdur": 1
+  },
+  {
+   "start": 128.5,
+   "end": 132,
+   "text": "The trick: a vector of what a claim is about.",
+   "wdur": 1
+  },
+  {
+   "start": 132,
+   "end": 135.5,
+   "text": "Same task, worded differently: 0.85. The bar is 0.82.",
+   "wdur": 1.1777777777777778
+  },
+  {
+   "start": 135.5,
+   "end": 137.8,
+   "text": "Same thing, different value: a conflict.",
+   "wdur": 0.8888888888888888
+  },
+  {
+   "start": 138.5,
+   "end": 142,
+   "text": "Where it's going: a private assistant on every laptop.",
+   "wdur": 1.2
+  },
+  {
+   "start": 142,
+   "end": 146,
+   "text": "It knows you, because nothing leaves your laptop.",
+   "wdur": 1.0888888888888888
+  },
+  {
+   "start": 146.5,
+   "end": 150.5,
+   "text": "The direction, not the demo: phone, voice and nudges come next.",
+   "wdur": 1.4
+  },
+  {
+   "start": 150.5,
+   "end": 153.8,
+   "text": "Only team work is shared. Everything else stays yours.",
+   "wdur": 1.2
+  },
+  {
+   "start": 154.5,
+   "end": 158.5,
+   "text": "Shared memory for small teams that work where the signal doesn't.",
+   "wdur": 1.4
+  }
+ ],
+ "errors": [],
+ "page_errors": [],
+ "clips": {
+  "real": [
+   "DECK_ARCH",
+   "DECK_ASSIST",
+   "DECK_DAY",
+   "LANDING_HERO",
+   "STAGE"
+  ],
+  "synth": []
+ },
+ "generated_by": "audio/probe.js"
+}

@@ -15,6 +15,9 @@ video/**/out/
 video/**/stills/
 video/stills/
 video/fallback/seg_*
+# v4 film: captured UI plates and render intermediates (frames/, out/, stills/, *.wav are covered above)
+video/v4/clips/
+video/v4/frames/
 
 # internal planning notes stay local
 PS3-Technical-Brief*.md

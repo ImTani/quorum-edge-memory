@@ -1,0 +1,7 @@
+/* Film-only layout nudges for the replica (the UI is otherwise the real stage CSS, copied).
+   At 1920x1080 the Ask panel is narrow, so a 3-source answer pushed its "9 ms, on this device" line
+   out of the box; slightly smaller citation chips keep the whole answer in view. */
+.on-stage .cites { gap: 5px; margin-top: 7px; }
+.on-stage .cite { height: 29px; font-size: 13px; padding: 0 8px; }
+.on-stage .answer-text { font-size: 16.5px; line-height: 1.36; }
+.on-stage .answer-meta { margin-top: 6px; }
