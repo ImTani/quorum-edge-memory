@@ -23,13 +23,16 @@ function fromHash() {
 }
 
 window.addEventListener('keydown', (e) => {
+  // Space / Enter on a focused button (flow buttons, component boxes, play) belongs to the button.
+  if ((e.key === ' ' || e.key === 'Enter') && e.target.closest?.('button')) return;
   if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); go(cur + 1); }
   if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
   if (e.key === 'Home') go(0);
   if (e.key === 'End') go(slides.length - 1);
 });
 window.addEventListener('click', (e) => {
-  if (e.target.closest('a, button, .diagram, .info')) return;
+  // The interactive architecture slide never turns on click; use the keys or the HUD there.
+  if (e.target.closest('a, button, .diagram, .info, .arch-slide')) return;
   if (e.clientX > window.innerWidth * 0.66) go(cur + 1);
   else if (e.clientX < window.innerWidth * 0.33) go(cur - 1);
 });
@@ -142,3 +145,26 @@ if (diagram) {
   }));
   info.innerHTML = '<p class="info-k">how to use</p><h3>Click any part</h3><p>Each part shows what it does, why we chose it, and where it lives in the code.</p><p>Or play a flow above to watch a request move through the system.</p>';
 }
+
+// ---------- optional play-through on the capture slide: lights each [data-step] in turn ----------
+document.querySelectorAll('[data-play]').forEach((btn) => {
+  const board = btn.closest('.slide');
+  const parts = [...board.querySelectorAll('[data-step]')];
+  const last = Math.max(...parts.map((p) => Number(p.dataset.step)));
+  let timer = null;
+  const reset = () => { board.classList.remove('playing'); parts.forEach((p) => p.classList.remove('cur', 'done')); };
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    clearTimeout(timer);
+    reset();
+    board.classList.add('playing');
+    let i = 1;
+    const tick = () => {
+      if (i > last) { timer = setTimeout(reset, 1400); return; }
+      parts.forEach((p) => { const s = Number(p.dataset.step); p.classList.toggle('cur', s === i); p.classList.toggle('done', s < i); });
+      i += 1;
+      timer = setTimeout(tick, 1100);
+    };
+    tick();
+  });
+});

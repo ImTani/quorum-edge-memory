@@ -223,146 +223,293 @@
     </section>
 
 
-    <!-- 16: module map -->
-    <section class="slide deep" data-title="Module map">
+    <!-- 15: module map -->
+    <section class="slide deep vis" data-title="Module map">
       <h2 class="tight">Module map: one job per file.</h2>
-      <table class="mods">
-        <tr><th>api.py</th><td>FastAPI app per device. Routes, the capture pipeline, owner rules, the SSE stream. Builds <code>ctx</code> (cfg, memory, store, bus, sync).</td></tr>
-        <tr><th>memory.py</th><td>The Qdrant Edge shard: three named vectors, hybrid search, conflict candidates, payload updates, fixed 3D projection for the cloud.</td></tr>
-        <tr><th>conflicts.py</th><td>Detection, resolution and applying a remote resolution. Deterministic conflict ids; disputed marks stay local.</td></tr>
-        <tr><th>sync.py</th><td>Background worker: pushes the outbox to the hub, pulls changes, owns the transport hook (offline + byte counts).</td></tr>
-        <tr><th>store.py</th><td>SQLite: outbox, conflicts, activity, key-value (pull cursor). WAL, one connection behind a lock.</td></tr>
-        <tr><th>extract.py</th><td>Message → claim drafts via Ollama (JSON) with a regex fallback. Dates resolved in code. Entity snapping and tier rules.</td></tr>
-        <tr><th>answer.py</th><td>Templated answers from retrieved claims: disputed first, "due this week", always cited.</td></tr>
-        <tr><th>embed.py · events.py</th><td>bge-small dense + Qdrant Edge BM25 · thread-safe event bus fanning out to SSE subscribers.</td></tr>
-        <tr><th>web/</th><td>device.js (one device UI, mounted twice on the stage), stage.js (hub column, captions), cloud.js (memory cloud).</td></tr>
-      </table>
+      <div class="band" style="top:154px;height:142px"><p class="lbl">UI · web/</p></div>
+      <div class="band" style="top:322px;height:118px"><p class="lbl">API</p></div>
+      <div class="band" style="top:466px;height:142px"><p class="lbl">domain</p></div>
+      <div class="band" style="top:634px;height:142px"><p class="lbl">infrastructure</p></div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah15" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <g marker-end="url(#ah15)">
+          <path d="M626 284 C 628 306, 622 324, 626 340"/>
+          <path d="M560 430 C 470 452, 320 458, 286 482"/>
+          <path d="M650 430 C 652 452, 640 466, 640 482"/>
+          <path d="M940 430 C 948 452, 966 466, 968 482"/>
+          <path d="M1060 430 C 1170 450, 1290 458, 1316 482"/>
+          <path d="M792 430 C 806 520, 806 600, 748 652"/>
+          <path d="M1120 544 C 1140 538, 1160 546, 1180 541"/>
+          <path d="M970 652 C 968 636, 974 616, 972 600"/>
+          <path d="M1100 652 C 1140 636, 1190 618, 1226 600"/>
+          <path d="M832 710 C 812 706, 792 714, 772 709"/>
+          <path d="M1380 598 C 1383 618, 1377 634, 1380 652"/>
+        </g>
+      </svg>
+      <div class="stk b mod" style="left:486px;top:176px;--r:-1deg"><b class="fn">device.js</b>one device UI, mounted twice on the stage</div>
+      <div class="stk b mod" style="left:836px;top:176px;--r:1.2deg"><b class="fn">stage.js</b>hub column, captions</div>
+      <div class="stk b mod" style="left:1186px;top:176px;--r:-.8deg"><b class="fn">cloud.js</b>the memory cloud</div>
+      <div class="stk y mod one" style="left:480px;top:344px;width:640px;--r:-.6deg"><b class="fn">api.py</b>FastAPI per device: routes, owner rules, SSE</div>
+      <p class="mk" style="left:1170px;top:366px">arrows: main dependencies</p>
+      <div class="stk y mod" style="left:136px;top:488px;--r:1deg"><b class="fn">extract.py</b>message → claim drafts; regex fallback</div>
+      <div class="stk y mod" style="left:486px;top:488px;--r:-1.3deg"><b class="fn">answer.py</b>templated answers, always cited</div>
+      <div class="stk y mod" style="left:836px;top:488px;--r:.8deg"><b class="fn">conflicts.py</b>detect · resolve · apply; deterministic ids</div>
+      <div class="stk y mod" style="left:1186px;top:488px;--r:-1deg"><b class="fn">memory.py</b>Edge shard: 3 named vectors, hybrid search</div>
+      <div class="stk b mod" style="left:136px;top:656px;--r:-1.2deg"><b class="fn">events.py</b>thread-safe event bus → SSE</div>
+      <div class="stk b mod" style="left:486px;top:656px;--r:1deg"><b class="fn">store.py</b>SQLite: outbox, conflicts, cursor</div>
+      <div class="stk b mod" style="left:836px;top:656px;--r:-.7deg"><b class="fn">sync.py</b>push outbox, pull changes, transport hook</div>
+      <div class="stk b mod" style="left:1186px;top:656px;--r:1.3deg"><b class="fn">embed.py</b>bge-small dense + Edge BM25</div>
     </section>
 
-    <!-- 17: capture pipeline -->
-    <section class="slide deep" data-title="Capture pipeline">
+    <!-- 16: capture pipeline -->
+    <section class="slide deep vis cap-slide" data-title="Capture pipeline">
       <h2 class="tight">Capture: from a message to a claim.</h2>
-      <ol class="pipe">
-        <li><b>POST /api/ingest</b><span>note, email or WhatsApp text with author and time.</span></li>
-        <li><b>Extract</b><span>Ollama returns JSON (entity, attribute, value phrase). Known entity names are passed in so "Sharma delivery" snaps to "Sharma wedding edit". 6 s budget.</span></li>
-        <li><b>Ground</b><span>Dates resolved in code against today; values must appear in the text. Nothing usable → regex fallback.</span></li>
-        <li><b>Build the claim</b><span>Owner inherited from the existing entity; tier capped at the entity's widest tier; the best sentence becomes the cited excerpt.</span></li>
-        <li><b>Store</b><span>memory.add_claim: text, key and bm25 vectors, then flush. Team or my-devices claims go to the outbox.</span></li>
-        <li><b>Check</b><span>conflicts.check runs the key-vector query; a disagreement opens a conflict.</span></li>
-        <li><b>Publish</b><span>claim, conflict and activity events stream to the UI over SSE.</span></li>
-      </ol>
+      <button class="play" type="button" data-play><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5 L13 8 L4 13.5 Z"/></svg>Play the note through</button>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah16" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <g marker-end="url(#ah16)">
+          <path data-step="2" d="M368 292 C 384 286, 398 296, 414 290"/>
+          <path data-step="3" d="M810 292 C 826 286, 842 296, 858 290"/>
+          <path data-step="4" d="M1190 292 C 1202 286, 1214 296, 1228 290"/>
+          <path data-step="5" d="M1372 504 C 1374 540, 1342 566, 1338 592"/>
+          <path data-step="6" d="M1144 680 C 1124 674, 1106 686, 1088 680"/>
+          <path data-step="7" d="M604 680 C 580 674, 556 686, 530 680"/>
+        </g>
+      </svg>
+      <div class="stk y taped big-note" data-step="1" style="left:96px;top:192px;width:266px;--r:-3deg">Client just called: Sharma delivery moves to the 18th.<small>note · Tanishk</small></div>
+      <p class="step" data-step="1" style="left:96px;top:432px;width:300px"><i>1</i><b>POST /api/ingest</b><br>note, email or WhatsApp, with author and time</p>
+
+      <div class="crd" data-step="2" style="left:420px;top:196px;width:384px"><p class="cap">model JSON</p><pre class="mono">{
+  "entity": "Sharma delivery",
+  "attribute": "due_date",
+  "value": "the 18th"
+}</pre></div>
+      <p class="step" data-step="2" style="left:420px;top:432px;width:384px"><i>2</i><b>Extract</b> · Ollama, JSON out<br>known names passed in · 6 s budget</p>
+
+      <div class="crd ground" data-step="3" style="left:864px;top:196px;width:322px"><p class="cap">grounded in code</p>
+        <p class="was">Sharma delivery</p><p class="now">→ Sharma wedding edit</p>
+        <p class="was">the 18th</p><p class="now">→ 2026-10-18</p></div>
+      <p class="step" data-step="3" style="left:864px;top:432px;width:330px"><i>3</i><b>Ground</b> · dates resolved in code<br>values must appear in the text, else regex fallback</p>
+
+      <div class="crd claim" data-step="4" style="left:1234px;top:176px;width:270px"><p class="cap"><i>4</i>build the claim</p>
+        <dl><dt>entity</dt><dd>Sharma wedding edit</dd><dt>value</dt><dd>18 Oct</dd><dt>owner · from the entity</dt><dd>tanishk</dd><dt>tier · capped at the entity's</dt><dd>team</dd><dt>source</dt><dd>best sentence, cited</dd></dl></div>
+
+      <div class="vec3" data-step="5" style="left:1150px;top:598px;width:354px">
+        <p class="vs t"><b>text</b>meaning</p>
+        <p class="vs k"><b>key</b>entity + attribute</p>
+        <p class="vs m"><b>bm25</b>keywords</p>
+      </div>
+      <p class="step" data-step="5" style="left:1150px;top:782px;width:354px"><i>5</i><b>Store</b> · memory.add_claim, then flush</p>
+
+      <div class="outbox" data-step="6" style="left:612px;top:604px"><span></span><span></span><span>team claim</span><p>outbox</p></div>
+      <div class="crd chk" data-step="6" style="left:842px;top:600px;width:240px"><p class="mono">conflicts.check</p><p>key-vector query; a disagreement opens a conflict</p></div>
+      <p class="step" data-step="6" style="left:612px;top:782px;width:470px"><i>6</i><b>Queue + check</b> · team or my-devices claims to the outbox</p>
+
+      <div class="ui-frame" data-step="7" style="left:96px;top:600px;width:430px"><p class="bar"><span></span><span></span><span></span></p>
+        <p class="ev"><b>claim</b>Sharma wedding edit · 18 Oct</p><p class="ev"><b>conflict</b>if one opened</p><p class="ev"><b>activity</b>a line in the log</p></div>
+      <p class="step" data-step="7" style="left:96px;top:782px;width:470px"><i>7</i><b>Publish</b> · events stream to the UI over SSE</p>
     </section>
 
-    <!-- 18: search and answers -->
-    <section class="slide deep" data-title="Search and answers">
+    <!-- 17: search and answers -->
+    <section class="slide deep vis" data-title="Search and answers">
       <h2 class="tight">Search and answers: one query, on the laptop.</h2>
-      <div class="split even">
-        <div class="code-card"><p class="hand blue">the query (memory.search)</p>
-<pre>QueryRequest(
-  prefetches = [
-    Nearest(bm25_query(q), using="bm25", limit=20),
-    Nearest(dense(q),      using="text", limit=20),
-  ],
-  query  = Fusion.Rrf(k=60),
-  filter = status ∈ {active, disputed}
-           (+ tier == team in team view),
-  limit  = 6)</pre></div>
-        <ul class="layers">
-          <li><b>Why hybrid:</b> BM25 catches names and rare tokens ("Kapoor", "Pangong"); dense catches meaning ("due" ≈ "delivery").</li>
-          <li><b>Why RRF:</b> the two scores live on different scales; rank fusion needs no calibration.</li>
-          <li><b>Answers are templated</b> from the hits: disputed claims lead with both sources; "due this week" lists dated claims in the next 7 days.</li>
-          <li><b>7–70 ms</b> end to end. No model in the answer path, so no hallucinated facts.</li>
-        </ul>
-      </div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah17" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <g marker-end="url(#ah17)">
+          <path d="M330 426 C 362 396, 360 296, 394 280"/>
+          <path d="M330 494 C 362 524, 360 640, 394 656"/>
+          <path d="M736 280 C 772 290, 786 360, 792 412"/>
+          <path d="M736 656 C 772 646, 786 580, 792 528"/>
+          <path d="M892 470 C 900 466, 906 474, 914 470"/>
+          <path d="M1166 470 C 1170 467, 1173 473, 1178 470"/>
+        </g>
+        <path class="ring" d="M808 398 C 872 394, 890 440, 886 476 C 882 520, 838 546, 794 542 C 746 538, 724 500, 728 462 C 732 426, 766 400, 820 401"/>
+      </svg>
+      <div class="stk y taped q" style="left:96px;top:378px;width:234px;--r:-2.5deg">When is the Sharma delivery?<small>the question</small></div>
+      <div class="crd lane" style="left:400px;top:184px;width:332px"><p class="lane-h">BM25</p><p class="lane-s">exact names, rare tokens</p><p class="chips"><code>Sharma</code><code>Kapoor</code><code>Pangong</code></p><p class="lane-f">bm25 vector · limit 20</p></div>
+      <div class="crd lane" style="left:400px;top:562px;width:332px"><p class="lane-h">dense</p><p class="lane-s">meaning</p><p class="chips"><code>due</code> ≈ <code>delivery</code></p><p class="lane-f">text vector · limit 20</p></div>
+      <p class="mk" style="left:906px;top:300px;width:260px">RRF: rank fusion, no score calibration</p>
+      <p class="rrf" style="left:727px;top:428px;width:160px"><b>RRF</b>k = 60</p>
+      <div class="crd filt" style="left:918px;top:384px;width:244px"><p class="filt-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4 H21 L14 12.5 V19.5 L10 21 V12.5 Z"/></svg>filter</p><p>status ∈ {active, disputed}</p><p>+ tier = team in team view</p><p class="lim">limit 6</p></div>
+      <div class="crd answer" style="left:1180px;top:252px;width:324px"><p class="cap">answer · templated</p>
+        <p class="ans">Disputed: email says 16 Oct; Tanishk's note says 18 Oct.</p>
+        <p class="cites"><span>email · Lakshya</span><span>note · Tanishk</span></p>
+        <p class="hand blue">disputed claims lead, with both sources</p></div>
+      <div class="fig" style="left:1180px;top:590px;width:324px"><b>7–70 ms</b><p>end to end, on the laptop</p><p>no model in the answer path</p></div>
     </section>
 
-    <!-- 19: conflict engine -->
-    <section class="slide deep" data-title="Conflict engine">
+    <!-- 18: conflict engine -->
+    <section class="slide deep vis" data-title="Conflict engine">
       <h2 class="tight">Conflict engine: deterministic on every laptop.</h2>
-      <div class="split even">
-        <div class="code-card"><p class="hand blue">detection (conflicts.check)</p>
-<pre>candidates = Nearest(key_vector(claim), using="key")
-  filter: attribute == claim.attribute
-          status ∈ {active, disputed}
-          claim_id != claim.claim_id
-  score_threshold = 0.82,  limit = 5
-
-conflict if  value differs
-         and names share a distinctive word
-
-conflict_id = "cfl_" + sha1(sorted ids)[:10]</pre></div>
-        <ul class="layers">
-          <li><b>Same id everywhere:</b> both laptops compute the same pair and hash, so they agree without exchanging conflict records.</li>
-          <li><b>"Disputed" stays local</b> and doesn't bump versions, so it can't outrank a real update pulled later.</li>
-          <li><b>Owner only</b> may resolve (403 otherwise); a lock makes double clicks settle once.</li>
-          <li><b>Resolution is a claim:</b> winner active, loser superseded (both version-bumped), plus a resolution claim that syncs; others apply it.</li>
-        </ul>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah18" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <path d="M392 186 C 414 190, 412 226, 412 268 C 412 320, 414 350, 434 360 C 414 370, 412 400, 412 452 C 412 494, 414 528, 392 532"/>
+        <g marker-end="url(#ah18)">
+          <path d="M834 342 C 848 336, 858 346, 870 340"/>
+          <path d="M1176 342 C 1184 336, 1192 346, 1200 340"/>
+          <path d="M1300 486 C 1270 548, 1080 540, 1036 592"/>
+          <path d="M858 690 C 846 684, 836 694, 824 688"/>
+          <path d="M1158 690 C 1174 684, 1190 694, 1204 688"/>
+          <path d="M514 690 C 504 684, 494 694, 484 688"/>
+        </g>
+      </svg>
+      <div class="stk y taped" style="left:96px;top:176px;width:252px;--r:-3deg">Sharma delivery moves to the 18th.<small>note · Tanishk</small></div>
+      <div class="stk b taped" style="left:122px;top:356px;width:262px;--r:2deg">Final delivery of the Sharma wedding edit on 16 October.<small>email · Lakshya</small></div>
+      <div class="crd keys" style="left:448px;top:268px;width:384px"><p class="cap">key text: the value is dropped</p><p class="keyline">Sharma delivery · due date</p><p class="keyline">Sharma wedding edit · due date</p></div>
+      <p class="mk" style="left:448px;top:440px;width:384px">entity + attribute, never the value</p>
+      <div class="gauge-box" style="left:874px;top:262px;width:300px">
+        <p class="cap">how alike Qdrant found them</p>
+        <svg viewBox="0 0 300 80" aria-hidden="true">
+          <path d="M4 50 C 60 47, 120 52, 180 49 C 220 47, 260 51, 294 49" class="bar"/>
+          <path d="M160 26 L160 70" class="tick"/>
+          <text x="140" y="20" class="t-grey">0.82</text>
+          <path d="M218 22 C 219 34, 217 50, 219 64" class="needle"/>
+          <text x="226" y="22" class="t-red">0.90</text>
+        </svg>
+        <p class="mk-s">key-vector query · limit 5<br>same attribute · live claims</p>
+        <p class="mk-s grey">1.00 when both snap to the same known task</p>
       </div>
+      <div class="verdict" style="left:1204px;top:262px;width:300px"><p class="hand red">values differ</p><p class="neq">18 Oct ≠ 16 Oct</p><p class="vsub">and the names share a distinctive word</p><p class="hand red big">→ a conflict, nothing overwritten</p></div>
+
+      <div class="crd own" style="left:96px;top:600px;width:384px"><p class="own-h">Only Tanishk can settle.</p><p class="own-s">others get 403 · a lock settles a double click once</p><p class="btns"><span>Keep 18 Oct</span><span>Keep 16 Oct</span></p><p class="hand blue">the resolution is a claim that syncs: winner active, loser superseded</p></div>
+      <div class="laptop sm" style="left:540px;top:612px;width:270px;height:150px"><p class="lbl">Tanishk</p><p class="lt-v">18 Oct vs 16 Oct</p><p class="cid">cfl_5d1e8a0c47</p></div>
+      <div class="crd idc" style="left:864px;top:604px;width:290px"><p class="cap">conflict id</p><p class="mono">"cfl_" +<br>sha1(sorted ids)[:10]</p><p class="hand blue">same pair, same id; no conflict records exchanged</p></div>
+      <div class="laptop sm" style="left:1210px;top:612px;width:270px;height:150px"><p class="lbl">Lakshya</p><p class="lt-v">18 Oct vs 16 Oct</p><p class="cid">cfl_5d1e8a0c47</p></div>
+      <p class="mk red" style="left:864px;top:806px;width:640px">“disputed” stays local and bumps no version, so it can't outrank a real update pulled later</p>
     </section>
 
-    <!-- 20: sync engine -->
-    <section class="slide deep" data-title="Sync engine">
+    <!-- 19: sync engine -->
+    <section class="slide deep vis" data-title="Sync engine">
       <h2 class="tight">Sync engine: outbox up, cursor down.</h2>
-      <div class="cols three">
-        <div class="note y"><b>Push</b>Every second: peek the outbox, read each claim's current payload and vectors, drop anything device-only, upsert oldest change first in batches of 64. Point ids are uuid5(claim_id), so retries are idempotent; acks check a gen counter.</div>
-        <div class="note b"><b>Pull</b>Scroll the hub for <i>modified_at &gt; cursor</i>, not modified by me, team (or my own my-devices). New claim → store with its vectors, then run conflict detection. Known claim → apply only if its version is newer.</div>
-        <div class="note y"><b>Transport hook</b>One middleware on the qdrant-client transport refuses every request while offline and counts request and response bytes. Hub errors back off up to 5 s; the outbox keeps everything.</div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah19" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <g marker-end="url(#ah19)">
+          <path d="M400 422 C 420 330, 520 260, 598 246"/>
+          <path d="M1002 246 C 1086 260, 1180 330, 1200 422"/>
+        </g>
+        <path class="red dash" d="M446 270 L512 344"/>
+        <g class="scis" transform="translate(452 298) rotate(-40)">
+          <circle cx="-16" cy="14" r="7"/><circle cx="16" cy="14" r="7"/>
+          <path d="M-11 9 L12 -22"/><path d="M11 9 L-12 -22"/>
+        </g>
+      </svg>
+      <div class="crd hubbox" style="left:604px;top:166px;width:392px"><b>Team hub</b><p class="hand">Qdrant server · quorum_team</p><p class="hs">a relay: no logic of its own</p></div>
+      <div class="cutnote" style="left:96px;top:176px;width:330px"><p class="hand red">offline switch</p><p>the transport hook refuses every request and counts bytes</p></div>
+      <p class="mk" style="left:438px;top:376px">push · every second</p>
+      <p class="mk" style="left:1000px;top:330px;width:150px">pull · scroll the hub</p>
+
+      <div class="laptop" style="left:96px;top:436px;width:500px;height:350px"><p class="lbl">Tanishk's laptop</p>
+        <div class="obx"><span></span><span></span><span></span><span>team claim</span></div>
+        <p class="obx-l">outbox · SQLite</p>
+        <ul class="obx-n"><li>oldest change first</li><li>batches of 64</li><li>uuid5 ids: retries are idempotent</li><li>acks check a gen counter</li><li>device-only dropped</li></ul>
+      </div>
+      <div class="stk y taped" style="left:652px;top:536px;width:296px;--r:2deg"><b class="hd">Hub down?</b>Backoff up to 5 s. The outbox keeps everything.</div>
+      <div class="laptop" style="left:1004px;top:436px;width:500px;height:350px"><p class="lbl">Lakshya's laptop</p>
+        <svg class="ruler" viewBox="0 0 440 76" aria-hidden="true">
+          <path d="M8 46 C 120 44, 300 48, 432 45" class="rl"/>
+          <path d="M30 38 V54 M80 38 V54 M130 38 V54 M180 38 V54 M230 38 V54 M280 38 V54 M330 38 V54 M380 38 V54" class="rt"/>
+          <rect x="52" y="20" width="14" height="14" class="old"/><rect x="104" y="20" width="14" height="14" class="old"/><rect x="152" y="20" width="14" height="14" class="old"/>
+          <rect x="262" y="20" width="14" height="14" class="new"/><rect x="312" y="20" width="14" height="14" class="new"/><rect x="360" y="20" width="14" height="14" class="new"/>
+          <path d="M214 8 C 215 30, 213 50, 215 70" class="cur"/>
+          <text x="222" y="72" class="t-red">cursor</text>
+          <text x="384" y="72" class="t-grey">time</text>
+        </svg>
+        <p class="cur-q">modified_at &gt; cursor</p>
+        <ul class="obx-n wide"><li>not modified by me; team, or my own my&#8209;devices</li><li>new claim → stored with its vectors, then conflict check</li><li>known claim → applied only if its version is newer</li></ul>
       </div>
     </section>
 
-    <!-- 21: data model -->
-    <section class="slide deep" data-title="Data model">
+    <!-- 20: data model -->
+    <section class="slide deep vis" data-title="Data model">
       <h2 class="tight">Data model: a point per claim.</h2>
-      <div class="split even">
-        <div class="code-card"><p class="hand blue">payload</p>
-<pre>claim_id   "clm_3f9a1c2b7d4e"   → point id uuid5
-entity     "Sharma wedding edit"
-attribute  "due_date"
-value      "2026-10-18"   value_label "18 Oct"
-owner      "tanishk"
-source     {kind, ref, author, excerpt, at}
-tier       device | my_devices | team
-status     active | disputed | superseded
-version · modified_at · modified_by
-conflict_id · resolves</pre></div>
-        <div>
-          <table class="kv small-kv">
-            <tr><th>text</th><td>dense 384, cosine: the claim sentence</td></tr>
-            <tr><th>key</th><td>dense 384, cosine: entity + attribute</td></tr>
-            <tr><th>bm25</th><td>sparse, IDF: the claim sentence</td></tr>
-          </table>
-          <p class="note-line"><b>Hub collection <code>quorum_team</code></b>: the same named vectors, plus payload indexes on modified_at, tier, modified_by, captured_by and attribute for the pull filter.</p>
-        </div>
+      <svg class="ink" viewBox="0 0 1600 900" aria-hidden="true">
+        <defs><marker id="ah20" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="tip" d="M2 2 L10 6 L2 10"/></marker></defs>
+        <path marker-end="url(#ah20)" d="M762 716 C 800 708, 850 722, 894 712"/>
+      </svg>
+      <div class="icard" style="left:96px;top:168px;width:660px">
+        <p class="ic-h">claim</p>
+        <dl>
+          <dt>claim_id</dt><dd>"clm_3f9a1c2b7d4e"</dd>
+          <dt>entity</dt><dd>"Sharma wedding edit"</dd>
+          <dt>attribute</dt><dd>"due_date"</dd>
+          <dt>value</dt><dd>"2026-10-18" · value_label "18 Oct"</dd>
+          <dt>owner</dt><dd>"tanishk"</dd>
+          <dt>source</dt><dd>{kind, ref, author, excerpt, at}</dd>
+          <dt>tier</dt><dd>device | my_devices | team</dd>
+          <dt>status</dt><dd>active | disputed | superseded</dd>
+          <dt class="span">version · modified_at · modified_by</dt>
+          <dt class="span">conflict_id · resolves</dt>
+        </dl>
+      </div>
+      <p class="stamp" style="left:452px;top:178px">point id = uuid5(claim_id)</p>
+      <p class="mk blue" style="left:956px;top:224px;font-size:23px">three named vectors</p>
+      <p class="tapev t" style="left:712px;top:282px;--r:-3deg">text</p>
+      <p class="tapev k" style="left:712px;top:372px;--r:2deg">key</p>
+      <p class="tapev m" style="left:712px;top:462px;--r:-1.5deg">bm25</p>
+      <p class="vdesc" style="left:956px;top:288px"><b>dense 384 · cosine</b>the claim sentence</p>
+      <p class="vdesc" style="left:956px;top:378px"><b>dense 384 · cosine</b>entity + attribute</p>
+      <p class="vdesc" style="left:956px;top:468px"><b>sparse · IDF</b>the claim sentence</p>
+      <div class="coll" style="left:900px;top:602px;width:604px">
+        <p class="tabs"><span>modified_at</span><span>tier</span><span>modified_by</span><span>captured_by</span><span>attribute</span></p>
+        <p class="coll-n">quorum_team</p>
+        <p class="hand">hub collection: the same named vectors</p>
+        <p class="coll-s">payload indexes (the tabs) serve the pull filter</p>
       </div>
     </section>
 
-    <!-- 22: concurrency and failure -->
-    <section class="slide deep" data-title="Concurrency and failure">
+    <!-- 21: concurrency and failure -->
+    <section class="slide deep vis" data-title="Concurrency and failure">
       <h2 class="tight">Concurrency and failure handling.</h2>
-      <table class="mods">
-        <tr><th>Shared shard</th><td>API threads and the sync thread share one Edge shard behind a re-entrant lock; every write flushes (~28 ms), so a hard kill loses nothing.</td></tr>
-        <tr><th>SQLite</th><td>WAL mode, one connection serialised by a lock. The outbox survives restarts.</td></tr>
-        <tr><th>One sync round at a time</th><td>A round lock; a pull applies under one batched flush, and the cursor is saved only after it lands.</td></tr>
-        <tr><th>Hub down</th><td>Backoff to 5 s, "Hub down" in the UI, the collection is re-created if the hub came back empty.</td></tr>
-        <tr><th>Model down or slow</th><td>6 s budget per message; after a connection error the model is skipped for 20 s and the regex fallback runs.</td></tr>
-        <tr><th>Live UI</th><td>SSE with a 15 s heartbeat; the page reloads state and reconnects on drop.</td></tr>
-        <tr><th>Known limits</th><td>The pull cursor uses device clocks (fix: a hub-assigned stamp); conflicts are pairwise; the hub has no auth yet.</td></tr>
-      </table>
+      <p class="whatif" style="left:96px;top:158px">Crash mid-write?</p>
+      <div class="stk y" style="left:100px;top:208px;width:330px;--r:-2deg">Every write flushes (~28 ms), so a hard kill loses nothing. SQLite runs in WAL mode; the outbox survives restarts.</div>
+      <p class="whatif" style="left:476px;top:168px">Two threads at once?</p>
+      <div class="stk b" style="left:480px;top:218px;width:400px;--r:1.2deg">API and sync threads share one Edge shard behind a re-entrant lock. SQLite: one connection, serialised by a lock. One sync round at a time; a pull applies in one batched flush and the cursor is saved only after it lands.</div>
+      <p class="whatif" style="left:930px;top:158px">Hub down?</p>
+      <div class="stk y" style="left:932px;top:208px;width:270px;--r:-1deg">Backoff to 5 s, “Hub down” in the UI. The collection is re-created if the hub came back empty.</div>
+      <p class="whatif" style="left:1236px;top:176px">Model slow or down?</p>
+      <div class="stk b" style="left:1236px;top:226px;width:268px;--r:2deg">6 s budget per message. After a connection error the model is skipped for 20 s; the regex fallback runs.</div>
+      <p class="whatif" style="left:110px;top:540px">SSE drops?</p>
+      <div class="stk b" style="left:120px;top:590px;width:290px;--r:1.5deg">15 s heartbeat; the page reloads state and reconnects.</div>
+      <p class="whatif" style="left:476px;top:528px">Double click on Keep?</p>
+      <div class="stk y" style="left:486px;top:578px;width:320px;--r:-1.5deg">A lock: it settles once. Only the owner may resolve (403 otherwise).</div>
+      <div class="limits" style="left:884px;top:546px;width:620px"><p class="hand red">Known limits</p>
+        <ul><li>The pull cursor uses device clocks <span>fix: a hub-assigned stamp</span></li><li>Conflicts are pairwise</li><li>The hub has no auth yet</li></ul></div>
     </section>
 
-    <!-- 23: decisions and trade-offs -->
-    <section class="slide deep" data-title="Decisions and trade-offs">
+    <!-- 22: decisions and trade-offs -->
+    <section class="slide deep vis" data-title="Decisions and trade-offs">
       <h2 class="tight">Decisions and trade-offs.</h2>
-      <table class="trade">
-        <tr><th>Decision</th><th>Why</th><th>Trade-off</th></tr>
-        <tr><td>Python bindings + FastAPI, not Tauri/Rust</td><td>Built and verified in hours; same Edge shard underneath</td><td>Not a single packaged binary yet</td></tr>
-        <tr><td>A <code>key</code> vector, not entity ids</td><td>Same thing in different words still matches; no global id service</td><td>One extra vector per claim</td></tr>
-        <tr><td>Deterministic rule, not the LLM, decides conflicts</td><td>Both laptops agree offline; measurable similarity</td><td>Threshold must be tuned</td></tr>
-        <tr><td>Templated answers</td><td>Milliseconds, cited, no hallucination</td><td>Less fluent prose</td></tr>
-        <tr><td>Scroll by cursor, not partial snapshots</td><td>Simple, exact for two devices</td><td>Device-clock cursor; snapshots next</td></tr>
-        <tr><td>Hub as relay only</td><td>All intelligence stays on devices; hub can be any Qdrant server</td><td>Needs a reachable server to share</td></tr>
-        <tr><td>Two processes on one machine</td><td>One presenter, one shared screen this round</td><td>Airplane mode shown as a hub switch</td></tr>
-      </table>
+      <div class="dec" style="left:96px;top:176px">
+        <div class="dec-top"><p class="stk y pick" style="--r:-2deg"><svg class="tick" viewBox="0 0 40 34" aria-hidden="true"><path d="M4 18 C 9 22, 12 26, 15 30 C 21 18, 28 9, 37 3"/></svg>A key vector</p><p class="nope"><span>over</span><s>entity ids</s></p></div>
+        <p class="why">Same thing in different words still matches; no global id service.</p>
+        <p class="cost">cost: one extra vector per claim</p>
+      </div>
+      <div class="dec" style="left:572px;top:192px">
+        <div class="dec-top"><p class="stk b pick" style="--r:1.5deg"><svg class="tick" viewBox="0 0 40 34" aria-hidden="true"><path d="M4 18 C 9 22, 12 26, 15 30 C 21 18, 28 9, 37 3"/></svg>A deterministic rule decides conflicts</p><p class="nope"><span>over</span><s>the LLM</s></p></div>
+        <p class="why">Both laptops agree offline; the similarity is measurable.</p>
+        <p class="cost">cost: the threshold must be tuned</p>
+      </div>
+      <div class="dec" style="left:1048px;top:170px">
+        <div class="dec-top"><p class="stk y pick" style="--r:-1deg"><svg class="tick" viewBox="0 0 40 34" aria-hidden="true"><path d="M4 18 C 9 22, 12 26, 15 30 C 21 18, 28 9, 37 3"/></svg>Templated answers</p><p class="nope"><span>over</span><s>generated prose</s></p></div>
+        <p class="why">Milliseconds, cited, no hallucination.</p>
+        <p class="cost">cost: less fluent prose</p>
+      </div>
+      <div class="dec" style="left:96px;top:500px">
+        <div class="dec-top"><p class="stk b pick" style="--r:1.8deg"><svg class="tick" viewBox="0 0 40 34" aria-hidden="true"><path d="M4 18 C 9 22, 12 26, 15 30 C 21 18, 28 9, 37 3"/></svg>Hub as relay only</p><p class="nope"><span>over</span><s>logic on the hub</s></p></div>
+        <p class="why">All intelligence stays on devices; the hub can be any Qdrant server.</p>
+        <p class="cost">cost: needs a reachable server to share</p>
+      </div>
+      <div class="dec" style="left:572px;top:488px">
+        <div class="dec-top"><p class="stk y pick" style="--r:-1.6deg"><svg class="tick" viewBox="0 0 40 34" aria-hidden="true"><path d="M4 18 C 9 22, 12 26, 15 30 C 21 18, 28 9, 37 3"/></svg>Scroll by cursor</p><p class="nope"><span>over</span><s>partial snapshots</s></p></div>
+        <p class="why">Simple, exact for two devices.</p>
+        <p class="cost">cost: device-clock cursor; snapshots next</p>
+      </div>
+      <div class="dec" style="left:1048px;top:508px">
+        <div class="dec-top"><p class="stk b pick" style="--r:1deg"><svg class="tick" viewBox="0 0 40 34" aria-hidden="true"><path d="M4 18 C 9 22, 12 26, 15 30 C 21 18, 28 9, 37 3"/></svg>Python bindings + FastAPI</p><p class="nope"><span>over</span><s>Tauri / Rust</s></p></div>
+        <p class="why">Built and verified in hours; the same Edge shard underneath.</p>
+        <p class="cost">cost: not a single packaged binary yet</p>
+      </div>
+      <p class="dec-foot">Also: two processes on one machine, not two laptops. One presenter, one shared screen this round; airplane mode is shown as a hub switch.</p>
     </section>
 
   </main>
