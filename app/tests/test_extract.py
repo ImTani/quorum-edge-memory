@@ -151,6 +151,27 @@ def test_fallback_varied(text, expected):
     assert [(d["entity"], d["attribute"], d["value"], d["tier"]) for d in drafts] == expected
 
 
+def test_fallback_names_an_unnamed_note_from_its_own_words():
+    """Never the shared placeholder "Note": two unrelated deadlines would key-match at 1.00."""
+    a = ex.fallback_extract("pick up the hard drives from the rental by 7 Oct", TODAY, KNOWN)
+    b = ex.fallback_extract("need to deliver the colour grade samples by 9 Oct", TODAY, KNOWN)
+    assert [(d["entity"], d["attribute"], d["value"]) for d in a] == [("Hard drives rental", "due_date", "2026-10-07")]
+    assert [(d["entity"], d["attribute"], d["value"]) for d in b] == [("Colour grade samples", "due_date", "2026-10-09")]
+
+
+@pytest.mark.parametrize("a, b, same", [
+    ("Sharma wedding edit", "Sharma delivery", True),
+    ("Sharma wedding edit", "Sharma wedding edit", True),
+    ("Drone permit", "Ladakh drone permit", True),     # a generic multi-word name inside the other
+    ("Hard drives rental", "Colour grade samples", False),
+    ("Note", "Note", False),                           # a placeholder identifies nothing
+    ("Delivery", "Sharma delivery", False),
+    ("Mehta reel cutdowns", "Sharma wedding edit", False),
+])
+def test_same_subject(a, b, same):
+    assert ex.same_subject(a, b) is same
+
+
 def test_fallback_always_returns_a_note_for_unstructured_text():
     drafts = ex.fallback_extract("Great energy on set today, everyone!", TODAY, KNOWN)
     assert len(drafts) == 1 and drafts[0]["attribute"] == "note"

@@ -704,15 +704,43 @@ _DEADLINE_HINT = re.compile(
     r"confirm\w*|reschedul\w*|shoot|is on|are on)\b", re.IGNORECASE)
 
 
+# Verbs and fillers that start a to-do ("need to pick up ...") but don't name what it is about.
+_TODO_FILLER = {
+    "need", "needs", "pick", "up", "get", "got", "have", "has", "must", "should", "remember",
+    "please", "do", "send", "deliver", "share", "finish", "make", "sure", "check", "call", "it",
+    "we", "i", "you", "they", "will", "can", "are", "be", "from", "into", "out", "all", "some",
+}
+
+
 def _guess_entity(text: str) -> str:
-    """A best-effort name for an unknown entity: the first capitalised words, else 'Note'."""
+    """A best-effort name for an unknown entity: the first capitalised words, else the message's
+    own content words ("pick up the hard drives from the rental by 7 Oct" -> "Hard drives rental").
+    Never a shared placeholder: two unrelated notes named "Note" would key-match at 1.00."""
     skip = {"client", "just", "hi", "hey", "the", "also", "ok", "okay", "please", "confirming"}
     for m in re.finditer(r"\b[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*", text):
         words = [w for w in m[0].split()
                  if w.lower() not in skip and w.lower() not in _WEEKDAYS and w.lower() not in _MONTHS]
         if words:
             return " ".join(words[:3])
-    return "Note"
+    undated = text
+    for phrase in find_date_phrases(text):
+        undated = undated.replace(phrase, " ")
+    words = [w for w in re.findall(r"[A-Za-z][A-Za-z'-]*", undated)
+             if w.lower() not in _STOPWORDS and w.lower() not in _TODO_FILLER
+             and not _DEADLINE_HINT.fullmatch(w)]
+    return " ".join(words[:3]).capitalize() if words else "Note"
+
+
+def same_subject(entity_a: str, entity_b: str) -> bool:
+    """Two entity names can be about the same thing only if they share a distinctive word
+    ("Sharma delivery" / "Sharma wedding edit"), or one multi-word name sits inside the other
+    ("Drone permit" / "Ladakh drone permit"). A one-word generic name ("Note", "Delivery")
+    identifies nothing, so it never matches."""
+    a, b = set(_tokens(entity_a)), set(_tokens(entity_b))
+    if _distinctive(a) & _distinctive(b):
+        return True
+    small, big = sorted((a, b), key=len)
+    return len(small) >= 2 and small <= big
 
 
 def fallback_extract(text: str, today: date, known: list[str]) -> list[dict]:

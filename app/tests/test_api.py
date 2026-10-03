@@ -256,6 +256,27 @@ def test_private_entity_follow_up_on_the_real_fallback_extractor(data_dir, embed
         ctx.memory.close()
 
 
+def test_unrelated_unnamed_notes_do_not_conflict_on_the_fallback_path(data_dir, embedder, monkeypatch):
+    def llm_down(*a, **k):
+        raise edge.extract.LLMUnavailable("test: fallback path")
+
+    monkeypatch.setattr(edge.extract, "_ask_llm", llm_down)
+    store = FakeStore()
+    ctx = edge.api.build_ctx(Config(device="tanishk", port=0, data_dir=data_dir), embedder=embedder,
+                             store=store, sync=FakeSync(store))
+    try:
+        edge.api.ingest(ctx, "note", "pick up the hard drives from the rental by 7 Oct")
+        second = edge.api.ingest(ctx, "note", "need to deliver the colour grade samples by 9 Oct")
+        assert second["conflicts"] == [] and store.list_conflicts() == []
+        # The demo pair still conflicts on the same path (the seed knows the Sharma entity).
+        ctx.memory.add_claim(make_claim("Sharma wedding edit", "assignee", "tanishk", "Tanishk is editing the Sharma wedding"))
+        edge.api.ingest(ctx, "email", "Confirming final delivery of the Sharma wedding edit on 16 October.")
+        demo = edge.api.ingest(ctx, "note", "Client just called: Sharma delivery moves to the 18th.")
+        assert [c["entity"] for c in demo["conflicts"]] == ["Sharma wedding edit"]
+    finally:
+        ctx.memory.close()
+
+
 def test_net_toggle_goes_to_the_sync_worker(make_client):
     client, ctx = make_client()
     assert client.post("/api/net", json={"online": False}).json()["online"] is False

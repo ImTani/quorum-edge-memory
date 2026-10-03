@@ -11,6 +11,7 @@ from datetime import datetime
 
 from edge.config import first_name
 from edge.events import log_activity, publish_claim
+from edge.extract import same_subject
 from edge.memory import now_ms
 
 TIERS = ("device", "my_devices", "team")          # narrowest audience first
@@ -55,7 +56,9 @@ def check(ctx, claim: dict, detected_on: str) -> dict | None:
     if claim.get("status") not in ("active", "disputed"):
         return None
     for other, similarity in ctx.memory.conflict_candidates(claim):
-        if other.get("value") != claim.get("value"):
+        # The key cosine says "same kind of fact"; a shared distinctive word in the names says
+        # "about the same thing", which keeps two unrelated fallback notes from colliding.
+        if other.get("value") != claim.get("value") and same_subject(claim["entity"], other["entity"]):
             return _open(ctx, claim, other, similarity, detected_on)
     return None
 
