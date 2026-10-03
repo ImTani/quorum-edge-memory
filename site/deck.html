@@ -37,6 +37,7 @@
         <a href="#13"><b>FAQ: limits</b><span>scale, clocks, dates</span></a>
         <a href="#14"><b>What's next</b><span>after this round</span></a>
       </nav>
+      <p class="toc-deep"><b>deep dive</b><a href="#15">architecture (interactive)</a><a href="#16">module map</a><a href="#17">capture pipeline</a><a href="#18">search</a><a href="#19">conflict engine</a><a href="#20">sync engine</a><a href="#21">data model</a><a href="#22">failure handling</a><a href="#23">trade-offs</a></p>
     </section>
 
     <!-- 3 -->
@@ -191,8 +192,192 @@
       <p class="hand blue bottom-line">Thank you. Ask us anything.</p>
     </section>
 
+    <!-- 15: interactive architecture -->
+    <section class="slide arch-slide" data-title="Architecture (interactive)">
+      <h2 class="tight">How the system fits together.</h2>
+      <div class="flows" role="toolbar" aria-label="Flows">
+        <button type="button" data-flow="capture">Capture a note</button>
+        <button type="button" data-flow="ask">Ask a question</button>
+        <button type="button" data-flow="sync">Sync and conflict</button>
+        <button type="button" data-flow="resolve">Resolve</button>
+      </div>
+      <div class="diagram" id="diagram">
+        <div class="frame-a"><p class="tape">Tanishk's device · one Python process</p></div>
+        <svg class="edges" viewBox="0 0 1600 900" aria-hidden="true">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3b4150"/></marker></defs>
+          <path class="edge" data-e="ui-api" d="M280 318 L280 352"/>
+          <path class="edge" data-e="api-extract" d="M280 422 L280 456"/>
+          <path class="edge" data-e="extract-ollama" d="M280 526 L280 560"/>
+          <path class="edge" data-e="api-answer" d="M134 387 C 108 387, 108 705, 134 705"/>
+          <path class="edge" data-e="api-memory" d="M426 380 L 504 380"/>
+          <path class="edge" data-e="api-conflicts" d="M426 400 C 466 400, 466 508, 504 508"/>
+          <path class="edge" data-e="api-store" d="M426 410 C 476 410, 450 616, 504 616"/>
+          <path class="edge" data-e="memory-conflicts" d="M654 432 L654 474"/>
+          <path class="edge" data-e="conflicts-store" d="M654 542 L654 582"/>
+          <path class="edge" data-e="sync-store" d="M654 700 L654 650"/>
+          <path class="edge" data-e="sync-memory" d="M804 735 C 846 735, 846 382, 804 382"/>
+          <path class="edge" data-e="sync-hub" d="M804 750 C 860 750, 880 650, 924 640"/>
+          <path class="edge" data-e="lakshya-hub" d="M1044 452 L1044 566"/>
+        </svg>
+        <button class="comp" data-c="ui" style="left:134px;top:248px;width:292px;height:70px"><b>Browser UI</b><span>stage · cloud · SSE</span></button>
+        <button class="comp" data-c="api" style="left:134px;top:352px;width:292px;height:70px"><b>FastAPI device app</b><span>routes · ctx · event bus</span></button>
+        <button class="comp" data-c="extract" style="left:134px;top:456px;width:292px;height:70px"><b>Extractor</b><span>text → claim drafts</span></button>
+        <button class="comp" data-c="ollama" style="left:134px;top:560px;width:292px;height:62px"><b>Ollama · llama3.2</b><span>localhost</span></button>
+        <button class="comp" data-c="answer" style="left:134px;top:672px;width:292px;height:66px"><b>Answers</b><span>templated, cited</span></button>
+        <button class="comp mem" data-c="memory" style="left:504px;top:342px;width:300px;height:90px"><b>Memory</b><span>Qdrant Edge shard · text / key / bm25</span></button>
+        <button class="comp" data-c="conflicts" style="left:504px;top:474px;width:300px;height:68px"><b>Conflict engine</b><span>check · resolve · apply</span></button>
+        <button class="comp" data-c="store" style="left:504px;top:582px;width:300px;height:68px"><b>Store · SQLite</b><span>outbox · conflicts · cursor</span></button>
+        <button class="comp" data-c="sync" style="left:504px;top:700px;width:300px;height:80px"><b>Sync worker</b><span>push · pull · transport hook</span></button>
+        <button class="comp hub" data-c="hub" style="left:924px;top:566px;width:240px;height:130px"><b>Team hub</b><span>Qdrant server · quorum_team</span></button>
+        <button class="comp peer" data-c="lakshya" style="left:924px;top:332px;width:240px;height:120px"><b>Lakshya's device</b><span>same stack, own shard</span></button>
+        <aside class="info" id="arch-info" aria-live="polite"></aside>
+      </div>
+    </section>
+
+    <!-- 16: module map -->
+    <section class="slide deep" data-title="Module map">
+      <h2 class="tight">Module map: one job per file.</h2>
+      <table class="mods">
+        <tr><th>api.py</th><td>FastAPI app per device. Routes, the capture pipeline, owner rules, the SSE stream. Builds <code>ctx</code> (cfg, memory, store, bus, sync).</td></tr>
+        <tr><th>memory.py</th><td>The Qdrant Edge shard: three named vectors, hybrid search, conflict candidates, payload updates, fixed 3D projection for the cloud.</td></tr>
+        <tr><th>conflicts.py</th><td>Detection, resolution and applying a remote resolution. Deterministic conflict ids; disputed marks stay local.</td></tr>
+        <tr><th>sync.py</th><td>Background worker: pushes the outbox to the hub, pulls changes, owns the transport hook (offline + byte counts).</td></tr>
+        <tr><th>store.py</th><td>SQLite: outbox, conflicts, activity, key-value (pull cursor). WAL, one connection behind a lock.</td></tr>
+        <tr><th>extract.py</th><td>Message → claim drafts via Ollama (JSON) with a regex fallback. Dates resolved in code. Entity snapping and tier rules.</td></tr>
+        <tr><th>answer.py</th><td>Templated answers from retrieved claims: disputed first, "due this week", always cited.</td></tr>
+        <tr><th>embed.py · events.py</th><td>bge-small dense + Qdrant Edge BM25 · thread-safe event bus fanning out to SSE subscribers.</td></tr>
+        <tr><th>web/</th><td>device.js (one device UI, mounted twice on the stage), stage.js (hub column, captions), cloud.js (memory cloud).</td></tr>
+      </table>
+    </section>
+
+    <!-- 17: capture pipeline -->
+    <section class="slide deep" data-title="Capture pipeline">
+      <h2 class="tight">Capture: from a message to a claim.</h2>
+      <ol class="pipe">
+        <li><b>POST /api/ingest</b><span>note, email or WhatsApp text with author and time.</span></li>
+        <li><b>Extract</b><span>Ollama returns JSON (entity, attribute, value phrase). Known entity names are passed in so "Sharma delivery" snaps to "Sharma wedding edit". 6 s budget.</span></li>
+        <li><b>Ground</b><span>Dates resolved in code against today; values must appear in the text. Nothing usable → regex fallback.</span></li>
+        <li><b>Build the claim</b><span>Owner inherited from the existing entity; tier capped at the entity's widest tier; the best sentence becomes the cited excerpt.</span></li>
+        <li><b>Store</b><span>memory.add_claim: text, key and bm25 vectors, then flush. Team or my-devices claims go to the outbox.</span></li>
+        <li><b>Check</b><span>conflicts.check runs the key-vector query; a disagreement opens a conflict.</span></li>
+        <li><b>Publish</b><span>claim, conflict and activity events stream to the UI over SSE.</span></li>
+      </ol>
+    </section>
+
+    <!-- 18: search and answers -->
+    <section class="slide deep" data-title="Search and answers">
+      <h2 class="tight">Search and answers: one query, on the laptop.</h2>
+      <div class="split even">
+        <div class="code-card"><p class="hand blue">the query (memory.search)</p>
+<pre>QueryRequest(
+  prefetches = [
+    Nearest(bm25_query(q), using="bm25", limit=20),
+    Nearest(dense(q),      using="text", limit=20),
+  ],
+  query  = Fusion.Rrf(k=60),
+  filter = status ∈ {active, disputed}
+           (+ tier == team in team view),
+  limit  = 6)</pre></div>
+        <ul class="layers">
+          <li><b>Why hybrid:</b> BM25 catches names and rare tokens ("Kapoor", "Pangong"); dense catches meaning ("due" ≈ "delivery").</li>
+          <li><b>Why RRF:</b> the two scores live on different scales; rank fusion needs no calibration.</li>
+          <li><b>Answers are templated</b> from the hits: disputed claims lead with both sources; "due this week" lists dated claims in the next 7 days.</li>
+          <li><b>7–70 ms</b> end to end. No model in the answer path, so no hallucinated facts.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 19: conflict engine -->
+    <section class="slide deep" data-title="Conflict engine">
+      <h2 class="tight">Conflict engine: deterministic on every laptop.</h2>
+      <div class="split even">
+        <div class="code-card"><p class="hand blue">detection (conflicts.check)</p>
+<pre>candidates = Nearest(key_vector(claim), using="key")
+  filter: attribute == claim.attribute
+          status ∈ {active, disputed}
+          claim_id != claim.claim_id
+  score_threshold = 0.82,  limit = 5
+
+conflict if  value differs
+         and names share a distinctive word
+
+conflict_id = "cfl_" + sha1(sorted ids)[:10]</pre></div>
+        <ul class="layers">
+          <li><b>Same id everywhere:</b> both laptops compute the same pair and hash, so they agree without exchanging conflict records.</li>
+          <li><b>"Disputed" stays local</b> and doesn't bump versions, so it can't outrank a real update pulled later.</li>
+          <li><b>Owner only</b> may resolve (403 otherwise); a lock makes double clicks settle once.</li>
+          <li><b>Resolution is a claim:</b> winner active, loser superseded (both version-bumped), plus a resolution claim that syncs; others apply it.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 20: sync engine -->
+    <section class="slide deep" data-title="Sync engine">
+      <h2 class="tight">Sync engine: outbox up, cursor down.</h2>
+      <div class="cols three">
+        <div class="note y"><b>Push</b>Every second: peek the outbox, read each claim's current payload and vectors, drop anything device-only, upsert oldest change first in batches of 64. Point ids are uuid5(claim_id), so retries are idempotent; acks check a gen counter.</div>
+        <div class="note b"><b>Pull</b>Scroll the hub for <i>modified_at &gt; cursor</i>, not modified by me, team (or my own my-devices). New claim → store with its vectors, then run conflict detection. Known claim → apply only if its version is newer.</div>
+        <div class="note y"><b>Transport hook</b>One middleware on the qdrant-client transport refuses every request while offline and counts request and response bytes. Hub errors back off up to 5 s; the outbox keeps everything.</div>
+      </div>
+    </section>
+
+    <!-- 21: data model -->
+    <section class="slide deep" data-title="Data model">
+      <h2 class="tight">Data model: a point per claim.</h2>
+      <div class="split even">
+        <div class="code-card"><p class="hand blue">payload</p>
+<pre>claim_id   "clm_3f9a1c2b7d4e"   → point id uuid5
+entity     "Sharma wedding edit"
+attribute  "due_date"
+value      "2026-10-18"   value_label "18 Oct"
+owner      "tanishk"
+source     {kind, ref, author, excerpt, at}
+tier       device | my_devices | team
+status     active | disputed | superseded
+version · modified_at · modified_by
+conflict_id · resolves</pre></div>
+        <div>
+          <table class="kv small-kv">
+            <tr><th>text</th><td>dense 384, cosine: the claim sentence</td></tr>
+            <tr><th>key</th><td>dense 384, cosine: entity + attribute</td></tr>
+            <tr><th>bm25</th><td>sparse, IDF: the claim sentence</td></tr>
+          </table>
+          <p class="note-line"><b>Hub collection <code>quorum_team</code></b>: the same named vectors, plus payload indexes on modified_at, tier, modified_by, captured_by and attribute for the pull filter.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 22: concurrency and failure -->
+    <section class="slide deep" data-title="Concurrency and failure">
+      <h2 class="tight">Concurrency and failure handling.</h2>
+      <table class="mods">
+        <tr><th>Shared shard</th><td>API threads and the sync thread share one Edge shard behind a re-entrant lock; every write flushes (~28 ms), so a hard kill loses nothing.</td></tr>
+        <tr><th>SQLite</th><td>WAL mode, one connection serialised by a lock. The outbox survives restarts.</td></tr>
+        <tr><th>One sync round at a time</th><td>A round lock; a pull applies under one batched flush, and the cursor is saved only after it lands.</td></tr>
+        <tr><th>Hub down</th><td>Backoff to 5 s, "Hub down" in the UI, the collection is re-created if the hub came back empty.</td></tr>
+        <tr><th>Model down or slow</th><td>6 s budget per message; after a connection error the model is skipped for 20 s and the regex fallback runs.</td></tr>
+        <tr><th>Live UI</th><td>SSE with a 15 s heartbeat; the page reloads state and reconnects on drop.</td></tr>
+        <tr><th>Known limits</th><td>The pull cursor uses device clocks (fix: a hub-assigned stamp); conflicts are pairwise; the hub has no auth yet.</td></tr>
+      </table>
+    </section>
+
+    <!-- 23: decisions and trade-offs -->
+    <section class="slide deep" data-title="Decisions and trade-offs">
+      <h2 class="tight">Decisions and trade-offs.</h2>
+      <table class="trade">
+        <tr><th>Decision</th><th>Why</th><th>Trade-off</th></tr>
+        <tr><td>Python bindings + FastAPI, not Tauri/Rust</td><td>Built and verified in hours; same Edge shard underneath</td><td>Not a single packaged binary yet</td></tr>
+        <tr><td>A <code>key</code> vector, not entity ids</td><td>Same thing in different words still matches; no global id service</td><td>One extra vector per claim</td></tr>
+        <tr><td>Deterministic rule, not the LLM, decides conflicts</td><td>Both laptops agree offline; measurable similarity</td><td>Threshold must be tuned</td></tr>
+        <tr><td>Templated answers</td><td>Milliseconds, cited, no hallucination</td><td>Less fluent prose</td></tr>
+        <tr><td>Scroll by cursor, not partial snapshots</td><td>Simple, exact for two devices</td><td>Device-clock cursor; snapshots next</td></tr>
+        <tr><td>Hub as relay only</td><td>All intelligence stays on devices; hub can be any Qdrant server</td><td>Needs a reachable server to share</td></tr>
+        <tr><td>Two processes on one machine</td><td>One presenter, one shared screen this round</td><td>Airplane mode shown as a hub switch</td></tr>
+      </table>
+    </section>
+
   </main>
-  <div class="hud"><span id="counter">1 / 14</span><a href="#2" class="hud-toc">contents</a></div>
+  <div class="hud"><span id="counter">1 / 23</span><a href="#2" class="hud-toc">contents</a></div>
   <script defer src="js/deck.js"></script>
 </body>
 </html>
