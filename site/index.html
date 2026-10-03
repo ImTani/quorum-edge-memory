@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quorum · your team's memory, on every laptop</title>
   <meta name="description" content="Quorum is offline-first team memory on Qdrant Edge. Every note becomes a claim with a source; when two teammates' claims disagree, it asks the owner instead of guessing.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 3h26v21l-5 5H3z' fill='%23ffe14d' transform='rotate(-7 16 16)'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' font-family='Comic Sans MS,cursive' font-weight='700'%3EQ%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 3h26v21l-5 5H3z' fill='%23ffe14d' transform='rotate(-7 16 16)'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800'%3EQ%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
@@ -28,7 +28,7 @@
       </ul>
     </nav>
     <div class="nav-right">
-      <a class="btn quiet" href="#demo">Watch the demo</a>
+      <a class="btn quiet" href="http://127.0.0.1:8001/stage">Watch the demo</a>
       <a class="btn" href="#early-access">Request early access</a>
     </div>
   </header>
@@ -51,7 +51,7 @@
       <div class="board-fit fit" data-fit="772x690">
       <div class="board fit-inner" id="board" role="group" aria-label="A whiteboard showing Quorum on two laptops and the team hub. It responds: switch Tanishk off the hub, write a note, switch him back on.">
         <div class="frame">
-          <span class="cap tl"></span><span class="cap tr"></span>
+          <span class="cap c-tl"></span><span class="cap c-tr"></span>
           <div class="surface">
             <svg class="ghosts" viewBox="0 0 820 620" preserveAspectRatio="none" aria-hidden="true">
               <g fill="none" stroke="#b9c3d6" stroke-width="3" stroke-linecap="round" opacity=".35">
@@ -66,8 +66,15 @@
                 <button class="hubtoggle boil" id="hub-toggle" role="switch" aria-checked="true"><span class="knob" aria-hidden="true"></span><span id="hub-label">on the hub</span></button>
                 <div class="sticky y boil" id="t-note" style="left:18px;top:150px;transform:rotate(-4deg)">
                   <span class="strip" style="transform:rotate(-6deg)"></span>
-                  <span class="txt" id="t-note-text">Client just called: Sharma delivery moves to the 18th.</span>
-                  <div class="meta" id="t-note-meta">Note · 14:02, no signal<br>synced on reconnect</div>
+                  Client just called: Sharma delivery moves to the 18th.
+                  <div class="meta">Note · 14:02, no signal<br>synced on reconnect</div>
+                  <svg class="strike" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M6 20 L94 80 M8 82 L92 16" stroke="#c81e34" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="160"/></svg>
+                </div>
+                <div class="sticky y boil gone small" id="t-new" style="left:26px;top:318px;transform:rotate(3deg)">
+                  <span class="strip" style="transform:rotate(4deg)"></span>
+                  <span id="t-new-text"></span>
+                  <div class="meta" id="t-new-meta"></div>
+                  <svg class="strike" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M6 20 L94 80 M8 82 L92 16" stroke="#c81e34" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="160"/></svg>
                 </div>
                 <button class="pad boil" id="pad" style="left:66px;top:312px">write a note…</button>
                 <div class="pocket boil" aria-label="Private notes that never leave this laptop">
@@ -86,7 +93,7 @@
                 <p class="who quiet boil" id="wall-count">18 notes · nothing private</p>
                 <div class="sticky y boil" id="w-note" style="left:30px;top:138px;transform:rotate(-5deg)">
                   <span class="strip"></span>
-                  <span class="txt" id="w-note-text">Client just called: Sharma delivery moves to the 18th.</span>
+                  Client just called: Sharma delivery moves to the 18th.
                   <div class="meta">Note · Tanishk</div>
                   <svg class="strike" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M6 20 L94 80 M8 82 L92 16" stroke="#d7263d" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="160"/></svg>
                 </div>
@@ -95,6 +102,12 @@
                   Confirming final delivery of the Sharma wedding edit on 16 October.
                   <div class="meta">Email · via Lakshya</div>
                   <svg class="strike" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M6 20 L94 80 M8 82 L92 16" stroke="#d7263d" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="160"/></svg>
+                </div>
+                <div class="sticky y boil gone small" id="w-new" style="left:124px;top:226px;transform:rotate(-3deg)">
+                  <span class="strip" style="transform:rotate(-4deg)"></span>
+                  <span id="w-new-text"></span>
+                  <div class="meta" id="w-new-meta"></div>
+                  <svg class="strike" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M6 20 L94 80 M8 82 L92 16" stroke="#c81e34" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="160"/></svg>
                 </div>
                 <svg class="loop boil" id="loop" viewBox="0 0 380 250" aria-hidden="true"><path d="M62 24 C 170 -8, 368 4, 372 112 C 376 214, 220 248, 118 240 C 20 232, -4 140, 24 74 C 34 52, 50 36, 76 26" fill="none" stroke="#d7263d" stroke-width="5" stroke-linecap="round"/></svg>
                 <p class="mark-text red boil" id="verdict" style="left:30px;top:372px;transform:rotate(-2deg)">same job · dates disagree!</p>
@@ -109,7 +122,7 @@
                 </svg>
                 <div class="owner" id="owner">
                   <p id="owner-text"><b>Tanishk owns this.</b> Quorum won't pick for him.</p>
-                  <div class="row" id="owner-row"><button type="button" id="keep-18">Keep 18 Oct</button><button type="button" id="keep-16">Keep 16 Oct</button></div>
+                  <div class="row" id="owner-row"><button type="button" id="keep-18">Keep 18 Oct</button><button type="button" id="keep-16">Keep 16 Oct</button><button type="button" id="keep-new" class="gone"></button></div>
                 </div>
               </div>
 
@@ -135,7 +148,7 @@
             </div>
           </div>
         </div>
-        <span class="cap bl"></span><span class="cap br"></span>
+        <span class="cap c-bl"></span><span class="cap c-br"></span>
         <div class="tray">
           <div class="tools">
             <button class="eraser" id="eraser" type="button" aria-label="Wipe the board back to the start"></button>
@@ -223,7 +236,7 @@
         <p>Lakshya's email says “Sharma wedding edit”. Tanishk's note says “Sharma delivery”. Different words, same job.</p>
         <p>Quorum compares what each note is <em>about</em>: the job and the kind of fact, never the value. Close enough, with different values, and both laptops open the same conflict on their own. Nothing is overwritten. The person who owns the task decides, and the decision reaches everyone.</p>
       </div>
-      <div class="match-fit fit" data-fit="680x400">
+      <div class="match-fit fit" data-fit="680x400" data-reflow="narrow">
       <figure class="match fit-inner" aria-label="How two notes about the same job are matched">
         <div class="m-sticky y boil" style="left:0;top:16px;--r:-3deg">Sharma delivery moves to the 18th.<span>note · Tanishk</span></div>
         <div class="m-sticky b boil" style="left:0;top:214px;--r:2deg">Final delivery of the Sharma wedding edit on 16 October.<span>email · Lakshya</span></div>
@@ -253,13 +266,13 @@
         <svg class="tl-line boil" viewBox="0 0 1328 40" preserveAspectRatio="none" aria-hidden="true"><path d="M6 22 C 200 14, 420 30, 660 20 S 1100 14, 1322 22" fill="none" stroke="#1b1d22" stroke-width="3" stroke-linecap="round"/></svg>
         <ol class="timeline">
           <li class="tl y boil" style="--r:-2deg"><time>14:02</time><b>No signal.</b> Tanishk notes the client's call. It's saved on his laptop and waits.</li>
-          <li class="tl w boil" style="--r:1.5deg"><time>14:03</time><b>Still answers.</b> “When is the Sharma delivery?” comes back from the laptop in milliseconds.</li>
+          <li class="tl y boil" style="--r:1.5deg"><time>14:03</time><b>Still answers.</b> “When is the Sharma delivery?” comes back from the laptop in milliseconds.</li>
           <li class="tl b boil" style="--r:-1deg"><time>14:04</time><b>Meanwhile.</b> Lakshya's laptop reads the client's email: the 16th. It reaches the hub.</li>
           <li class="tl y boil" style="--r:2deg"><time>14:05</time><b>Back online.</b> His note goes up, hers comes down. Both laptops spot the clash within a second.</li>
-          <li class="tl g boil" style="--r:-1.5deg"><time>14:06</time><b>Settled.</b> Tanishk keeps the date that's true. Lakshya's laptop has it a second later.</li>
+          <li class="tl y boil" style="--r:-1.5deg"><time>14:06</time><b>Settled.</b> Tanishk keeps the date that's true. Lakshya's laptop has it a second later.</li>
         </ol>
       </div>
-      <a class="btn quiet stage-link" href="http://127.0.0.1:8001/stage">Open the live two-laptop demo</a>
+      <a class="btn quiet stage-link" href="http://127.0.0.1:8001/stage">Open the two-laptop demo</a>
     </section>
 
     <section class="privacy" id="privacy" aria-labelledby="privacy-title">
@@ -268,6 +281,7 @@
         <p>Every note starts on the laptop that heard it. It moves up only when it's clearly team work: a deadline, a shoot, a deliverable. Anything unsure stays put.</p>
         <p>The hub never receives a private note. In the demo we count them on the hub, live: zero.</p>
       </div>
+      <div class="wb"><span class="cap c-tl"></span><span class="cap c-tr"></span><span class="cap c-bl"></span><span class="cap c-br"></span>
       <div class="zones" aria-label="Where a note can live">
         <div class="zone">
           <div class="pocket boil">
@@ -278,13 +292,14 @@
           <p class="zone-label boil">stays on the laptop</p>
         </div>
         <div class="zone">
-          <div class="zone-sticky pink boil" style="--r:3deg">Riya's birthday, Thursday</div>
+          <div class="zone-sticky y boil" style="--r:3deg">Riya's birthday, Thursday</div>
           <p class="zone-label boil">my own devices</p>
         </div>
         <div class="zone">
-          <div class="zone-sticky y boil" style="--r:-2deg">Mehta reel cutdowns: three, due Monday</div>
+          <div class="zone-sticky b boil" style="--r:-2deg">Mehta reel cutdowns: three, due Monday</div>
           <p class="zone-label boil">the whole team</p>
         </div>
+      </div>
       </div>
     </section>
 
@@ -296,18 +311,22 @@
       <dl class="spec">
         <div><dt>Memory</dt><dd>Every claim is a point with three named vectors: <code>text</code> for meaning, <code>key</code> for what it's about, <code>bm25</code> for keywords.</dd></div>
         <div><dt>Search</dt><dd>Hybrid: BM25 and dense results fused with RRF, answered on the laptop in 7 to 70 ms.</dd></div>
-        <div><dt>Conflicts</dt><dd>A nearest-neighbour query on <code>key</code>, filtered to the same kind of fact and live claims, threshold 0.82. The same pair gets the same conflict id on every laptop.</dd></div>
+        <div><dt>Conflicts</dt><dd>A nearest-neighbour query on <code>key</code>, filtered to the same kind of fact and live claims, <span class="ringed">threshold 0.82<svg class="ring boil" viewBox="0 0 140 40" preserveAspectRatio="none" aria-hidden="true"><path d="M14 9 C 50 -1, 128 2, 134 18 C 140 34, 70 40, 26 36 C 4 33, 0 18, 18 10 C 24 8, 30 6, 38 6" fill="none" stroke="#c81e34" stroke-width="2.6" stroke-linecap="round"/></svg></span>. The same pair gets the same conflict id on every laptop.</dd></div>
         <div><dt>Sync</dt><dd>An outbox that survives restarts pushes team claims to the hub; each laptop pulls what changed since its cursor.</dd></div>
         <div><dt>Understanding</dt><dd>A local model turns emails, WhatsApp and notes into claims with sources. Dates are worked out in code, not by the model.</dd></div>
       </dl>
     </section>
 
     <section class="teams" aria-labelledby="teams-title">
+      <div class="teams-copy">
       <h2 id="teams-title">Built with BKA, our customer zero.</h2>
       <p>BKA is a four-person production house and developer group: many clients, shoots where there's no signal, deadlines that change on a phone call. Quorum is for teams like that: production houses, developer groups, event teams, agencies, site crews.</p>
+      </div>
+      <div class="bka-note boil" aria-hidden="true"><span class="strip"></span><p class="bka-title">BKA</p><p>four people<br>a production house + developer group<br>many clients, one wall<br>shoots with no signal</p></div>
     </section>
 
     <section class="closing" aria-labelledby="closing-title">
+      <div class="wb"><span class="cap c-tl"></span><span class="cap c-tr"></span><span class="cap c-bl"></span><span class="cap c-br"></span>
       <div class="closing-board">
         <h2 id="closing-title">Give your team one memory.</h2>
         <p>Priced per team, per month. Early access opens team by team.</p>
@@ -318,6 +337,7 @@
         </form>
         <p class="cta-note" role="status"></p>
         <p class="closing-aside boil">we'll save you a spot on the wall</p>
+      </div>
       </div>
     </section>
   </main>

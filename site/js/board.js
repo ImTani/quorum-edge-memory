@@ -1,6 +1,6 @@
 // The hero whiteboard: a small simulation of Quorum on two laptops and the team hub.
 // It mirrors the real app's story (app/CONTRACT.md demo script) in the browser; nothing here talks
-// to a server. The page states that it's a simulation in the section below the board.
+// to a server.
 
 const $ = (id) => document.getElementById(id);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -57,125 +57,129 @@ function setupBoil() {
 }
 
 // ---------- board state ----------
-const ORIGINAL_NOTE = 'Client just called: Sharma delivery moves to the 18th.';
+// The story on load is the conflict moment: Tanishk's 18th (a call) and Lakshya's 16th (the email)
+// both on the team wall. Going offline never changes what the hub already holds. A new note waits
+// on Tanishk's laptop until he's back, then joins the wall beside the others; nothing is overwritten.
 const EMAIL_DAY = 16;
+const CALL_DAY = 18;
 const el = {
   toggle: $('hub-toggle'), toggleLabel: $('hub-label'),
-  tNote: $('t-note'), tText: $('t-note-text'), tMeta: $('t-note-meta'),
+  tNote: $('t-note'), tNew: $('t-new'), tNewText: $('t-new-text'), tNewMeta: $('t-new-meta'),
   pad: $('pad'),
-  wNote: $('w-note'), wText: $('w-note-text'), wEmail: $('w-email'),
+  wNote: $('w-note'), wEmail: $('w-email'), wNew: $('w-new'), wNewText: $('w-new-text'), wNewMeta: $('w-new-meta'),
   lEmail: $('l-email'), lMeta: $('l-email-meta'),
   wallCount: $('wall-count'),
-  loop: $('loop'), verdict: $('verdict'), gauge: $('gauge'), needle: $('needle'), sim: $('sim-text'),
+  loop: $('loop'), verdict: $('verdict'),
   owner: $('owner'), ownerText: $('owner-text'), ownerRow: $('owner-row'),
-  keep18: $('keep-18'), keep16: $('keep-16'), eraser: $('eraser'), live: $('board-live'),
+  keep18: $('keep-18'), keep16: $('keep-16'), keepNew: $('keep-new'),
+  eraser: $('eraser'), live: $('board-live'),
 };
 
-const state = { online: true, noteText: ORIGINAL_NOTE, noteDay: 18, noteOnWall: true, conflict: true, resolved: null };
+const fresh = () => ({ online: true, note: null, resolved: null });
+let state = fresh();
 const wait = (ms) => new Promise((r) => setTimeout(r, reduceMotion ? 0 : ms));
 const say = (msg) => { el.live.textContent = msg; };
 const show = (node, on) => node.classList.toggle('is-hidden', !on);
+const gone = (node, on) => node.classList.toggle('gone', on);
 
-// Where the needle sits on the hand-drawn gauge: the dashed tick is 0.82 at x=246.
-function setSimilarity(sim) {
-  const x = (sim - 0.90) * 275;
-  el.needle.style.transform = `translateX(${x}px)`;
-  el.sim.textContent = sim.toFixed(2);
-}
-
-// A note about the Sharma job with a date. Mirrors the app: same job (matched by meaning) plus a
-// different value = a conflict; same job and the same date = nothing to settle.
+// What a note is about, the way the app decides it: the Sharma edit's due date, or something else.
 function readNote(text) {
   const t = text.toLowerCase();
-  const sameJob = /sharma|wedding edit|delivery/.test(t);
-  const m = t.match(/\b([0-3]?\d)(?:st|nd|rd|th)?\b(?:\s*(?:of\s*)?(?:oct|october))?/);
-  const day = m ? Number(m[1]) : null;
-  const sim = /sharma/.test(t) ? 0.90 : (sameJob ? 0.86 : 0.41);
-  return { sameJob: sameJob && sim >= 0.82, day: day && day >= 1 && day <= 31 ? day : null, sim };
+  const m = t.match(/\b([0-3]?\d)(?:st|nd|rd|th)?\b/);
+  const day = m && Number(m[1]) >= 1 && Number(m[1]) <= 31 ? Number(m[1]) : null;
+  const sharmaDue = /sharma/.test(t) && /(edit|delivery|wedding|due)/.test(t) && day !== null;
+  return { text, day, sharmaDue };
 }
 
 function setStrike(node, on) {
   const p = node.querySelector('.strike path');
-  if (p) p.style.transition = reduceMotion ? 'none' : 'stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)';
-  if (p) p.style.strokeDashoffset = on ? '0' : '160';
+  if (p) {
+    p.style.transition = reduceMotion ? 'none' : 'stroke-dashoffset .6s cubic-bezier(.16,1,.3,1)';
+    p.style.strokeDashoffset = on ? '0' : '160';
+  }
   node.classList.toggle('superseded', on);
 }
 
+function relation(n) {
+  if (!n.sharmaDue) return 'nothing to compare';
+  if (n.day === EMAIL_DAY) return 'agrees with the email';
+  if (n.day === CALL_DAY) return 'agrees with the call';
+  return `same job · a third date`;
+}
+
 function render() {
+  const n = state.note;
+  const thirdDate = n && n.onWall && n.sharmaDue && n.day !== EMAIL_DAY && n.day !== CALL_DAY;
   el.toggle.setAttribute('aria-checked', String(state.online));
   el.toggleLabel.textContent = state.online ? 'on the hub' : 'no signal';
-  el.tText.textContent = state.noteText;
-  el.wText.textContent = state.noteText;
-  el.tMeta.innerHTML = state.online
-    ? (state.noteOnWall ? 'Note · 14:02, no signal<br>synced on reconnect' : 'Note · just now<br>synced to the team')
-    : 'Note · just now, no signal<br>waiting for the hub';
-  el.wNote.classList.toggle('gone', !state.noteOnWall);
-  el.wallCount.textContent = `${state.noteOnWall ? 18 : 17} notes · nothing private`;
-  el.loop.classList.toggle('erased', !(state.conflict && state.noteOnWall && !state.resolved));
-  show(el.verdict, state.noteOnWall);
-  show(el.gauge, state.noteOnWall);
-  show(el.owner, state.conflict && state.noteOnWall);
-  show(el.ownerRow, !state.resolved);
-  const keptNote = state.resolved !== null && state.resolved !== EMAIL_DAY;
-  setStrike(el.wNote, state.resolved === EMAIL_DAY);
-  setStrike(el.wEmail, keptNote);
-  setStrike(el.lEmail, keptNote);
-  el.keep18.textContent = `Keep ${state.noteDay} Oct`;
-  el.lMeta.innerHTML = keptNote ? `Email · Rohit Sharma<br>settled: ${state.resolved} Oct, by Tanishk` : 'Email · Rohit Sharma<br>synced to the team';
-}
 
-function setVerdict(text, tone) {
-  el.verdict.textContent = text;
-  el.verdict.className = `mark-text ${tone} boil` + (el.verdict.classList.contains('is-hidden') ? ' is-hidden' : '');
-}
-
-async function goOffline() {
-  state.online = false;
-  state.noteOnWall = false;
-  state.conflict = false;
-  state.resolved = null;
-  render();
-  say("Tanishk's laptop lost the hub. It still remembers and searches; new notes wait on the laptop.");
-}
-
-async function goOnline() {
-  state.online = true;
-  render();
-  if (state.noteOnWall) return;
-  // the note travels from his laptop to the team wall
-  await wait(250);
-  state.noteOnWall = true;
-  const r = readNote(state.noteText);
-  setSimilarity(r.sameJob ? r.sim : r.sim);
-  if (r.sameJob && r.day && r.day !== EMAIL_DAY) {
-    state.conflict = true;
-    state.noteDay = r.day;
-    setVerdict('same job · dates disagree!', 'red');
-    el.ownerText.innerHTML = '<b>Tanishk owns this.</b> Quorum won\'t pick for him.';
-    say(`Back on the hub. Quorum found the same job in Lakshya's email, similarity ${r.sim.toFixed(2)}, with a different date. It asks Tanishk instead of guessing.`);
-  } else if (r.sameJob && r.day === EMAIL_DAY) {
-    state.conflict = false;
-    setVerdict('same job · same date, all good', 'green');
-    say('Back on the hub. The note agrees with the email, so there is nothing to settle.');
-  } else {
-    state.conflict = false;
-    setVerdict(r.sameJob ? 'same job · no date to compare' : 'new note · nothing to compare', 'blue');
-    say('Back on the hub. The note reached the team wall; it does not disagree with anything.');
+  gone(el.tNew, !n);
+  gone(el.pad, !!n);
+  gone(el.wNew, !(n && n.onWall));
+  if (n) {
+    el.tNewText.textContent = n.text;
+    el.wNewText.textContent = n.text;
+    el.tNewMeta.textContent = n.onWall ? 'Note · just now · on the team wall' : 'Note · just now · waiting for the hub';
+    el.wNewMeta.textContent = `Note · Tanishk · ${relation(n)}`;
   }
-  render();
+  el.wallCount.textContent = `${18 + (n && n.onWall ? 1 : 0)} notes · nothing private`;
+
+  const r = state.resolved;
+  el.loop.classList.toggle('erased', r !== null);
+  show(el.ownerRow, r === null);
+  gone(el.keepNew, !thirdDate);
+  if (thirdDate) el.keepNew.textContent = `Keep ${n.day} Oct`;
+  if (r === null) {
+    el.verdict.textContent = thirdDate ? 'same job · three dates now!' : 'same job · dates disagree!';
+    el.verdict.className = 'mark-text red';
+    el.ownerText.innerHTML = '<b>Tanishk owns this.</b> Quorum won\'t pick for him.';
+  } else {
+    el.verdict.textContent = `settled · ${r} Oct`;
+    el.verdict.className = 'mark-text green';
+    el.ownerText.innerHTML = `<b>Settled by Tanishk: ${r} Oct.</b> Lakshya's laptop has it too.`;
+  }
+  const struck = (day) => r !== null && day !== r;
+  setStrike(el.wNote, struck(CALL_DAY));
+  setStrike(el.tNote, struck(CALL_DAY));
+  setStrike(el.wEmail, struck(EMAIL_DAY));
+  setStrike(el.lEmail, struck(EMAIL_DAY));
+  if (n && n.sharmaDue) { setStrike(el.wNew, struck(n.day)); setStrike(el.tNew, struck(n.day)); }
+  el.lMeta.innerHTML = r !== null && r !== EMAIL_DAY ? `Email · Rohit Sharma<br>settled: ${r} Oct` : 'Email · Rohit Sharma<br>synced to the team';
 }
 
-el.toggle.addEventListener('click', () => (state.online ? goOffline() : goOnline()));
+async function sync() {
+  const n = state.note;
+  if (!state.online || !n || n.onWall) return;
+  await wait(380);
+  n.onWall = true;
+  if (n.sharmaDue && n.day !== EMAIL_DAY && n.day !== CALL_DAY) state.resolved = null;
+  render();
+  say(n.sharmaDue
+    ? (n.day === EMAIL_DAY || n.day === CALL_DAY
+      ? `Tanishk's note reached the team wall. It agrees with the ${n.day === EMAIL_DAY ? 'email' : 'call'}, so it adds support, not a new conflict.`
+      : `Tanishk's note reached the team wall: a third date for the Sharma edit. Quorum adds it to the disagreement and still asks Tanishk.`)
+    : "Tanishk's note reached the team wall. It isn't about the Sharma edit, so there's nothing to compare.");
+}
+
+el.toggle.addEventListener('click', async () => {
+  state.online = !state.online;
+  render();
+  if (!state.online) {
+    say("Tanishk's laptop lost the hub. Everything already on the team wall stays; new notes wait on his laptop.");
+  } else {
+    say(state.note && !state.note.onWall ? 'Back on the hub. His waiting note goes up now.' : 'Back on the hub. Nothing was waiting.');
+    await sync();
+  }
+});
 
 function resolve(day) {
   state.resolved = day;
-  el.ownerText.innerHTML = `<b>Settled by Tanishk: ${day} Oct.</b> Lakshya's laptop has it too.`;
-  setVerdict(day === EMAIL_DAY ? 'kept the email · 16 Oct' : `kept the call · ${day} Oct`, 'green');
   render();
-  say(`Tanishk kept ${day} October. The other version is kept as history, struck through, on both laptops.`);
+  say(`Tanishk kept ${day} October. The other versions stay as history, struck through, on both laptops.`);
 }
-el.keep18.addEventListener('click', () => resolve(state.noteDay));
-el.keep16.addEventListener('click', () => resolve(16));
+el.keep18.addEventListener('click', () => resolve(CALL_DAY));
+el.keep16.addEventListener('click', () => resolve(EMAIL_DAY));
+el.keepNew.addEventListener('click', () => state.note && resolve(state.note.day));
 
 // ---------- writing a note on the pad ----------
 el.pad.addEventListener('click', () => {
@@ -184,9 +188,9 @@ el.pad.addEventListener('click', () => {
   w.className = 'writer boil';
   w.style.left = '14px';
   w.style.top = '250px';
-  w.innerHTML = `<label class="sr-only" for="note-input">Write Tanishk's note</label>
-    <textarea id="note-input" maxlength="120" placeholder="e.g. Client says the Sharma edit is due the 20th"></textarea>
-    <div class="row"><span>on Tanishk's laptop</span><span><button type="button" data-act="cancel">Cancel</button> <button type="button" data-act="save">Stick it</button></span></div>`;
+  w.innerHTML = '<label class="sr-only" for="note-input">Write Tanishk\'s note</label>'
+    + '<textarea id="note-input" maxlength="110" placeholder="e.g. Client says the Sharma edit is due the 20th"></textarea>'
+    + '<div class="row"><span>on Tanishk\'s laptop</span><span><button type="button" data-act="cancel">Cancel</button> <button type="button" data-act="save">Stick it</button></span></div>';
   $('lane-t').appendChild(w);
   const ta = w.querySelector('textarea');
   ta.focus();
@@ -195,16 +199,10 @@ el.pad.addEventListener('click', () => {
     const text = ta.value.trim();
     if (!text) return close();
     w.remove();
-    state.noteText = text;
-    state.resolved = null;
-    if (state.online) {
-      state.noteOnWall = false;
-      render();
-      await goOnline();
-    } else {
-      render();
-      say("Saved on Tanishk's laptop. It waits there until he's back on the hub.");
-    }
+    state.note = { ...readNote(text), onWall: false };
+    render();
+    if (state.online) await sync();
+    else say("Saved on Tanishk's laptop. It waits there until he's back on the hub.");
   };
   w.addEventListener('click', (e) => {
     const act = e.target.dataset && e.target.dataset.act;
@@ -220,10 +218,7 @@ el.pad.addEventListener('click', () => {
 // ---------- the eraser wipes the board back to the start ----------
 el.eraser.addEventListener('click', () => {
   document.querySelector('.writer')?.remove();
-  Object.assign(state, { online: true, noteText: ORIGINAL_NOTE, noteDay: 18, noteOnWall: true, conflict: true, resolved: null });
-  setSimilarity(0.90);
-  setVerdict('same job · dates disagree!', 'red');
-  el.ownerText.innerHTML = '<b>Tanishk owns this.</b> Quorum won\'t pick for him.';
+  state = fresh();
   render();
   say('Board wiped back to the start.');
 });
@@ -252,22 +247,27 @@ document.querySelectorAll('form.cta').forEach((form) => {
 });
 
 // ---------- fixed compositions scale as one object on narrower screens ----------
-// The board and the matching diagram are drawn at a design size; below it they scale down whole
-// (never reflow), so every sticky and marker stroke stays where it was drawn.
+// The board is drawn at a design size and zooms down whole (never reflows), so every sticky and
+// stroke stays where it was drawn. Below 680px it never drops under 0.8, so type stays readable,
+// and the lanes swipe sideways instead. The matching figure reflows in CSS below 680px.
 function fitAll() {
+  const narrow = window.matchMedia('(max-width: 680px)').matches;
   document.querySelectorAll('[data-fit]').forEach((box) => {
     const inner = box.firstElementChild;
     const [w, h] = box.dataset.fit.split('x').map(Number);
-    const s = Math.min(1, box.clientWidth / w);
+    if (narrow && box.dataset.reflow === 'narrow') {
+      inner.style.zoom = ''; inner.style.width = ''; inner.style.height = '';
+      return;
+    }
+    let s = Math.min(1, box.clientWidth / w);
+    if (narrow) s = Math.max(0.8, s);
     inner.style.width = w + 'px';
     inner.style.height = h + 'px';
-    inner.style.transform = s < 1 ? `scale(${s})` : '';
-    box.style.height = (h * s) + 'px';
+    inner.style.zoom = s < 1 ? String(s) : '';
   });
 }
 window.addEventListener('resize', fitAll);
 fitAll();
 
-setSimilarity(0.90);
 render();
 setupBoil();
