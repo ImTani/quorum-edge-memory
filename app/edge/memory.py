@@ -2,6 +2,7 @@
 import threading
 import time
 import uuid
+from contextlib import contextmanager
 
 import numpy as np
 import qdrant_edge as q
@@ -69,6 +70,7 @@ class Memory:
         self.embedder = embedder
         # Serialises read-modify-write on payloads; the API threadpool and the sync thread share us.
         self._lock = threading.RLock()
+        self._batch_depth = 0
         path = cfg.data_dir / cfg.device / "shard"
         if (path / "edge_config.json").exists():
             self.shard = q.EdgeShard.load(str(path))
@@ -109,6 +111,25 @@ class Memory:
         point = q.Point(id=point_id(payload["claim_id"]), vector=vectors, payload=payload)
         with self._lock:
             self.shard.update(q.UpdateOperation.upsert_points([point]))
+            self._flush_unless_batching()
+
+    # Edge shard updates live in memory until flush(); a hard kill (demo.ps1 -Stop, a crash) would
+    # otherwise lose every claim since startup while SQLite (outbox, cursor) keeps its state.
+    # A flush is ~28 ms, so single writes flush at once and bulk writes flush once at the end.
+    @contextmanager
+    def batch(self):
+        """Group writes (a sync pull, seeding) under a single flush."""
+        with self._lock:
+            self._batch_depth += 1
+            try:
+                yield self
+            finally:
+                self._batch_depth -= 1
+                self._flush_unless_batching()
+
+    def _flush_unless_batching(self) -> None:
+        if self._batch_depth == 0:
+            self.shard.flush()
 
     def update_fields(self, claim_id: str, bump_version: bool = True, **fields) -> dict:
         """Patch a claim's payload. bump_version=False is for local-only marks (e.g. disputed) that
@@ -123,6 +144,7 @@ class Memory:
                 claim["modified_at"] = now_ms()
                 claim["modified_by"] = fields.get("modified_by", self.cfg.device)
             self.shard.update(q.UpdateOperation.overwrite_payload([point_id(claim_id)], claim))
+            self._flush_unless_batching()
         return claim
 
     # ---- reads --------------------------------------------------------------------------------

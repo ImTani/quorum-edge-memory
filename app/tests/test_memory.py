@@ -118,6 +118,49 @@ def test_shard_survives_close_and_reload(data_dir, embedder):
         m.close()
 
 
+_HARD_KILL_WRITER = r"""
+import json, os, sys
+sys.path.insert(0, sys.argv[1])
+from pathlib import Path
+from edge.config import Config
+from edge.memory import Memory
+claims, vectors = json.loads(Path(sys.argv[3]).read_text(encoding="utf-8"))
+m = Memory(Config(device="tanishk", port=0, data_dir=Path(sys.argv[2])), embedder=None)
+m.upsert_raw(claims[0], vectors)                    # a single write (capture)
+m.update_fields(claims[0]["claim_id"], status="superseded")
+with m.batch():                                     # a bulk write (sync pull)
+    for c in claims[1:]:
+        m.upsert_raw(c, vectors)
+os._exit(0)                                         # like Stop-Process -Force: no close(), no flush()
+"""
+
+
+def test_writes_survive_a_hard_kill(data_dir, embedder):
+    """demo.ps1 stops devices with Stop-Process -Force; nothing written before that may be lost."""
+    import json
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    claims = [make_claim("Kapoor invoice", "amount", str(85000 + i), f"Kapoor invoice {i}") for i in range(3)]
+    vectors = {"text": [1.0] + [0.0] * 383, "key": [0.0, 1.0] + [0.0] * 382,
+               "bm25": {"indices": [1, 2], "values": [0.5, 0.5]}}
+    payload = data_dir / "claims.json"
+    payload.write_text(json.dumps([claims, vectors]), encoding="utf-8")
+    app_dir = Path(__file__).resolve().parents[1]
+    done = subprocess.run([sys.executable, "-c", _HARD_KILL_WRITER, str(app_dir), str(data_dir), str(payload)],
+                          capture_output=True, text=True, timeout=60)
+    assert done.returncode == 0, done.stderr
+
+    m = Memory(Config(device="tanishk", port=0, data_dir=data_dir), embedder)
+    try:
+        assert m.count() == 3
+        assert m.get(claims[0]["claim_id"])["status"] == "superseded"
+        assert all(m.get(c["claim_id"]) is not None for c in claims[1:])
+    finally:
+        m.close()
+
+
 def test_pulled_point_round_trips_and_lands_in_the_same_place(data_dir, embedder, memory):
     claim = make_claim("Sharma wedding edit", "due_date", "2026-10-16", "Sharma edit due 16 Oct")
     memory.add_claim(claim)
