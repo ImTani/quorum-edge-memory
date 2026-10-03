@@ -5,12 +5,17 @@ agree on a conflict without ever exchanging conflict records. Only the resolutio
 team-tier claim that every device applies.
 """
 import hashlib
+import threading
 import uuid
 from datetime import datetime
 
 from edge.config import first_name
 from edge.events import log_activity, publish_claim
 from edge.memory import now_ms
+
+TIERS = ("device", "my_devices", "team")          # narrowest audience first
+SHARED_TIERS = ("my_devices", "team")             # tiers that may leave the device
+_resolve_lock = threading.Lock()
 
 ATTRIBUTE_NOUNS = {
     "due_date": "Dates", "birthday": "Birthdays", "assignee": "Assignees", "location": "Locations",
@@ -85,7 +90,17 @@ def _open(ctx, claim: dict, other: dict, similarity: float, detected_on: str) ->
     return conflict
 
 
+def _narrowest_tier(claims: list[dict]) -> str:
+    return min((c.get("tier") if c.get("tier") in TIERS else "device" for c in claims), key=TIERS.index)
+
+
 def resolve(ctx, conflict_id: str, winner_claim_id: str, resolved_by: str) -> dict:
+    # Check-then-act under one lock: a double click or a client retry must not settle twice.
+    with _resolve_lock:
+        return _resolve(ctx, conflict_id, winner_claim_id, resolved_by)
+
+
+def _resolve(ctx, conflict_id: str, winner_claim_id: str, resolved_by: str) -> dict:
     conflict = ctx.store.get_conflict(conflict_id)
     if conflict is None:
         raise KeyError(conflict_id)
@@ -94,9 +109,23 @@ def resolve(ctx, conflict_id: str, winner_claim_id: str, resolved_by: str) -> di
     if conflict["status"] != "open":
         return conflict
 
+    # The outcome is shared only as widely as the most private claim in the conflict: settling a
+    # team claim against a device-only one must not put the private value (or the fact that a
+    # private claim overruled the team) on the hub. Wider claims get local-only marks then.
+    current = [c for c in (ctx.memory.get(cid) for cid in conflict["claim_ids"]) if c is not None]
+    audience = _narrowest_tier(current)
+    tier_of = {c["claim_id"]: c.get("tier") for c in current}
+
+    def settle(claim_id: str, status: str) -> dict:
+        shared = TIERS.index(tier_of.get(claim_id, "device")) <= TIERS.index(audience)
+        claim = ctx.memory.update_fields(claim_id, bump_version=shared, status=status, conflict_id=conflict_id)
+        if shared and claim.get("tier") in SHARED_TIERS:
+            ctx.store.enqueue(claim_id)
+        return claim
+
     loser_ids = [c for c in conflict["claim_ids"] if c != winner_claim_id]
-    winner = ctx.memory.update_fields(winner_claim_id, status="active", conflict_id=conflict_id)
-    losers = [ctx.memory.update_fields(c, status="superseded", conflict_id=conflict_id) for c in loser_ids]
+    winner = settle(winner_claim_id, "active")
+    losers = [settle(c, "superseded") for c in loser_ids]
 
     stamp = now_iso()
     # Name the conflict's entity (what the conflict card shows), not the winner's own phrasing.
@@ -115,7 +144,7 @@ def resolve(ctx, conflict_id: str, winner_claim_id: str, resolved_by: str) -> di
         "stated_at": stamp,
         "captured_by": ctx.cfg.device,
         "device_id": ctx.cfg.device_id,
-        "tier": "team",
+        "tier": audience,
         "status": "active",
         "conflict_id": conflict_id,
         "resolves": conflict_id,
@@ -124,8 +153,8 @@ def resolve(ctx, conflict_id: str, winner_claim_id: str, resolved_by: str) -> di
         "modified_by": ctx.cfg.device,
     }
     ctx.memory.add_claim(resolution)
-    for claim in (winner, *losers, resolution):
-        ctx.store.enqueue(claim["claim_id"])
+    if audience in SHARED_TIERS:
+        ctx.store.enqueue(resolution["claim_id"])
 
     conflict = ctx.store.update_conflict(
         conflict_id, status="resolved", winner_claim_id=winner_claim_id,

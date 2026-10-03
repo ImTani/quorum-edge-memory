@@ -192,6 +192,55 @@ def test_resolve_supersedes_loser_and_creates_resolution_claim(ctx):
         conflicts.resolve(ctx, opened["conflict_id"], "clm_not_in_conflict", resolved_by="tanishk")
 
 
+def test_settling_against_a_private_claim_shares_nothing(ctx):
+    """Tanishk's device-only working date beats the client's team claim: the outcome stays local."""
+    email = sharma_email()
+    private = dict(sharma_note(), value="2026-10-20", value_label="20 Oct", tier="device",
+                   text="Sharma wedding edit: we can deliver on 20 Oct, keep it quiet")
+    ctx.memory.add_claim(email)
+    ctx.memory.add_claim(private)
+    opened = conflicts.check(ctx, private, detected_on="ingest")
+
+    resolved = conflicts.resolve(ctx, opened["conflict_id"], private["claim_id"], resolved_by="tanishk")
+
+    resolution = ctx.memory.get(resolved["resolution_claim_id"])
+    assert resolution["tier"] == "device"
+    assert ctx.store.outbox_ids() == set()            # neither the value nor the overruled team claim leaves
+    loser = ctx.memory.get(email["claim_id"])
+    assert (loser["status"], loser["version"]) == ("superseded", 1)   # a local mark, not a new version
+    assert ctx.memory.get(private["claim_id"])["status"] == "active"
+
+    # Whichever side wins, the settlement is shared only as widely as the most private claim.
+    assert conflicts._narrowest_tier([email, private]) == "device"
+    assert conflicts._narrowest_tier([email, dict(private, tier="my_devices")]) == "my_devices"
+
+
+def test_concurrent_resolves_settle_once(ctx):
+    import threading
+
+    email, note = sharma_email(), sharma_note()
+    ctx.memory.add_claim(email)
+    ctx.memory.add_claim(note)
+    opened = conflicts.check(ctx, note, detected_on="ingest")
+    barrier = threading.Barrier(2)
+    results = []
+
+    def click():
+        barrier.wait()
+        results.append(conflicts.resolve(ctx, opened["conflict_id"], note["claim_id"], resolved_by="tanishk"))
+
+    threads = [threading.Thread(target=click) for _ in range(2)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    resolutions = [c for c in ctx.memory.all_claims() if c["attribute"] == "resolution"]
+    assert len(resolutions) == 1
+    assert ctx.memory.get(note["claim_id"])["version"] == 2
+    assert {r["resolution_claim_id"] for r in results} == {resolutions[0]["claim_id"]}
+
+
 def test_remote_resolution_applies_on_a_device_that_never_saw_the_conflict(data_dir, embedder, ctx):
     email, note = sharma_email(), sharma_note()
     ctx.memory.add_claim(email)
