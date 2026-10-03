@@ -523,7 +523,6 @@ export class MemoryCloud {
     const x1 = pr.x + side * (beside ? 26 : 30), y1 = beside ? pr.y + 18 : pr.y - 32, x2 = x1 + side * 12;
     ctx.globalAlpha = a; ctx.strokeStyle = rgba(color, 0.85); ctx.lineWidth = 1.3;
     ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x2, y1); ctx.stroke();
-    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x2, y1, 2.2, 0, TAU); ctx.fill();
     const f1 = Math.round(15 * this.fs), f2 = Math.round(12.5 * this.fs * 10) / 10;
     ctx.font = `600 ${f1}px ${FONT}`; const tw = ctx.measureText(label).width;
     let sw = 0; if (sub) { ctx.font = `400 ${f2}px ${FONT}`; sw = ctx.measureText(sub).width; }

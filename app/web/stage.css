@@ -32,11 +32,12 @@ body.stage :focus-visible { outline: 2px solid var(--indigo); outline-offset: 2p
   background: #0F1420; border-bottom: 1px solid var(--rule-2);
 }
 .caption { min-width: 0; }
-.cap-head { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 30px; line-height: 1.15; font-weight: 700; letter-spacing: -.01em; color: var(--text); }
+.cap-head { display: flex; align-items: baseline; gap: 14px; margin: 0; font-size: 30px; line-height: 1.15; font-weight: 700; letter-spacing: -.01em; color: var(--text); }
 .cap-head [data-cap="head"] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cap-dot { width: 14px; height: 14px; border-radius: 50%; flex: none; background: var(--indigo); }
-.cap-how { margin: 6px 0 0 26px; max-width: 1240px; font-size: 19px; line-height: 1.35; color: #C9D0DF; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-.cap-src { display: flex; align-items: center; gap: 8px; margin: 6px 0 0 26px; font-size: 17px; color: var(--sub); white-space: nowrap; overflow: hidden; }
+/* What kind of moment this is, in words, in the state's colour. */
+.cap-tag { flex: none; font-size: 17px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--indigo); }
+.cap-how { margin: 6px 0 0; max-width: 1240px; font-size: 19px; line-height: 1.35; color: #C9D0DF; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.cap-src { display: flex; align-items: center; gap: 8px; margin: 6px 0 0; font-size: 17px; color: var(--sub); white-space: nowrap; overflow: hidden; }
 .cap-src q { font-style: italic; color: #DDE2EC; quotes: "“" "”"; }
 .cap-src .q-kind { font-weight: 600; color: var(--sub); }
 .cap-src .q-claim { color: var(--text); }
@@ -48,14 +49,11 @@ body.stage :focus-visible { outline: 2px solid var(--indigo); outline-offset: 2p
 
 /* beat tracker: where the presenter is in the 8-beat script. Never advances by itself. */
 .beats { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-.beats ol { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.beats li .num {
-  display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
-  font: 600 15px var(--font); color: var(--muted); border: 1.5px solid var(--rule-2); background: transparent;
-}
-.beats li.done .num { color: #0B0F17; background: var(--green); border-color: var(--green); }
-.beats li.done svg { width: 18px; height: 18px; }
-.beats li.now .num { color: var(--text); border-color: var(--indigo); background: rgba(124, 140, 255, .18); }
+/* A segmented progress bar: filled = shown, outlined = still to come, indigo = the next beat. */
+.beats ol { display: flex; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.beats li { width: 40px; height: 10px; border-radius: 2px; border: 1.5px solid var(--rule-2); background: transparent; }
+.beats li.done { background: var(--green); border-color: var(--green); }
+.beats li.now { background: rgba(124, 140, 255, .45); border-color: var(--indigo); }
 .beat-next { font-size: 16px; color: var(--text); max-width: 430px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .beat-next .k { color: var(--muted); margin-right: 6px; }
 
@@ -112,7 +110,6 @@ body.stage :focus-visible { outline: 2px solid var(--indigo); outline-offset: 2p
 .on-stage .rate.frozen::after { font-size: 14px; }
 .on-stage .totals { font: 15px var(--font); gap: 12px; color: var(--sub); }
 .on-stage .totals b { font: 600 15px var(--mono); }
-.on-stage .dot { box-shadow: none !important; }
 
 /* pane body: memory on top; capture and ask below, side by side */
 .on-stage main.grid, .on-stage main.grid.focus {
@@ -156,7 +153,7 @@ body.stage :focus-visible { outline: 2px solid var(--indigo); outline-offset: 2p
 .on-stage .view-toggle button.on { background: rgba(124,140,255,.22); color: var(--text); }
 .on-stage .legend { font-size: 14px; gap: 4px 16px; left: 14px; bottom: 10px; color: var(--sub); }
 .on-stage .legend b { font-size: 14px; }
-.on-stage .legend i { box-shadow: none; width: 10px; height: 10px; }
+.on-stage .legend i { width: 12px; height: 12px; }
 .on-stage .legend .lg.zero { opacity: .55; }
 
 /* claim card (hover) */
@@ -169,7 +166,6 @@ body.stage :focus-visible { outline: 2px solid var(--indigo); outline-offset: 2p
 .on-stage .conflict-card { left: 10px; right: 10px; bottom: 10px; padding: 12px 14px; border-radius: 12px; box-shadow: 0 14px 36px rgba(0,0,0,.55); background: rgba(20, 13, 17, .97); }
 .on-stage .conflict-card.resolved { box-shadow: 0 14px 36px rgba(0,0,0,.55); background: rgba(11, 20, 16, .97); }
 .on-stage .cf-kicker { font-size: 15px; letter-spacing: 0; text-transform: none; font-weight: 700; }
-.on-stage .kdot { box-shadow: none; }
 .on-stage .cf-time { font-size: 14px; }
 .on-stage .cf-own { font-size: 15px; }
 .on-stage .cf-title { font-size: 19px; margin: 6px 0 10px; }
@@ -272,7 +268,6 @@ body.stage :focus-visible { outline: 2px solid var(--indigo); outline-offset: 2p
 .links .link { stroke-width: 4; stroke-linecap: round; }
 .links .link.on { stroke: var(--green); }
 .links .link.cut { stroke: var(--amber); stroke-dasharray: 2 9; opacity: .9; }
-.links .end.on { fill: var(--green); }
 .links .slash { stroke: var(--amber); stroke-width: 3; stroke-linecap: round; }
 .links .cut-label { fill: #FFD27A; font: 600 14px var(--font); paint-order: stroke; stroke: var(--bg); stroke-width: 5px; }
 .links .token { fill: #fff; stroke: var(--green); stroke-width: 3; }

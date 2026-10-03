@@ -35,19 +35,22 @@ const otherPane = pane => (pane.side === 'left' ? panes.right : panes.left);
 
 /* --------------------------------------------------------------- captions */
 const cap = { prio: 0, at: 0, key: null };
-const capEls = { dot: $('[data-cap="dot"]'), head: $('[data-cap="head"]'), how: $('[data-cap="how"]'), src: $('[data-cap="src"]') };
+const capEls = { tag: $('[data-cap="tag"]'), head: $('[data-cap="head"]'), how: $('[data-cap="how"]'), src: $('[data-cap="src"]') };
 const ARROW = '<svg class="cap-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 /**
  * Show a caption. prio: 1 background (sync traffic), 2 normal, 3 the moments (conflict, resolve).
  * force: the presenter just did this, so it always shows. key: lets a later event upgrade the same
- * caption in place (email captured -> "and synced it").
+ * caption in place (email captured -> "and synced it"). tag: the kind of moment in one or two
+ * words ("Offline", "Conflict"), shown before the headline in the tone's colour.
  */
-function say({ tone = 'indigo', head, how = '', src = '', prio = 2, force = false, key = null, pane = null }) {
+function say({ tone = 'indigo', tag = '', head, how = '', src = '', prio = 2, force = false, key = null, pane = null }) {
   const now = performance.now();
   if (!force && prio < cap.prio && now - cap.at < CAPTION_HOLD_MS) return false;
   Object.assign(cap, { prio, at: now, key });
-  capEls.dot.style.background = TONE[tone] || tone;
+  capEls.tag.textContent = tag;
+  capEls.tag.style.color = TONE[tone] || tone;
+  capEls.tag.classList.toggle('hidden', !tag);
   capEls.head.textContent = head;
   capEls.how.textContent = how;
   capEls.src.innerHTML = src;
@@ -94,13 +97,12 @@ const BEATS = [
   { label: 'Team view', next: 'Switch a device to Team view' },
 ];
 const done = new Set();
-const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function tick(n) { if (!done.has(n)) { done.add(n); renderBeats(); } }
 function renderBeats() {
   const now = BEATS.findIndex((_, i) => !done.has(i + 1)) + 1;   // 0 when all done
   $('[data-beats]').innerHTML = BEATS.map((b, i) => {
     const n = i + 1, st = done.has(n) ? 'done' : n === now ? 'now' : 'todo';
-    return `<li class="${st}" title="${esc(b.label)}"><span class="num">${st === 'done' ? CHECK : n}</span></li>`;
+    return `<li class="${st}" title="${n}. ${esc(b.label)}${st === 'done' ? ' (shown)' : ''}"></li>`;
   }).join('');
   $('[data-beat-next]').innerHTML = now
     ? `<span class="k">Next · ${now} of 8</span> ${esc(BEATS[now - 1].next)}`
@@ -122,14 +124,14 @@ function onPaneMessage(pane, msg) {
   const who = pane.device, name = nameOf(who);
   if (msg.type === 'working') {
     const what = msg.what === 'email' ? 'the email' : 'the note';
-    say({ tone: 'indigo', force: true, pane, head: `${possessive(who)} device is reading ${what}…`,
+    say({ tone: 'indigo', tag: 'Reading', force: true, pane, head: `${possessive(who)} device is reading ${what}…`,
       how: 'A local model (llama3.2 via Ollama) turns it into a claim on the laptop itself. No cloud call; it takes a few seconds.' });
     return;
   }
   if (msg.type === 'answer') return onAnswer(pane, msg);
   if (msg.type === 'draft') {
     const owner = nameOf(msg.conflict.owner);
-    say({ tone: 'indigo', force: true, pane, head: `${name} can't settle it, so Quorum drafted a message to ${owner}.`,
+    say({ tone: 'indigo', tag: 'Draft', force: true, pane, head: `${name} can't settle it, so Quorum drafted a message to ${owner}.`,
       how: `Only the owner decides. The app sends nothing; ${name} chooses whether to open it in email or WhatsApp.` });
     return;
   }
@@ -163,11 +165,11 @@ function onNet(pane, online) {
   const who = pane.device;
   if (!online) {
     tick(2);
-    say({ tone: 'amber', force: true, pane, head: `${possessive(who)} device lost the hub.`,
+    say({ tone: 'amber', tag: 'Offline', force: true, pane, head: `${possessive(who)} device lost the hub.`,
       how: 'It still remembers and searches. Everything stays on the device until it reconnects.' });
   } else {
     const queued = pane.ui.state.sync?.outbox || 0;
-    say({ tone: 'green', force: true, prio: 1, pane, head: `${possessive(who)} device is back on the hub.`,
+    say({ tone: 'green', tag: 'Online', force: true, prio: 1, pane, head: `${possessive(who)} device is back on the hub.`,
       how: queued ? `It sends its outbox first (${plural(queued, 'claim')}), then pulls what the team added while it was away.`
         : 'It pulls what the team added while it was away.' });
   }
@@ -177,18 +179,18 @@ function onCapture(pane, c) {
   const who = pane.device, online = !!pane.ui.state.sync?.online;
   const kind = c.source.kind === 'email' ? 'email' : c.source.kind === 'whatsapp' ? 'chat' : 'note';
   if (c.tier === 'device') {
-    say({ tone: 'violet', force: true, pane, head: `Kept on ${possessive(who)} device only.`,
+    say({ tone: 'violet', tag: 'Private', force: true, pane, head: `Kept on ${possessive(who)} device only.`,
       how: `The local model read the ${kind} and marked this claim private. It never syncs; the hub can't see it.`, src: sourceLine(c) });
     return;
   }
   if (!online) {
     tick(3);
-    say({ tone: 'amber', force: true, pane, head: `Saved on ${possessive(who)} device, queued.`,
+    say({ tone: 'amber', tag: 'Queued', force: true, pane, head: `Saved on ${possessive(who)} device, queued.`,
       how: `The local model turned the ${kind} into a claim with its source. The hub doesn't have it yet.`, src: sourceLine(c) });
     return;
   }
   if (kind === 'email') tick(4);
-  say({ tone: 'amber', force: true, pane, key: `capture:${c.claim_id}`, head: `${possessive(who)} device learned ${learnedWhat(c)}.`,
+  say({ tone: 'amber', tag: 'Queued', force: true, pane, key: `capture:${c.claim_id}`, head: `${possessive(who)} device learned ${learnedWhat(c)}.`,
     how: `The local model read the ${kind} into a claim with its source, and queued it for the hub.`, src: sourceLine(c) });
   pane.lastCapture = { claim: c, kind, at: performance.now() };
 }
@@ -198,17 +200,17 @@ function onPush(pane, n) {
   const lc = pane.lastCapture;
   if (lc && cap.key === `capture:${lc.claim.claim_id}`) {
     pane.lastCapture = null;
-    say({ tone: 'green', force: true, pane, head: `${possessive(pane.device)} device learned ${learnedWhat(lc.claim)} and synced it.`,
+    say({ tone: 'green', tag: 'Synced', force: true, pane, head: `${possessive(pane.device)} device learned ${learnedWhat(lc.claim)} and synced it.`,
       how: `The local model read the ${lc.kind} into a claim with its source. Now the hub has it; private claims stayed behind.`, src: sourceLine(lc.claim) });
     return;
   }
-  say({ tone: 'green', prio: 1, pane, head: `${possessive(pane.device)} device sent ${plural(n, 'claim')} to the hub.`,
+  say({ tone: 'green', tag: 'Synced', prio: 1, pane, head: `${possessive(pane.device)} device sent ${plural(n, 'claim')} to the hub.`,
     how: 'Only claims marked for the team leave a device. Private ones never enter the outbox.' });
 }
 
 function onPull(pane, n) {
   sendToken(pane, 'pull', n);
-  say({ tone: 'green', prio: 1, pane, head: `${possessive(pane.device)} device pulled ${plural(n, 'claim')} from the hub.`,
+  say({ tone: 'green', tag: 'Synced', prio: 1, pane, head: `${possessive(pane.device)} device pulled ${plural(n, 'claim')} from the hub.`,
     how: 'Each pulled claim is checked against what this device already knows, on the device.' });
 }
 
@@ -221,7 +223,7 @@ function onConflict(pane, cf, prev) {
     seen.add(who); conflictSeen.set(cf.conflict_id, seen);
     const sim = (+cf.similarity || 0).toFixed(2);
     const how = `Qdrant compared what each claim is about (not its value) and matched them at similarity ${sim}. Nothing was overwritten.`;
-    say({ tone: 'red', prio: 3, force: seen.size > 1, pane,
+    say({ tone: 'red', tag: 'Conflict', prio: 3, force: seen.size > 1, pane,
       head: seen.size > 1 ? 'Both devices found the same disagreement on their own.' : `${possessive(who)} device found a disagreement on its own.`,
       how, src: conflictSources(pane, cf) });
     return;
@@ -234,10 +236,10 @@ function onConflict(pane, cf, prev) {
     const lost = loser ? valueOf(loser) : 'the other version';
     if (by === who) {
       const other = otherPane(pane);
-      say({ tone: 'green', prio: 3, force: true, pane, head: `${nameOf(by)} settled it: ${valueOf(winner) || 'one version'} kept.`,
+      say({ tone: 'green', tag: 'Resolved', prio: 3, force: true, pane, head: `${nameOf(by)} settled it: ${valueOf(winner) || 'one version'} kept.`,
         how: `${other.device ? `${possessive(other.device)} device gets` : 'The other device gets'} the decision through the hub on its next pull. ${lost} stays as history, marked superseded.` });
     } else {
-      say({ tone: 'green', prio: 3, force: true, pane, head: `${nameOf(by)} settled it. ${possessive(who)} device applied the decision.`,
+      say({ tone: 'green', tag: 'Resolved', prio: 3, force: true, pane, head: `${nameOf(by)} settled it. ${possessive(who)} device applied the decision.`,
         how: `The decision travelled through the hub as a claim of its own. ${lost} is kept as history, marked superseded; nothing was deleted.` });
     }
   }
@@ -250,7 +252,7 @@ function onAnswer(pane, { r, view, online }) {
     tick(6);
     const cf = r.conflict_id && pane.ui.state.conflicts.get(r.conflict_id);
     const owner = cf ? nameOf(cf.owner) : 'the owner';
-    say({ tone: 'red', force: true, prio: 2, pane, head: `${possessive(who)} device won't guess: it's disputed.`,
+    say({ tone: 'red', tag: 'Disputed', force: true, prio: 2, pane, head: `${possessive(who)} device won't guess: it's disputed.`,
       how: `It answered in ${ms} ms with both sources side by side. ${owner} owns the task, so ${owner} decides.`,
       src: cf ? conflictSources(pane, cf) : '' });
     return;
@@ -259,10 +261,10 @@ function onAnswer(pane, { r, view, online }) {
   const sources = n ? `, with ${plural(n, 'source')}` : '';
   const scope = view === 'team' ? ' Team view: only claims shared with the team were searched.' : '';
   if (!online) {
-    say({ tone: 'amber', force: true, pane, head: `Answered on ${possessive(who)} device in ${ms} ms, with no hub.`,
+    say({ tone: 'amber', tag: 'Offline', force: true, pane, head: `Answered on ${possessive(who)} device in ${ms} ms, with no hub.`,
       how: `Search runs on the device's own Qdrant Edge shard, so losing the hub costs nothing.${scope}` });
   } else {
-    say({ tone: 'indigo', force: true, pane, head: `Answered on the device in ${ms} ms${sources}.`,
+    say({ tone: 'indigo', tag: 'Answered', force: true, pane, head: `Answered on the device in ${ms} ms${sources}.`,
       how: `${possessive(who)} laptop searched its own Qdrant Edge shard, keywords and meaning together. No hub, no cloud.${scope}` });
   }
 }
@@ -272,10 +274,10 @@ function onView(pane, view) {
   const hidden = [...pane.ui.state.claims.values()].filter(c => c.tier !== 'team' && c.attribute !== 'resolution' && c.status !== 'retracted').length;
   if (view === 'team') {
     tick(8);
-    say({ tone: 'violet', force: true, pane, head: 'Team view hides device-only claims. The hub holds none of them.',
+    say({ tone: 'violet', tag: 'Team view', force: true, pane, head: 'Team view hides device-only claims. The hub holds none of them.',
       how: `${possessive(who)} device now shows only what the team shares: ${plural(hidden, 'personal claim')} drop out. Device-only claims on the hub: ${hub.device ?? 0}.` });
   } else {
-    say({ tone: 'indigo', force: true, pane, head: `Back to everything on ${possessive(who)} device.`,
+    say({ tone: 'indigo', tag: 'Mine', force: true, pane, head: `Back to everything on ${possessive(who)} device.`,
       how: 'Mine includes private claims. They are searchable here and nowhere else.' });
   }
 }
@@ -403,7 +405,6 @@ function drawLinks() {
     const [ax, ay] = L.a, [bx, by] = L.b, mx = (ax + bx) / 2, my = (ay + by) / 2;
     if (!cut) {
       out += `<line class="link on" x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}"/>`;
-      out += `<circle class="end on" cx="${ax}" cy="${ay}" r="4"/><circle class="end on" cx="${bx}" cy="${by}" r="4"/>`;
     } else {
       const gap = 14, dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy) || 1, ux = dx / len, uy = dy / len;
       out += `<line class="link cut" x1="${ax}" y1="${ay}" x2="${mx - ux * gap}" y2="${my - uy * gap}"/>`;
@@ -441,7 +442,7 @@ function drawTokens() {
     const fade = k < 1 ? 1 : Math.max(0, 1 - (now - t.t0 - TOKEN_MS) / 1600);
     // Two short lines under the link: the gap between a pane and the hub is narrow.
     const mx = (L.a[0] + L.b[0]) / 2, my = Math.max(L.a[1], L.b[1]) + 26;
-    return `<g opacity="${fade.toFixed(3)}"><circle class="token" cx="${x}" cy="${y}" r="7"/>
+    return `<g opacity="${fade.toFixed(3)}"><rect class="token" x="${x - 6}" y="${y - 6}" width="12" height="12" rx="2"/>
       <text class="token-label" x="${mx}" y="${my}" text-anchor="middle">${t.dir === 'push' ? 'sent' : 'pulled'}<tspan x="${mx}" dy="17">${esc(plural(t.n, 'claim'))}</tspan></text></g>`;
   }).join('');
 }

@@ -96,10 +96,10 @@ function markup(stage) {
   return `
     <header class="top">
       <div class="brand">
-        ${stage ? '' : '<div class="mark" aria-hidden="true"><i></i><i></i><i></i></div>'}
+        ${stage ? '' : '<div class="mark" aria-hidden="true"><span>Q</span></div>'}
         <div class="brand-text">
           <div class="device-name" data-el="device-name">Quorum</div>
-          <div class="device-sub"><span data-el="live" class="live" title="Live updates from this device">connecting</span><span class="sep">·</span>edge node · Qdrant Edge</div>
+          <div class="device-sub"><span data-el="live" class="live connecting" title="Live updates from this device">Connecting…</span><span class="sep">·</span>edge node · Qdrant Edge</div>
         </div>
       </div>
 
@@ -120,7 +120,7 @@ function markup(stage) {
           </div>
         </div>
         <div class="stat hub" data-el="hub-stat" title="Hub status">
-          <span class="dot" data-el="hub-dot"></span><span class="k" data-el="hub-text">hub</span>
+          <span class="k" data-el="hub-text">Hub</span>
         </div>
       </div>
     </header>
@@ -370,11 +370,11 @@ export function createDeviceUI(root, opts = {}) {
     el('down-total').textContent = fmtBytes(s.bytes_down);
     // Right after reconnecting, hub_ok is still false until the first round lands; only an actual
     // error (last_error) means the hub is unreachable.
-    const hub = !state.sync ? ['unknown', 'hub']
-      : !online ? ['paused', 'sync paused']
-      : s.hub_ok === false ? (s.last_error ? ['down', 'hub unreachable'] : ['unknown', 'reaching hub…'])
-      : ['ok', 'hub ok'];
-    el('hub-dot').className = `dot ${hub[0]}`;
+    const hub = !state.sync ? ['unknown', 'Hub']
+      : !online ? ['paused', 'Hub paused']
+      : s.hub_ok === false ? (s.last_error ? ['down', 'Hub down'] : ['unknown', 'Reaching hub…'])
+      : ['ok', 'Hub ok'];
+    el('hub-stat').className = `stat hub ${hub[0]}`;
     el('hub-text').textContent = hub[1];
     el('hub-stat').title = s.last_error ? `Last error: ${s.last_error}` : 'Hub status';
   }
@@ -509,7 +509,7 @@ export function createDeviceUI(root, opts = {}) {
 
     card.className = `conflict-card ${resolved ? 'resolved' : 'open'} ${draftHtml ? 'with-draft' : ''}`;
     card.innerHTML = `
-      <div class="cf-kicker"><span class="kdot"></span>${resolved ? 'Conflict resolved' : `Conflict · detected on ${esc(cf.detected_on === 'sync' ? 'sync' : 'capture')}`}<span class="cf-time">${esc(fmtClock(cf.detected_at))}</span>
+      <div class="cf-kicker">${resolved ? 'Conflict resolved' : `Conflict · detected on ${esc(cf.detected_on === 'sync' ? 'sync' : 'capture')}`}<span class="cf-time">${esc(fmtClock(cf.detected_at))}</span>
         ${kickerNote}${resolved ? '' : '<button class="x" data-action="dismiss" title="Hide (the conflict stays open)">×</button>'}</div>
       <div class="cf-title">${title}</div>
       <div class="cf-cols">${cols}</div>
@@ -528,7 +528,7 @@ export function createDeviceUI(root, opts = {}) {
       pill.addEventListener('click', () => { state.cardConflictId = latestConflictId(); state.dismissed.delete(state.cardConflictId); renderConflictCard(); });
       el('cloud-wrap').appendChild(pill);
     }
-    pill.innerHTML = `<span class="kdot"></span>${openCount} open conflict${openCount > 1 ? 's' : ''} · show`;
+    pill.innerHTML = `${openCount} open conflict${openCount > 1 ? 's' : ''} · show`;
   }
 
   /** While the card is up, the cloud row grows and the projection centre moves above the card. */
@@ -713,7 +713,7 @@ export function createDeviceUI(root, opts = {}) {
   /* ----------------------------------------------------------------- boot */
   function setLive(s) {
     const live = el('live');
-    live.textContent = s === 'open' ? 'live' : s === 'reconnecting' ? 'reconnecting…' : s;
+    live.textContent = { open: 'Live', reconnecting: 'Reconnecting…', connecting: 'Connecting…', offline: 'Offline' }[s] || s;
     live.className = `live ${s}`;
     emit({ type: 'live', status: s });
   }

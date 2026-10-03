@@ -49,19 +49,24 @@ header.top {
   background: linear-gradient(180deg, rgba(14,19,30,.95), rgba(10,14,22,.8));
 }
 .brand { display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1 1 auto; }
-.mark { position: relative; width: 30px; height: 30px; flex: none; }
-.mark i { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--indigo); box-shadow: 0 0 10px var(--indigo); }
-.mark i:nth-child(1) { left: 2px; top: 16px; }
-.mark i:nth-child(2) { left: 10px; top: 3px; background: #9DB4FF; }
-.mark i:nth-child(3) { left: 18px; top: 16px; background: #B49CFF; }
+/* The Quorum mark from the landing page: a yellow sticky note with a handwritten Q. */
+.mark { position: relative; flex: none; width: 22px; height: 22px; margin: 0 3px; transform: rotate(-7deg); filter: drop-shadow(2px 3px 0 rgba(0,0,0,.45)); }
+.mark span {
+  display: grid; place-items: center; width: 100%; height: 100%; background: #FFE14D; color: #1B1F2A;
+  font: 700 15px/1 "Shantell Sans", "Segoe Print", cursive; padding-top: 1px;
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
+}
+.mark::after { /* the folded-over corner */
+  content: ""; position: absolute; right: 0; bottom: 0; width: 28%; height: 28%;
+  background: #C9AE2E; clip-path: polygon(0 0, 100% 0, 0 100%);
+}
 .brand-text { min-width: 0; }
 .device-name { font-size: 22px; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .1px; }
 .device-name b { font-weight: 700; }
 .device-name span { color: var(--sub); font-weight: 400; }
 .device-sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; white-space: nowrap; }
 .device-sub .sep { margin: 0 6px; }
-.live { color: var(--green); }
-.live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 5px; vertical-align: 1px; }
+.live { color: var(--green); font-weight: 600; }
 .live.reconnecting, .live.connecting { color: var(--amber); }
 .live.offline { color: var(--red); }
 
@@ -98,12 +103,11 @@ header.top {
 .rate.frozen::after { content: " · frozen"; font: 500 11px var(--font); color: rgba(245,165,36,.75); }
 .totals { display: flex; gap: 8px; font: 12px var(--mono); color: var(--sub); white-space: nowrap; }
 .totals b { color: var(--text); font-weight: 600; }
-.stat.hub { gap: 7px; padding: 0 11px; }
-.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--grey); flex: none; }
-.dot.ok { background: var(--green); box-shadow: 0 0 10px var(--green); animation: breathe 2.4s ease-in-out infinite; }
-.dot.paused { background: var(--amber); box-shadow: 0 0 8px rgba(245,165,36,.7); }
-.dot.down { background: var(--red); box-shadow: 0 0 10px var(--red); animation: breathe 1s ease-in-out infinite; }
-@keyframes breathe { 50% { opacity: .55; } }
+.stat.hub { padding: 0 12px; }
+.stat.hub .k { font-weight: 600; }
+.stat.hub.ok .k { color: var(--green); }
+.stat.hub.paused .k { color: var(--amber); }
+.stat.hub.down .k { color: #FF8A8A; }
 
 /* ------------------------------------------------------------------- grid */
 main.grid {
@@ -178,7 +182,7 @@ form .btn { height: 42px; }
 .legend { transition: opacity .3s; }
 .legend .lg { display: inline-flex; align-items: center; gap: 6px; transition: opacity .3s; }
 .legend .lg.zero { opacity: .38; }
-.legend i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
+.legend i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); }
 .legend b { color: var(--text); font: 600 12.5px var(--mono); }
 
 /* hover / pinned claim card */
@@ -211,8 +215,6 @@ svg { width: 16px; height: 16px; flex: none; }
 .conflict-card.resolved { border-color: rgba(34,197,94,.6); background: rgba(10,18,15,.94); box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 36px rgba(34,197,94,.18); }
 .cf-kicker { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: #FF8A8A; }
 .resolved .cf-kicker { color: #7EE2A4; }
-.kdot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 10px var(--red); animation: breathe 1s ease-in-out infinite; }
-.resolved .kdot { background: var(--green); box-shadow: 0 0 10px var(--green); animation: none; }
 .cf-time { color: var(--muted); font-weight: 500; letter-spacing: .4px; }
 .cf-kicker .x { margin-left: auto; border: 0; background: transparent; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px; }
 .cf-kicker .x:hover { color: var(--text); }
