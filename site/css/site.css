@@ -1,13 +1,10 @@
 /* Quorum landing page. The world: a team's whiteboard (Team Wall direction, comp A2). */
+@font-face { font-family: "Shantell Sans"; src: url(../fonts/shantell-sans-vf.woff2) format("woff2-variations"), url(../fonts/shantell-sans-vf.woff2) format("woff2"); font-weight: 300 800; font-display: swap; }
 @font-face { font-family: "Schibsted Grotesk"; src: url(../fonts/schibsted-grotesk-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Schibsted Grotesk"; src: url(../fonts/schibsted-grotesk-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
 @font-face { font-family: "Schibsted Grotesk"; src: url(../fonts/schibsted-grotesk-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
 @font-face { font-family: "Schibsted Grotesk"; src: url(../fonts/schibsted-grotesk-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "Schibsted Grotesk"; src: url(../fonts/schibsted-grotesk-800.woff2) format("woff2"); font-weight: 800; font-display: swap; }
-@font-face { font-family: "Shantell Sans"; src: url(../fonts/shantell-sans-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
-@font-face { font-family: "Shantell Sans"; src: url(../fonts/shantell-sans-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
-@font-face { font-family: "Shantell Sans"; src: url(../fonts/shantell-sans-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
-@font-face { font-family: "Shantell Sans"; src: url(../fonts/shantell-sans-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
 
 :root {
   --ink: #14171f; --ink-2: #3b4150; --ink-3: #656b7a; --ink-4: #646a78;
@@ -343,3 +340,11 @@ textarea, input { caret-color: var(--m-blue); }
 #w-new.sticky.small { width: 132px; min-height: 100px; font-size: 14.5px; line-height: 1.25; padding: 14px 11px 10px; }
 #w-new .meta { margin-top: 8px; font-size: 12px; }
 .owner .row button { white-space: nowrap; padding: 9px 8px; }
+.owner .row.three button { font-size: 13.5px; padding: 8px 4px; }
+.ringed { margin: 0 .35em; }
+.ring { left: -7px; width: calc(100% + 14px); }
+#w-new.sticky.small { min-height: 92px; }
+
+/* handwriting is redrawn in place through the variable font (board.js steps --infm) */
+:root { --infm: 0; }
+.boil, .tape-label, .who, .hand, .mark-text, .aside { font-variation-settings: "INFM" var(--infm); }

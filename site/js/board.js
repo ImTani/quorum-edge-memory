@@ -5,15 +5,14 @@
 const $ = (id) => document.getElementById(id);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ---------- line boil: crisp, vector, subtle ----------
-// Hand-drawn animation redraws a line a few times and cycles the drawings. Each marker path gets
-// three slightly jittered variants of its own coordinates, swapped ~7 times a second; handwriting
-// and notes get a sub-pixel wobble through the translate/rotate properties (which compose with
-// their existing tilt). Nothing is rasterised, so it stays sharp at any zoom.
-const BOIL_MS = 140;
-const PATH_AMP = 0.45;   // in each drawing's own viewBox units
-const TEXT_AMP = 0.3;    // px
-const ROT_AMP = 0.25;    // deg
+// ---------- line boil: the shape is redrawn, nothing moves ----------
+// Hand-drawn animation redraws each line a few times and cycles the drawings. Marker paths get
+// three variants of their own coordinates, jittered by a fraction of a unit (the stroke's shape
+// breathes; its place doesn't). Handwriting is redrawn through Shantell Sans's Informality axis,
+// so letterforms reshape in place. All vector; nothing is translated, rotated or rasterised.
+const BOIL_MS = 150;
+const PATH_AMP = 0.11;            // viewBox units: a quarter of the first pass
+const INFM_FRAMES = [0, 6, 3];    // Shantell Sans "INFM" axis (0-100)
 
 function jitterPath(d, amp, seed) {
   let i = 0;
@@ -29,8 +28,7 @@ function setupBoil() {
     const d = p.getAttribute('d');
     return [d, jitterPath(d, PATH_AMP, k + 1), jitterPath(d, PATH_AMP, k + 101)];
   });
-  const texts = [...document.querySelectorAll('svg text')].filter((t) => t.closest('.boil'));
-  const blocks = () => document.querySelectorAll('.boil:not(svg):not(g)');
+  const root = document.documentElement.style;
   let frame = 0;
   let last = 0;
   const tick = (t) => {
@@ -38,18 +36,7 @@ function setupBoil() {
       last = t;
       frame = (frame + 1) % 3;
       paths.forEach((p, k) => p.setAttribute('d', frames[k][frame]));
-      texts.forEach((el, k) => {
-        const s = Math.sin((k + 1) * 12.9898 + frame * 78.233) * 43758.5453;
-        el.style.translate = `${((s - Math.floor(s)) * 2 - 1) * TEXT_AMP}px 0`;
-      });
-      blocks().forEach((el, k) => {
-        const a = Math.sin((k + 1) * 12.9898 + frame * 78.233) * 43758.5453;
-        const b = Math.sin((k + 7) * 4.1414 + frame * 39.425) * 24634.6345;
-        const c = Math.sin((k + 3) * 7.7777 + frame * 11.11) * 12345.678;
-        const r = (v) => (v - Math.floor(v)) * 2 - 1;
-        el.style.translate = `${(r(a) * TEXT_AMP).toFixed(2)}px ${(r(b) * TEXT_AMP).toFixed(2)}px`;
-        el.style.rotate = `${(r(c) * ROT_AMP).toFixed(3)}deg`;
-      });
+      root.setProperty('--infm', String(INFM_FRAMES[frame]));
     }
     requestAnimationFrame(tick);
   };
@@ -87,7 +74,7 @@ function readNote(text) {
   const t = text.toLowerCase();
   const m = t.match(/\b([0-3]?\d)(?:st|nd|rd|th)?\b/);
   const day = m && Number(m[1]) >= 1 && Number(m[1]) <= 31 ? Number(m[1]) : null;
-  const sharmaDue = /sharma/.test(t) && /(edit|delivery|wedding|due)/.test(t) && day !== null;
+  const sharmaDue = /sharma/.test(t) && /(edit|delivery|wedding)/.test(t) && day !== null;
   return { text, day, sharmaDue };
 }
 
@@ -130,7 +117,8 @@ function render() {
   gone(el.keepNew, !thirdDate);
   if (thirdDate) el.keepNew.textContent = `Keep ${n.day} Oct`;
   if (r === null) {
-    el.verdict.textContent = thirdDate ? 'same job · three dates now!' : 'same job · dates disagree!';
+    el.verdict.textContent = thirdDate ? 'three dates now!' : 'same job · dates disagree!';
+    el.ownerRow.classList.toggle('three', !!thirdDate);
     el.verdict.className = 'mark-text red';
     el.ownerText.innerHTML = '<b>Tanishk owns this.</b> Quorum won\'t pick for him.';
   } else {
