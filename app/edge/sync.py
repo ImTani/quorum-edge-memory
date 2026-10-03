@@ -6,6 +6,7 @@ body bytes. So "offline" is enforced at the wire, and the network monitor is a m
 """
 from __future__ import annotations
 
+import contextlib
 import threading
 import time
 import traceback
@@ -27,10 +28,12 @@ PAYLOAD_INDEXES = {
     "attribute": models.PayloadSchemaType.KEYWORD,
 }
 PUSH_BATCH = 64
+OUTBOX_SCAN = 2000                        # entries read per round to pick the oldest-stamped batch
 PULL_PAGE = 128
 BACKOFF_BASE_S = 0.5
 BACKOFF_MAX_S = 5.0
-STATUS_MIN_INTERVAL_S = 0.5               # `sync` events at most 2/s
+STATUS_MIN_INTERVAL_S = 0.5               # `sync` counter updates at most 2/s
+STATE_FIELDS = ("online", "hub_ok", "outbox", "last_error")
 
 
 class HubOffline(RuntimeError):
@@ -245,11 +248,11 @@ class SyncWorker(threading.Thread):
 
     def push(self) -> int:
         store, memory = self.ctx.store, self.ctx.memory
-        entries = store.outbox_peek(PUSH_BATCH)
+        entries = store.outbox_peek(OUTBOX_SCAN)
         if not entries:
             return 0
         gens = {e["claim_id"]: e["gen"] for e in entries}
-        points, pushed, dropped = [], [], []
+        ready, dropped = [], []
         for entry in entries:
             cid = entry["claim_id"]
             found = memory.get_with_vectors(cid)     # the point as it is *now*, not when enqueued
@@ -260,8 +263,13 @@ class SyncWorker(threading.Thread):
                 dropped.append(cid)                  # privacy invariant: never leaves the device
                 self._activity("sync_push", f"Kept private: {claim.get('entity') or cid} is device-only")
             else:
-                points.append(hub_point(claim, vectors))
-                pushed.append(claim)
+                ready.append((claim, vectors))
+        # Peers pull by `modified_at > cursor`. Sending the oldest stamps first means a peer that
+        # pulls between two batches never moves its cursor past a claim still waiting here.
+        ready.sort(key=lambda cv: (int(cv[0].get("modified_at", 0)), cv[0]["claim_id"]))
+        ready = ready[:PUSH_BATCH]
+        pushed = [claim for claim, _ in ready]
+        points = [hub_point(claim, vectors) for claim, vectors in ready]
         sent = 0
         if points:
             before = self.bytes_up
@@ -302,6 +310,15 @@ class SyncWorker(threading.Thread):
 
         # Oldest first, so a resolution claim lands after the claims it settles.
         records.sort(key=lambda r: (r.payload.get("modified_at", 0), r.payload.get("version", 0)))
+        with self._memory_batch():
+            applied, new_cursor = self._apply_pulled(records, cursor)
+        store.kv_set("pull_cursor", new_cursor)
+        if applied:
+            self._activity("sync_pull", f"Pulled {_plural(applied, 'claim')} from hub")
+        return applied
+
+    def _apply_pulled(self, records: list, cursor: int) -> tuple[int, int]:
+        memory = self.ctx.memory
         conflicts = self._conflicts()
         applied = 0
         new_cursor = cursor
@@ -327,12 +344,14 @@ class SyncWorker(threading.Thread):
                 continue                             # we already have this version or newer
             applied += 1
             self._publish_claim(memory.get(claim["claim_id"]) or claim)
-        store.kv_set("pull_cursor", new_cursor)
-        if applied:
-            self._activity("sync_pull", f"Pulled {_plural(applied, 'claim')} from hub")
-        return applied
+        return applied, new_cursor
 
     # ---- helpers ------------------------------------------------------------------------
+
+    def _memory_batch(self):
+        """One shard flush for the whole pull (the cursor is saved only after it lands)."""
+        batch = getattr(self.ctx.memory, "batch", None)
+        return batch() if batch else contextlib.nullcontext()
 
     def _conflicts(self):
         conflicts = getattr(self.ctx, "conflicts", None)
@@ -366,9 +385,17 @@ class SyncWorker(threading.Thread):
         publish_claim(self.ctx, claim)              # turns the point green (synced) in the UI
 
     def _publish_status(self, force: bool = False) -> None:
+        """Counters (bytes, timestamps) are throttled to 2/s; a state change (online, hub_ok,
+        outbox, last_error) goes out at once, else the header shows "Outbox 1" right after the
+        round that drained it."""
         status = self.status()
         now = time.monotonic()
-        if not force and (status == self._last_published or now - self._last_published_at < STATUS_MIN_INTERVAL_S):
-            return
+        if not force:
+            if status == self._last_published:
+                return
+            last = self._last_published or {}
+            state_changed = any(status[k] != last.get(k) for k in STATE_FIELDS)
+            if not state_changed and now - self._last_published_at < STATUS_MIN_INTERVAL_S:
+                return
         self._last_published, self._last_published_at = status, now
         self.ctx.bus.publish("sync", status)

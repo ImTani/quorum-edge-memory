@@ -315,6 +315,45 @@ def test_version_check_and_resolution_claims(devices):
     assert resolution["claim_id"] not in [cid for cid, _ in b.conflicts.checked]
 
 
+def test_peer_misses_nothing_when_a_push_splits_across_batches(devices, monkeypatch):
+    """More than one batch is queued and an early entry was edited later (newest modified_at).
+    A peer pulling between the two batches must not move its cursor past the second batch."""
+    a, b = devices
+    monkeypatch.setattr(sync_mod, "PUSH_BATCH", 4)
+    a.sync.set_online(False)
+    claims = [capture(a, make_claim("tanishk", f"Checklist item {i} due 9 Oct")) for i in range(6)]
+    a.memory.update_fields(claims[0]["claim_id"], status="retracted")   # e.g. resolve() on an old claim
+    a.store.enqueue(claims[0]["claim_id"])
+    a.sync.set_online(True)
+
+    a.sync.sync_once()                               # batch 1
+    b.sync.sync_once()                               # the peer pulls in between
+    a.sync.sync_once()                               # batch 2
+    b.sync.sync_once()
+    assert a.store.outbox_len() == 0
+    assert [c["claim_id"] for c in claims if b.memory.get(c["claim_id"]) is None] == []
+    assert b.memory.get(claims[0]["claim_id"])["status"] == "retracted"
+
+
+def test_reconnect_status_is_published_as_soon_as_the_round_lands(devices):
+    """set_online(True) publishes hub_ok=False/outbox=1; the round that drains the outbox right
+    after must publish too, not wait out the 2/s throttle."""
+    a, _ = devices
+    a.sync.ensure_collection()                       # as on stage: the round itself is fast
+    a.sync.set_online(False)
+    capture(a, make_claim("tanishk", "Sharma wedding edit due 18 Oct"))
+    a.sync.set_online(True)
+    assert a.bus.of("sync")[-1]["outbox"] == 1
+    a.sync.sync_once()
+    a.sync._publish_status()                         # what run() does after each round
+    last = a.bus.of("sync")[-1]
+    assert (last["hub_ok"], last["outbox"]) == (True, 0)
+
+    published = len(a.bus.of("sync"))
+    a.sync._publish_status()                         # nothing changed: no event
+    assert len(a.bus.of("sync")) == published
+
+
 def test_offline_means_zero_hub_traffic(devices, hub_client, collection):
     a, _ = devices
     a.sync.set_online(False)
