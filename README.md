@@ -27,126 +27,98 @@ Cloud assistants don't help here. They need a connection, and to be useful they 
 
 Each member uses it through a personal assistant built on top of the layer. The **memory layer is the submission**; the assistant is the showcase.
 
-## Architecture
+## Architecture (as built for the online round)
 
 ```mermaid
 flowchart LR
-  L["Laptop A<br/>Edge app + Qdrant Edge"] <-->|sync when online| H["Home server<br/>Qdrant Server + team hub"]
-  T["Laptop B<br/>Edge app + Qdrant Edge"] <-->|sync when online| H
-  P["Phone<br/>(mocked in demo)"] -.-> L
-  G["Gmail"] -->|read-only, cached| L
-  W["WhatsApp export"] --> L
+  L["Tanishk's device<br/>FastAPI + Qdrant Edge shard + SQLite"] <-->|push outbox / pull changes| H["Team hub<br/>Qdrant server"]
+  T["Lakshya's device<br/>FastAPI + Qdrant Edge shard + SQLite"] <-->|push outbox / pull changes| H
+  M["Local model<br/>Ollama llama3.2"] --> L
+  M --> T
 ```
+
+For the online round both devices run on one machine as two separate processes, each with its own Qdrant Edge shard and SQLite file, shown side by side on one demo stage (`/stage`). "Offline" is a per-device switch that blocks that device's hub traffic at the transport; search, extraction and memory keep working. Two laptops with real airplane mode come after the elimination round.
 
 | Component | Runs on | Stack |
 | --- | --- | --- |
-| Edge app shell | Laptop | Tauri (Rust + TypeScript) |
-| Vector memory | Laptop | `qdrant-edge` (Rust crate; Python bindings as fallback) |
-| Embeddings | Laptop | FastEmbed on-device: dense + BM25 sparse for hybrid search |
-| Graph + outbox | Laptop | SQLite: entities, relations, claims, persistent sync queue |
-| Local LLM | Laptop | llama.cpp / Ollama with constrained (grammar/JSON-schema) output |
-| Sync hub | Home server | Qdrant Server (Docker), holding only the *my-devices* and *team* tiers |
+| Device app | Each device | FastAPI per device; vanilla JS UI (`app/web/`), live over SSE |
+| Vector memory | Each device | `qdrant-edge-py` 0.8.0: one Edge shard per device |
+| Embeddings | Each device | FastEmbed `bge-small-en-v1.5` (dense) + Qdrant Edge's built-in BM25 (sparse) |
+| Outbox, conflicts, activity | Each device | SQLite, persistent across restarts |
+| Extraction | Each device | Ollama `llama3.2`, JSON mode with the schema in the prompt and validation in Python; regex fallback; dates resolved in code |
+| Sync hub | Same machine (demo) | Qdrant server 1.19 binary; holds only *team* and *my devices* claims |
+
+Interfaces and as-built notes: [`app/CONTRACT.md`](app/CONTRACT.md). A full walkthrough of the demo and its mechanics is in `docs/WALKTHROUGH.md`.
 
 ## Memory model: claims, not facts
 
-```json
-{
-  "claim_id": "clm_01J...",
-  "entity_id": "task_sharma_edit",
-  "attribute": "due_date",
-  "value": "2026-10-16",
-  "source": {"kind": "email", "ref": "gmail:18f2...", "author": "client:sharma"},
-  "stated_at": "2026-10-03T11:20:00+05:30",
-  "captured_by": "lakshya",
-  "device_id": "dev_lakshya_laptop",
-  "tier": "team",
-  "status": "active",
-  "conflict_id": null,
-  "version": 1
-}
-```
+Every memory is a claim with a source: entity, attribute, value, who said it, who captured it, where and when, tier and status. Superseded claims are kept, so history stays traceable.
 
-- **Graph (SQLite):** Person, Project, Task, Event, Source, with relations OWNS, DUE_ON, ASSIGNED_TO, MENTIONED_IN, ABOUT.
-- **Vectors (Qdrant Edge):** every claim and source message is a point with named vectors (dense + BM25 sparse). Payload carries entity, attribute, tier, status.
-- `status` ∈ `active | disputed | superseded | retracted`. Superseded claims are kept, so history stays traceable.
+Each claim is a Qdrant point with three named vectors:
+
+| Vector | Built from | Used for |
+| --- | --- | --- |
+| `text` | the claim sentence | meaning in hybrid search; position in the memory cloud |
+| `bm25` | the claim sentence | keywords in hybrid search |
+| `key` | entity + attribute, never the value | conflict detection |
 
 ### Qdrant does the conflict detection
-When a new claim arrives, a **hybrid search filtered by attribute and active status** retrieves existing claims about the same thing. A close match with a different value opens a conflict:
-
-> *"Found 2 claims about the Sharma delivery, similarity 0.91. Dates disagree."*
+For every new claim (typed locally or pulled from the hub), a dense nearest-neighbour query on `key`, filtered to the same attribute, live claims and not itself, with a 0.82 threshold, returns claims about the same thing. One with a different value (and a shared distinctive word in the names) opens a conflict. Both devices derive the same conflict id from the pair, so they agree without coordinating. Measured: "Sharma delivery due date" vs "Sharma edit due date" = 0.899; an unrelated deadline = 0.738.
 
 ### Qdrant enforces privacy
-Every search carries a **payload filter on tier**, so shared views can never surface device-only claims.
+Team view adds a payload filter on tier to the Qdrant query. The sync outbox refuses device-only claims, the push step refuses them again, and the pull filter only takes team claims (or my-devices claims I captured).
 
-## Sync tiers
+## Tiers
 
 | Tier | Stored on | Syncs to | Examples |
 | --- | --- | --- | --- |
-| Device only | This device | Nowhere | Personal finances, window titles, friends' private news |
-| My devices | My devices + hub | My other devices | Personal schedule, birthdays |
-| Team | All team devices + hub | Whole team | Client deadlines, deliverables, shoot schedules |
+| Device only | This device | Nowhere | Salary, a friend's private news |
+| My devices | My devices + hub | My other devices | Birthdays, personal schedule |
+| Team | All team devices + hub | Whole team | Client deadlines, deliverables, shoots |
 
-Everything starts **device-only**. A claim moves up a tier only when the local model classifies it that way; anything it's unsure about stays on the device.
-**Up-sync:** dual write, local store plus a persistent outbox drained by a background worker with retries. **Down-sync:** partial snapshots, so only changed segments are sent.
+Everything starts device-only. Rules on the extracted claim decide when it's clearly team work; anything unsure stays on the device, and a follow-up never gets a wider tier than its entity already has.
+**Up-sync:** a persistent outbox drained by a background worker with retries, oldest change first. **Down-sync:** each device scrolls the hub for claims changed since its cursor.
 
 ## Conflict handling
 
-```mermaid
-stateDiagram-v2
-  [*] --> Detected
-  Detected --> Open: both claims marked disputed
-  Open --> Resolved: owner picks or corrects
-  Open --> AskTeammate: owner has not answered
-  AskTeammate --> Resolved: reply confirms a value
-  Resolved --> [*]
-```
-
-- Detected **at ingest** (a new claim contradicts a local one) and **at sync** (claims made on separate offline devices meet for the first time).
-- The **task owner** is asked. While a conflict is open, every answer shows both versions and their sources: *"Disputed. The client's email says the 16th; you said the 18th on set."*
-- If the owner doesn't answer, the assistant offers *"Should I ask Lakshya?"*, drafts the message, and **sends only on yes**.
-- On resolution, the chosen claim becomes active, the other is superseded, and the resolution itself is stored as a claim.
-
-## Proactive behaviours
-
-| Behaviour | Example |
-| --- | --- |
-| Hyperfocus nudge | "You've been on the game project since 2. The Sharma edit is due tomorrow at 10." |
-| Deadline reminder | "Reel cutdowns due Monday. Three, not two, per the client's last message." |
-| Person fact | "Riya's birthday is Thursday." |
-| Pattern | "You usually forget invoices on Fridays. Want a reminder at 4?" |
-
-## Privacy by construction
-
-1. **No leaks through team sync:** tier filters on every Qdrant search.
-2. **Encrypted at rest:** memory, graph and outbox.
-3. **No cloud calls in the private path:** extraction, classification and answers all run on the local model.
-
-## Interface
-
-Memory point cloud (claims in 3D by meaning, coloured local / queued / synced / conflicted) · Assistant panel with cited sources · Memory inspector · Conflict centre (side-by-side evidence + Qdrant similarity) · Sync status · Activity timeline · Live network monitor proving offline operation.
+- Detected **at ingest** and **at sync**, by the same function.
+- The **task owner** resolves. While a conflict is open, answers lead with both versions and their sources: *"Disputed: the client's email says 16 Oct; Tanishk's note from the call says 18 Oct."*
+- A teammate who isn't the owner can draft a message to the owner (email or WhatsApp link); the app never sends anything itself.
+- On resolution the chosen claim stays active, the other is superseded, and a resolution claim syncs so every device applies it.
 
 ## Real vs mocked (we're upfront about this)
 
-| Real | Mocked for the demo |
+| Real | Mocked or not built yet |
 | --- | --- |
-| Qdrant Edge memory + hybrid search on-device | Phone app |
-| Qdrant-driven conflict detection + tier filters | Live WhatsApp notification stream (replayed) |
-| Offline operation on two physical laptops | Screen understanding |
-| Hub sync, persistent outbox, partial snapshots | Task execution beyond reminders/drafts |
-| Conflict ownership + resolution | Long-term pattern learning |
-| Gmail ingest, WhatsApp export parsing, typed notes | Voice (stretch goal) |
+| Qdrant Edge memory + hybrid search on each device | Phone app, live WhatsApp stream, screen understanding |
+| Qdrant-driven conflict detection, at ingest and at sync | Gmail API (a fixture inbox stands in) |
+| Hub sync with a persistent outbox; per-device offline switch | Two physical laptops (one machine for the online round) |
+| Owner resolution that syncs; tier privacy | Partial-snapshot sync, encryption at rest, voice, proactive nudges |
+| Local extraction with sources; cited answers | |
 
 ## Status
 
-🚧 **Round 1 submission: concept, architecture and motion showcase.** The build runs through the hackathon week; see [`docs/ROADMAP.md`](docs/ROADMAP.md).
+**Elimination round MVP:** the two-device demo runs end to end (`scripts/demo.ps1`, checked by `scripts/demo_check.py`); the landing page is in `site/`.
 
 ## Repository layout
 
 | Path | What it is |
 | --- | --- |
-| `docs/ROADMAP.md` | Build plan and cut lines for the hackathon week |
-| `deck/` | Pitch deck (`Quorum-Pitch.pptx`) and the script that generates it (`python make_deck.py`) |
-| `video/` | The showcase film as code: a deterministic HTML/canvas renderer, one file per scene in `video/scenes/`, a synthesized score in `video/audio/` |
+| `app/` | The product: device app (`app/edge`), UI and demo stage (`app/web`), fixtures, tests |
+| `scripts/` | `demo.ps1` (run the demo), `demo_check.py` (end-to-end check), `env.ps1` (repo-local caches), hub fetch |
+| `site/` | The landing page (open `site/index.html`) |
+| `docs/` | `MVP.md` (plan), `ROADMAP.md`, walkthrough |
+| `deck/` | Pitch deck (`Quorum-Pitch.pptx`) and its generator |
+| `video/` | The showcase film as code |
+
+Run the demo (Windows, PowerShell):
+
+```powershell
+.\scripts\fetch_hub.ps1        # once: Qdrant server binary
+.\scripts\demo.ps1             # hub + two seeded devices; prints the stage URL
+app\.venv\Scripts\python scripts\demo_check.py
+.\scripts\demo.ps1 -Stop
+```
 
 To rebuild the film (needs Node, Chrome, ffmpeg and Python with numpy/scipy):
 
