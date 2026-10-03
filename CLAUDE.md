@@ -8,7 +8,8 @@ interfaces are frozen in `app/CONTRACT.md`. Read that before touching `app/`. `d
 - Deps: `. .\scripts\env.ps1; uv pip install -p app\.venv\Scripts\python.exe -r app\requirements.txt`
 - Tests: `app\.venv\Scripts\python -m pytest app\tests -q`
 - Hub binary: `.\scripts\fetch_hub.ps1` (Qdrant server into `app\hub\bin`, gitignored)
-- Full demo: `.\scripts\demo.ps1` (reset + seed + hub + two devices on :8001 / :8002)
+- Full demo: `.\scripts\demo.ps1` (reset + seed + hub + two devices on :8001 / :8002); stop with `-Stop`
+- End-to-end check (right after demo.ps1): `app\.venv\Scripts\python scripts\demo_check.py` (`--until 5` to rehearse)
 - Isolation guard: `.\scripts\check_isolation.ps1`
 
 ## Rules
