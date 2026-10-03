@@ -27,4 +27,4 @@ interfaces are frozen in `app/CONTRACT.md`. Read that before touching `app/`. `d
 4. **Processes.** Anything you start (hub, devices, http servers) you stop before you finish.
    Check ports with `Get-NetTCPConnection -LocalPort <p>`. Windows holds file locks on open
    shards, so stop a device before deleting its data.
-5. **Pitch rules.** Never call it "Jarvis". Never mention ADHD.
+5. **Pitch rules.** Follow the framing rules in the internal brief (kept out of git): lead with the team conflict, not the assistant.

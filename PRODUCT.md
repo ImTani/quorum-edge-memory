@@ -49,7 +49,7 @@ The memory layer is the product; a personal assistant on each device is how memb
 
 - Name: **Quorum**.
 - Lines from the brief: "Your team's memory, on every laptop, even with no signal." · "It reads everything, and nothing leaves unless it's work your team needs." · "When two people disagree about a deadline, it asks instead of guessing."
-- Lead with the team conflict, not the assistant. Never call it "Jarvis". Never mention ADHD.
+- Lead with the team conflict, not the assistant; follow the framing rules in the internal brief.
 - Honesty is part of the brand: state plainly what is mocked.
 
 ## Evidence on Hand

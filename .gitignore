@@ -40,5 +40,3 @@ app/data/
 !.impeccable/design.json
 !.impeccable/surfaces/
 
-# rendered deck PDF (scripts/render_deck_pdf.js); distributed with the submission, not committed
-deck/*.pdf
