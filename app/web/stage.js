@@ -70,7 +70,7 @@ function spotlight(pane, tone) {
 /** "Note said “…”  ->  Sharma wedding edit · due date · 18 Oct" */
 function sourceLine(c) {
   if (!c?.source?.excerpt) return '';
-  const what = `${esc(c.entity)}${ATTR[c.attribute] ? ` · ${esc(ATTR[c.attribute])}` : ''} · <b>${esc(valueOf(c))}</b>`;
+  const what = `${esc(c.entity)}${ATTR[c.attribute] ? `, ${esc(ATTR[c.attribute])}` : ''}: <b>${esc(valueOf(c))}</b>`;
   return `<span class="q-kind">${esc(kindLabel(c.source.kind))}:</span> <q>${esc(quote(c.source.excerpt))}</q>${ARROW}<span class="q-claim">${what}</span>`;
 }
 
@@ -105,7 +105,7 @@ function renderBeats() {
     return `<li class="${st}" title="${n}. ${esc(b.label)}${st === 'done' ? ' (shown)' : ''}"></li>`;
   }).join('');
   $('[data-beat-next]').innerHTML = now
-    ? `<span class="k">Next · ${now} of 8</span> ${esc(BEATS[now - 1].next)}`
+    ? `<span class="k">Next, ${now} of 8:</span> ${esc(BEATS[now - 1].next)}`
     : '<span class="k">Done</span> All 8 beats shown';
 }
 renderBeats();

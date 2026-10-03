@@ -128,6 +128,7 @@ function roundRect(ctx, x, y, w, h, r) {
 /* --------------------------------------------------- ambient galaxy dust */
 // Decorative only: faint, tiny, indigo. Claims are the bright coloured points drawn on top.
 const TINTS = ['#7C8CFF', '#9DB4FF', '#B49CFF', '#8FD3FF', '#C9D2FF', '#6F7CFF', '#A5B4FC'];
+const WASH = ['#8FB4FF', '#FFD86B', '#9FE0C0', '#C6B4FF', '#9FD6FF', '#FFC2A0', '#B8C6FF'];
 const CLUSTERS = [];
 for (let c = 0; c < 7; c++) {
   const a = c / 7 * TAU + rand(c, 11) * 0.6, r = 0.45 + rand(c, 12) * 0.8;
@@ -389,7 +390,8 @@ export class MemoryCloud {
     ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     ctx.clearRect(0, 0, this.w, this.h);
     this.waves = this.waves.filter(w => t - w.t0 < 4);
-    if (!STUDIO) this._drawDust(ctx, t, cam, focused);   // no starfield in the light scene
+    if (STUDIO) this._drawBoard(ctx, t, cam, focused);   // whiteboard: washes, specks, sketched links
+    else this._drawDust(ctx, t, cam, focused);
     const proj = this._drawClaims(ctx, t, dt, cam);
     this._drawConflicts(ctx, t, proj);
     this.opts.onFrame?.(id => this.screen.get(id) || null);
@@ -429,6 +431,65 @@ export class MemoryCloud {
     ctx.globalAlpha = 1;
   }
 
+  /** Studio look: the nebula as a whiteboard. Dry-erase colour washes per cluster (multiply, so they
+   *  read on white), faint marker specks for the dust, and thin ink links from each claim to its
+   *  nearest neighbours, like a mind map sketched around the claims. */
+  _drawBoard(ctx, t, cam, focused) {
+    const aOp = focused ? 0.55 : 0.8;
+    const a = this.cam.angle, ca = Math.cos(a), sa = Math.sin(a);
+    const rot = (x, y, z) => [x * ca + z * sa, y, -x * sa + z * ca];
+    ctx.globalCompositeOperation = 'multiply';
+    for (let c = 0; c < CLUSTERS.length; c++) {
+      const C = CLUSTERS[c];
+      for (let b = 0; b < 3; b++) {
+        const lx = C.x + (rand(c * 3 + b, 21) - 0.5) * C.s, ly = C.y + (rand(c * 3 + b, 22) - 0.5) * C.s * 0.5, lz = C.z + (rand(c * 3 + b, 23) - 0.5) * C.s;
+        const pr = this._project(cam, rot(lx, ly, lz)); if (!pr.vis) continue;
+        const R = C.s * (2.6 + b * 0.9) * pr.s;
+        ctx.globalAlpha = clamp(aOp * 0.16 * this._fog(cam, pr.z) * (1 + 0.12 * Math.sin(t * 0.4 + c + b)));
+        ctx.drawImage(glowSprite(WASH[c % WASH.length]), pr.x - R, pr.y - R, 2 * R, 2 * R);
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    for (let i = 0; i < DUST.length; i += 2) {
+      const q = DUST[i];
+      const lx = q.x + 0.018 * Math.sin(t * 0.31 + q.ph), ly = q.y + 0.014 * Math.sin(t * 0.23 + q.ph * 1.7), lz = q.z + 0.018 * Math.cos(t * 0.27 + q.ph);
+      const pr = this._project(cam, rot(lx, ly, lz)); if (!pr.vis) continue;
+      if (pr.x < -10 || pr.x > this.w + 10 || pr.y < -10 || pr.y > this.h + 10) continue;
+      ctx.globalAlpha = clamp(aOp * 0.22 * q.bright * this._fog(cam, pr.z));
+      ctx.fillStyle = '#7A8294';
+      const r = Math.max(0.6, 0.006 * q.size * pr.s);
+      ctx.beginPath(); ctx.ellipse(pr.x, pr.y, r * 1.3, r * 0.8, q.ph, 0, TAU); ctx.fill();
+    }
+    // sketched links between nearby claims
+    const pts = [];
+    for (const n of this.nodes.values()) {
+      if (!this._visible(n.claim) || n.vis < 0.2) continue;
+      const pr = this._project(cam, this._world(n.pos)); if (!pr.vis) continue;
+      pts.push({ n, pr });
+    }
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = INK;
+    const seen = new Set();
+    for (const A of pts) {
+      const near = pts.filter(B => B !== A)
+        .map(B => [B, len3(sub3(A.n.pos, B.n.pos))])
+        .sort((x, y) => x[1] - y[1]).slice(0, 2);
+      for (const [B, d] of near) {
+        const key = A.n.id < B.n.id ? A.n.id + '|' + B.n.id : B.n.id + '|' + A.n.id;
+        if (seen.has(key) || d > 0.9) continue;
+        seen.add(key);
+        const mx = (A.pr.x + B.pr.x) / 2, my = (A.pr.y + B.pr.y) / 2;
+        const bend = 0.08 * Math.hypot(B.pr.x - A.pr.x, B.pr.y - A.pr.y) * (rand(key.length, 31) - 0.5);
+        ctx.globalAlpha = clamp(0.16 * Math.min(A.n.vis, B.n.vis) * (1 - d / 0.9) * aOp + 0.04);
+        ctx.lineWidth = 1.1;
+        ctx.beginPath(); ctx.moveTo(A.pr.x, A.pr.y);
+        ctx.quadraticCurveTo(mx - (B.pr.y - A.pr.y) / Math.hypot(B.pr.x - A.pr.x, B.pr.y - A.pr.y || 1) * bend, my + (B.pr.x - A.pr.x) / Math.hypot(B.pr.x - A.pr.x || 1, B.pr.y - A.pr.y) * bend, B.pr.x, B.pr.y);
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   _drawClaims(ctx, t, dt, cam) {
     this.screen = new Map();
     const proj = new Map(), labels = [];
@@ -456,6 +517,9 @@ export class MemoryCloud {
       const a = n.vis * fog * (superseded ? 0.45 : 1);
       const R = Math.max(3.2, 0.034 * size * pr.s) * born * beat * (1 + 0.35 * waveB) * (sel ? 1.25 : 1);
       if (STUDIO) {
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.globalAlpha = clamp(a * (disputed ? 0.5 : 0.32) * (1 + flash));
+        ctx.drawImage(glowSprite(color), pr.x - R * 3.4, pr.y - R * 3.4, R * 6.8, R * 6.8);
         drawFlat(ctx, pr.x, pr.y, R * 1.15 * (1 + 0.25 * flash), color, a, disputed);
       } else {
         drawGlow(ctx, pr.x, pr.y, R * (disputed ? 7 : 4.6) * (1 + flash * 0.9), color, a * (0.5 + flash + waveB * 0.5 + (hl ? 0.35 : 0)), false);

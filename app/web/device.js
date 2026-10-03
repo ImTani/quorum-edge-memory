@@ -99,7 +99,7 @@ function markup(stage) {
         ${stage ? '' : '<div class="mark" aria-hidden="true"><span>Q</span></div>'}
         <div class="brand-text">
           <div class="device-name" data-el="device-name">Quorum</div>
-          <div class="device-sub"><span data-el="live" class="live connecting" title="Live updates from this device">Connecting…</span><span class="sep">·</span>edge node · Qdrant Edge</div>
+          <div class="device-sub"><span data-el="live" class="live connecting" title="Live updates from this device">Connecting…</span><span class="node-kind">Qdrant Edge node</span></div>
         </div>
       </div>
 
@@ -227,7 +227,7 @@ export function createDeviceUI(root, opts = {}) {
         return { label: valueOf(c), sub: `${kindLabel(c.source?.kind)} · ${prettyAuthor(c.source?.author)}` };
       }
       const st = claimState(c);
-      const where = { private: 'private · stays on this device', queued: 'queued · in outbox', synced: 'synced' }[st] || st;
+      const where = { private: 'private, stays on this device', queued: 'queued in the outbox', synced: 'synced' }[st] || st;
       return { label: valueOf(c).length > 26 ? c.entity : valueOf(c), sub: `${kindLabel(c.source?.kind)} · ${where}` };
     },
   });
@@ -242,7 +242,7 @@ export function createDeviceUI(root, opts = {}) {
     cloud.setConflicts([...state.conflicts.values()]);
     if (!state.cardConflictId || !state.conflicts.has(state.cardConflictId)) state.cardConflictId = latestConflictId();
     applySync(s.sync, { quiet: true });
-    if (opts.title !== false && !stage) document.title = `${state.displayName} · Quorum`;
+    if (opts.title !== false && !stage) document.title = `${state.displayName.replace(' · ', ', ')} | Quorum`;
     renderAll();
     emit({ type: 'hydrate', state });
   }
@@ -356,7 +356,7 @@ export function createDeviceUI(root, opts = {}) {
   function renderHeader() {
     const s = state.sync || {};
     const [first, ...rest] = (state.displayName || 'Quorum').split('·');
-    el('device-name').innerHTML = `<b>${esc(first.trim())}</b>${rest.length ? `<span> · ${esc(rest.join('·').trim())}</span>` : ''}`;
+    el('device-name').innerHTML = `<b>${esc(first.trim())}</b>${rest.length ? `<span class="role">${esc(rest.join(' ').trim())}</span>` : ''}`;
     const online = !!s.online, known = !!state.sync;
     const sw = el('hub-switch');
     sw.classList.toggle('on', known && online); sw.classList.toggle('off', known && !online); sw.classList.toggle('unknown', !known);
@@ -400,8 +400,8 @@ export function createDeviceUI(root, opts = {}) {
     const team = state.view === 'team';
     el('cloud-title').textContent = team ? 'Team view' : 'Memory';
     el('cloud-subtitle').textContent = team
-      ? `${vis.length} team claims · private and personal ones hidden`
-      : `${vis.length} claims on this device · each point is one claim`;
+      ? `${vis.length} team claims, private ones hidden`
+      : `${vis.length} claims on this device, one point each`;
   }
 
   const viewButtons = () => root.querySelectorAll('.view-toggle button');
@@ -470,13 +470,13 @@ export function createDeviceUI(root, opts = {}) {
     const subject = cf.entity ? (lead.entity === cf.entity ? entityPhrase(lead) : `the ${cf.entity}`) : entityPhrase(lead);
 
     const title = resolved
-      ? `Resolved: <b>${esc(valueOf(winner))}</b> for ${esc(subject)}<span class="by"> · chosen by ${esc(isMe(cf.resolved_by) ? 'you' : nameOf(cf.resolved_by))}</span>`
+      ? `Resolved: <b>${esc(valueOf(winner))}</b> for ${esc(subject)}<span class="by">, chosen by ${esc(isMe(cf.resolved_by) ? 'you' : nameOf(cf.resolved_by))}</span>`
       : `Found 2 claims about <b>${esc(subject)}</b>, similarity <span class="sim">${sim}</span>. ${esc(ATTR_PLURAL[cf.attribute] || 'Values')} disagree.`;
 
     const cols = claims.map(c => {
       const isWinner = resolved && c.claim_id === cf.winner_claim_id, isLoser = resolved && !isWinner;
       const action = resolved
-        ? `<span class="verdict ${isWinner ? 'kept' : 'lost'}">${isWinner ? '✓ Kept' : 'Superseded · kept for history'}</span>`
+        ? `<span class="verdict ${isWinner ? 'kept' : 'lost'}">${isWinner ? '✓ Kept' : 'Superseded, kept for history'}</span>`
         : owner ? `<button class="btn keep" data-keep="${esc(c.claim_id)}">Keep ${esc(valueOf(c))}</button>` : '';
       return `
         <div class="cf-col ${isWinner ? 'winner' : ''} ${isLoser ? 'loser' : ''}">
@@ -510,7 +510,7 @@ export function createDeviceUI(root, opts = {}) {
 
     card.className = `conflict-card ${resolved ? 'resolved' : 'open'} ${draftHtml ? 'with-draft' : ''}`;
     card.innerHTML = `
-      <div class="cf-kicker">${resolved ? 'Conflict resolved' : `Conflict · detected on ${esc(cf.detected_on === 'sync' ? 'sync' : 'capture')}`}<span class="cf-time">${esc(fmtClock(cf.detected_at))}</span>
+      <div class="cf-kicker">${resolved ? 'Conflict resolved' : `Conflict found on ${esc(cf.detected_on === 'sync' ? 'sync' : 'capture')}`}<span class="cf-time">${esc(fmtClock(cf.detected_at))}</span>
         ${kickerNote}${resolved ? '' : '<button class="x" data-action="dismiss" title="Hide (the conflict stays open)">×</button>'}</div>
       <div class="cf-title">${title}</div>
       <div class="cf-cols">${cols}</div>
@@ -529,7 +529,7 @@ export function createDeviceUI(root, opts = {}) {
       pill.addEventListener('click', () => { state.cardConflictId = latestConflictId(); state.dismissed.delete(state.cardConflictId); renderConflictCard(); });
       el('cloud-wrap').appendChild(pill);
     }
-    pill.innerHTML = `${openCount} open conflict${openCount > 1 ? 's' : ''} · show`;
+    pill.innerHTML = `Show ${openCount} open conflict${openCount > 1 ? 's' : ''}`;
   }
 
   /** While the card is up, the cloud row grows and the projection centre moves above the card. */

@@ -344,3 +344,6 @@ main.grid.focus .answer-text { font-size: 16px; }
 #mock-strip .mock-tag { font: 600 11px var(--mono); color: var(--indigo); margin-right: 4px; }
 #mock-strip button { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line); background: transparent; color: var(--sub); font: 600 12px var(--mono); cursor: pointer; padding: 0; }
 #mock-strip button.done { color: var(--green); border-color: rgba(34,197,94,.45); }
+
+.device-name .role { margin-left: 10px; }
+.device-sub .node-kind { margin-left: 10px; }
