@@ -144,8 +144,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tray .eraser:hover + svg .eraser-g, .tray .eraser:focus-visible + svg .eraser-g { transform: translate(118px, 16px) rotate(1deg); }
 .eraser-g { transition: transform .25s var(--ease-out); }
 
-/* hand-drawn wobble: one filter; board.js steps its seed for the boil */
-.boil { filter: url(#boil); }
+/* the boil is vector: board.js cycles redrawn paths and sub-pixel wobble (no raster filter) */
 
 @media (prefers-reduced-motion: reduce) {
   .sticky, .loop path, .gauge .needle, .owner, .pad, .btn { transition: none !important; }

@@ -6,22 +6,14 @@
   <title>Quorum · your team's memory, on every laptop</title>
   <meta name="description" content="Quorum is offline-first team memory on Qdrant Edge. Every note becomes a claim with a source; when two teammates' claims disagree, it asks the owner instead of guessing.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 3h26v21l-5 5H3z' fill='%23ffe14d' transform='rotate(-7 16 16)'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' font-family='Comic Sans MS,cursive' font-weight='700'%3EQ%3C/text%3E%3C/svg%3E">
-  <link rel="preload" href="fonts/schibsted-grotesk-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/shantell-sans-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
   <svg class="boil-defs" aria-hidden="true" focusable="false">
-    <filter id="boil" x="-5%" y="-10%" width="110%" height="120%">
-      <feTurbulence id="boil-noise" type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="4"/>
-      <feDisplacementMap in="SourceGraphic" scale="2.4"/>
-    </filter>
-    <filter id="dry" x="-5%" y="-40%" width="110%" height="180%">
+    <filter id="dry" x="-2%" y="-40%" width="104%" height="180%" color-interpolation-filters="sRGB">
       <feTurbulence type="fractalNoise" baseFrequency="0.9 0.06" numOctaves="2" seed="3" result="n"/>
-      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.55" result="streak"/>
-      <feComposite in="SourceGraphic" in2="streak" operator="in" result="s"/>
-      <feTurbulence id="dry-noise" type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/>
-      <feDisplacementMap in="s" scale="2.2"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.2 1.45" result="streak"/>
+      <feComposite in="SourceGraphic" in2="streak" operator="in"/>
     </filter>
   </svg>
 

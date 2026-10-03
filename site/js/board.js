@@ -5,21 +5,55 @@
 const $ = (id) => document.getElementById(id);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ---------- line boil: step the turbulence seed like hand-drawn animation (~7 fps) ----------
-const noise = [$('boil-noise'), $('dry-noise')];
-if (!reduceMotion) {
-  const seeds = [4, 9, 15, 22];
+// ---------- line boil: crisp, vector, subtle ----------
+// Hand-drawn animation redraws a line a few times and cycles the drawings. Each marker path gets
+// three slightly jittered variants of its own coordinates, swapped ~7 times a second; handwriting
+// and notes get a sub-pixel wobble through the translate/rotate properties (which compose with
+// their existing tilt). Nothing is rasterised, so it stays sharp at any zoom.
+const BOIL_MS = 140;
+const PATH_AMP = 0.45;   // in each drawing's own viewBox units
+const TEXT_AMP = 0.3;    // px
+const ROT_AMP = 0.25;    // deg
+
+function jitterPath(d, amp, seed) {
   let i = 0;
+  const rand = () => { const x = Math.sin(seed * 9301 + (i++) * 49297) * 233280; return x - Math.floor(x); };
+  return d.replace(/-?\d*\.?\d+(?:e-?\d+)?/gi, (n) => (parseFloat(n) + (rand() * 2 - 1) * amp).toFixed(2));
+}
+
+function setupBoil() {
+  if (reduceMotion) return;
+  const paths = [...document.querySelectorAll('svg.boil path, g.boil path, .sticky .strike path')]
+    .filter((p) => !p.closest('.lock') && !/[aA]/.test(p.getAttribute('d') || ''));
+  const frames = paths.map((p, k) => {
+    const d = p.getAttribute('d');
+    return [d, jitterPath(d, PATH_AMP, k + 1), jitterPath(d, PATH_AMP, k + 101)];
+  });
+  const texts = [...document.querySelectorAll('svg text')].filter((t) => t.closest('.boil'));
+  const blocks = () => document.querySelectorAll('.boil:not(svg):not(g)');
+  let frame = 0;
   let last = 0;
-  const step = (t) => {
-    if (t - last > 140) {
-      i = (i + 1) % seeds.length;
-      noise.forEach((n, k) => n && n.setAttribute('seed', String(seeds[i] + k * 3)));
+  const tick = (t) => {
+    if (t - last >= BOIL_MS && !document.hidden) {
       last = t;
+      frame = (frame + 1) % 3;
+      paths.forEach((p, k) => p.setAttribute('d', frames[k][frame]));
+      texts.forEach((el, k) => {
+        const s = Math.sin((k + 1) * 12.9898 + frame * 78.233) * 43758.5453;
+        el.style.translate = `${((s - Math.floor(s)) * 2 - 1) * TEXT_AMP}px 0`;
+      });
+      blocks().forEach((el, k) => {
+        const a = Math.sin((k + 1) * 12.9898 + frame * 78.233) * 43758.5453;
+        const b = Math.sin((k + 7) * 4.1414 + frame * 39.425) * 24634.6345;
+        const c = Math.sin((k + 3) * 7.7777 + frame * 11.11) * 12345.678;
+        const r = (v) => (v - Math.floor(v)) * 2 - 1;
+        el.style.translate = `${(r(a) * TEXT_AMP).toFixed(2)}px ${(r(b) * TEXT_AMP).toFixed(2)}px`;
+        el.style.rotate = `${(r(c) * ROT_AMP).toFixed(3)}deg`;
+      });
     }
-    requestAnimationFrame(step);
+    requestAnimationFrame(tick);
   };
-  requestAnimationFrame(step);
+  requestAnimationFrame(tick);
 }
 
 // ---------- board state ----------
@@ -236,3 +270,4 @@ fitAll();
 
 setSimilarity(0.90);
 render();
+setupBoil();
