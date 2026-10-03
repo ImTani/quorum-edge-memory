@@ -1,0 +1,8 @@
+qdrant-edge-py==0.8.0
+qdrant-client==1.15.1
+fastembed==0.7.3
+fastapi==0.116.1
+uvicorn==0.35.0
+httpx==0.28.1
+numpy
+pytest

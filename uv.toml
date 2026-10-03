@@ -1,0 +1,12 @@
+# Isolation, first line of defence: every uv cache lives in this repo (CLAUDE.md, "Isolation").
+# SINGLE quotes: a TOML basic string would read `\P` and `\c` as escapes and uv would reject the
+# whole file, silently falling back to a global cache. Absolute, because a relative cache-dir
+# resolves against the current directory, not this file. It points at the MAIN checkout so every
+# git worktree shares one cache, and the cache outlives any worktree.
+#
+# This machine exports UV_CACHE_DIR globally, and the env var beats this file. Source
+# scripts/env.ps1 (PowerShell) or scripts/env.sh (bash) first; they override it.
+cache-dir = 'X:\Projects_X\code_cubicle_6\.cache\uv'
+# Use the installed Python 3.12; never download interpreters into %APPDATA%\uv\python.
+python-downloads = 'never'
+python-preference = 'only-system'
