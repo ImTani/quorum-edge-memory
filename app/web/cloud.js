@@ -435,7 +435,7 @@ export class MemoryCloud {
    *  read on white), faint marker specks for the dust, and thin ink links from each claim to its
    *  nearest neighbours, like a mind map sketched around the claims. */
   _drawBoard(ctx, t, cam, focused) {
-    const aOp = focused ? 0.55 : 0.8;
+    const aOp = focused ? 0.8 : 1;
     const a = this.cam.angle, ca = Math.cos(a), sa = Math.sin(a);
     const rot = (x, y, z) => [x * ca + z * sa, y, -x * sa + z * ca];
     ctx.globalCompositeOperation = 'multiply';
@@ -445,18 +445,18 @@ export class MemoryCloud {
         const lx = C.x + (rand(c * 3 + b, 21) - 0.5) * C.s, ly = C.y + (rand(c * 3 + b, 22) - 0.5) * C.s * 0.5, lz = C.z + (rand(c * 3 + b, 23) - 0.5) * C.s;
         const pr = this._project(cam, rot(lx, ly, lz)); if (!pr.vis) continue;
         const R = C.s * (2.6 + b * 0.9) * pr.s;
-        ctx.globalAlpha = clamp(aOp * 0.16 * this._fog(cam, pr.z) * (1 + 0.12 * Math.sin(t * 0.4 + c + b)));
+        ctx.globalAlpha = clamp(aOp * 0.34 * this._fog(cam, pr.z) * (1 + 0.12 * Math.sin(t * 0.4 + c + b)));
         ctx.drawImage(glowSprite(WASH[c % WASH.length]), pr.x - R, pr.y - R, 2 * R, 2 * R);
       }
     }
     ctx.globalCompositeOperation = 'source-over';
-    for (let i = 0; i < DUST.length; i += 2) {
+    for (let i = 0; i < DUST.length; i += 1) {
       const q = DUST[i];
       const lx = q.x + 0.018 * Math.sin(t * 0.31 + q.ph), ly = q.y + 0.014 * Math.sin(t * 0.23 + q.ph * 1.7), lz = q.z + 0.018 * Math.cos(t * 0.27 + q.ph);
       const pr = this._project(cam, rot(lx, ly, lz)); if (!pr.vis) continue;
       if (pr.x < -10 || pr.x > this.w + 10 || pr.y < -10 || pr.y > this.h + 10) continue;
-      ctx.globalAlpha = clamp(aOp * 0.22 * q.bright * this._fog(cam, pr.z));
-      ctx.fillStyle = '#7A8294';
+      ctx.globalAlpha = clamp(aOp * 0.42 * q.bright * this._fog(cam, pr.z));
+      ctx.fillStyle = '#5E6678';
       const r = Math.max(0.6, 0.006 * q.size * pr.s);
       ctx.beginPath(); ctx.ellipse(pr.x, pr.y, r * 1.3, r * 0.8, q.ph, 0, TAU); ctx.fill();
     }
@@ -480,8 +480,8 @@ export class MemoryCloud {
         seen.add(key);
         const mx = (A.pr.x + B.pr.x) / 2, my = (A.pr.y + B.pr.y) / 2;
         const bend = 0.08 * Math.hypot(B.pr.x - A.pr.x, B.pr.y - A.pr.y) * (rand(key.length, 31) - 0.5);
-        ctx.globalAlpha = clamp(0.16 * Math.min(A.n.vis, B.n.vis) * (1 - d / 0.9) * aOp + 0.04);
-        ctx.lineWidth = 1.1;
+        ctx.globalAlpha = clamp(0.34 * Math.min(A.n.vis, B.n.vis) * (1 - d / 0.9) * aOp + 0.1);
+        ctx.lineWidth = 1.4;
         ctx.beginPath(); ctx.moveTo(A.pr.x, A.pr.y);
         ctx.quadraticCurveTo(mx - (B.pr.y - A.pr.y) / Math.hypot(B.pr.x - A.pr.x, B.pr.y - A.pr.y || 1) * bend, my + (B.pr.x - A.pr.x) / Math.hypot(B.pr.x - A.pr.x || 1, B.pr.y - A.pr.y) * bend, B.pr.x, B.pr.y);
         ctx.stroke();
@@ -518,7 +518,7 @@ export class MemoryCloud {
       const R = Math.max(3.2, 0.034 * size * pr.s) * born * beat * (1 + 0.35 * waveB) * (sel ? 1.25 : 1);
       if (STUDIO) {
         ctx.globalCompositeOperation = 'multiply';
-        ctx.globalAlpha = clamp(a * (disputed ? 0.5 : 0.32) * (1 + flash));
+        ctx.globalAlpha = clamp(a * (disputed ? 0.75 : 0.55) * (1 + flash));
         ctx.drawImage(glowSprite(color), pr.x - R * 3.4, pr.y - R * 3.4, R * 6.8, R * 6.8);
         drawFlat(ctx, pr.x, pr.y, R * 1.15 * (1 + 0.25 * flash), color, a, disputed);
       } else {
