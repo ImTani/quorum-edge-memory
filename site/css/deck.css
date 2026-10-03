@@ -180,3 +180,5 @@ h2.tight { margin-bottom: 30px; font-size: 44px; }
 .toc-deep { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 26px; align-items: baseline; font-size: 19px; }
 .toc-deep b { font: 600 21px var(--hand); color: var(--red); margin-right: 4px; }
 .toc-deep a { color: var(--ink-2); text-underline-offset: 4px; }
+
+.arch-note { position: absolute; left: 112px; top: 836px; max-width: 1060px; font-size: 16px; line-height: 1.4; color: var(--ink-3); }

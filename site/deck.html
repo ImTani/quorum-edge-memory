@@ -26,7 +26,7 @@
       <nav class="toc">
         <a href="#3"><b>The problem</b><span>why field teams lose track</span></a>
         <a href="#4"><b>What Quorum does</b><span>four things, in one line each</span></a>
-        <a href="#5"><b>How it works</b><span>two laptops and a hub</span></a>
+        <a href="#5"><b>How it works</b><span>interactive architecture</span></a>
         <a href="#6"><b>A claim</b><span>memory with a source</span></a>
         <a href="#7"><b>Catching conflicts</b><span>the Qdrant query</span></a>
         <a href="#8"><b>Sync and offline</b><span>outbox, cursor, switch</span></a>
@@ -37,7 +37,7 @@
         <a href="#13"><b>FAQ: limits</b><span>scale, clocks, dates</span></a>
         <a href="#14"><b>What's next</b><span>after this round</span></a>
       </nav>
-      <p class="toc-deep"><b>deep dive</b><a href="#15">architecture (interactive)</a><a href="#16">module map</a><a href="#17">capture pipeline</a><a href="#18">search</a><a href="#19">conflict engine</a><a href="#20">sync engine</a><a href="#21">data model</a><a href="#22">failure handling</a><a href="#23">trade-offs</a></p>
+      <p class="toc-deep"><b>deep dive</b><a href="#5">architecture (interactive)</a><a href="#15">module map</a><a href="#16">capture pipeline</a><a href="#17">search</a><a href="#18">conflict engine</a><a href="#19">sync engine</a><a href="#20">data model</a><a href="#21">failure handling</a><a href="#22">trade-offs</a></p>
     </section>
 
     <!-- 3 -->
@@ -62,17 +62,47 @@
       </div>
     </section>
 
-    <!-- 5 -->
-    <section class="slide" data-title="How it works">
-      <h2>Two edge nodes and a team hub.</h2>
-      <div class="arch">
-        <div class="node"><p class="tape">Tanishk's laptop</p><ul><li>FastAPI device app</li><li>Qdrant Edge shard</li><li>SQLite outbox</li><li>Local model (Ollama)</li></ul></div>
-        <div class="link"><span class="hand">push outbox</span><span class="hand">pull changes</span></div>
-        <div class="node hub"><p class="tape">Team hub</p><ul><li>Qdrant server</li><li>Team claims only</li><li>Stores, computes nothing</li></ul></div>
-        <div class="link"><span class="hand">push outbox</span><span class="hand">pull changes</span></div>
-        <div class="node"><p class="tape">Lakshya's laptop</p><ul><li>FastAPI device app</li><li>Qdrant Edge shard</li><li>SQLite outbox</li><li>Local model (Ollama)</li></ul></div>
+    <!-- 5: interactive architecture -->
+    <section class="slide arch-slide" data-title="Architecture (interactive)">
+      <h2 class="tight">How the system fits together.</h2>
+      <div class="flows" role="toolbar" aria-label="Flows">
+        <button type="button" data-flow="capture">Capture a note</button>
+        <button type="button" data-flow="ask">Ask a question</button>
+        <button type="button" data-flow="sync">Sync and conflict</button>
+        <button type="button" data-flow="resolve">Resolve</button>
       </div>
-      <p class="small">For this round both laptops run on one machine as separate processes with their own shards. "Offline" is a per-device switch that blocks hub traffic at the transport; everything else keeps running.</p>
+      <div class="diagram" id="diagram">
+        <div class="frame-a"><p class="tape">Tanishk's device · one Python process</p></div>
+        <svg class="edges" viewBox="0 0 1600 900" aria-hidden="true">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3b4150"/></marker></defs>
+          <path class="edge" data-e="ui-api" d="M280 318 L280 352"/>
+          <path class="edge" data-e="api-extract" d="M280 422 L280 456"/>
+          <path class="edge" data-e="extract-ollama" d="M280 526 L280 560"/>
+          <path class="edge" data-e="api-answer" d="M134 387 C 108 387, 108 705, 134 705"/>
+          <path class="edge" data-e="api-memory" d="M426 380 L 504 380"/>
+          <path class="edge" data-e="api-conflicts" d="M426 400 C 466 400, 466 508, 504 508"/>
+          <path class="edge" data-e="api-store" d="M426 410 C 476 410, 450 616, 504 616"/>
+          <path class="edge" data-e="memory-conflicts" d="M654 432 L654 474"/>
+          <path class="edge" data-e="conflicts-store" d="M654 542 L654 582"/>
+          <path class="edge" data-e="sync-store" d="M654 700 L654 650"/>
+          <path class="edge" data-e="sync-memory" d="M804 735 C 846 735, 846 382, 804 382"/>
+          <path class="edge" data-e="sync-hub" d="M804 750 C 860 750, 880 650, 924 640"/>
+          <path class="edge" data-e="lakshya-hub" d="M1044 452 L1044 566"/>
+        </svg>
+        <button class="comp" data-c="ui" style="left:134px;top:248px;width:292px;height:70px"><b>Browser UI</b><span>stage · cloud · SSE</span></button>
+        <button class="comp" data-c="api" style="left:134px;top:352px;width:292px;height:70px"><b>FastAPI device app</b><span>routes · ctx · event bus</span></button>
+        <button class="comp" data-c="extract" style="left:134px;top:456px;width:292px;height:70px"><b>Extractor</b><span>text → claim drafts</span></button>
+        <button class="comp" data-c="ollama" style="left:134px;top:560px;width:292px;height:62px"><b>Ollama · llama3.2</b><span>localhost</span></button>
+        <button class="comp" data-c="answer" style="left:134px;top:672px;width:292px;height:66px"><b>Answers</b><span>templated, cited</span></button>
+        <button class="comp mem" data-c="memory" style="left:504px;top:342px;width:300px;height:90px"><b>Memory</b><span>Qdrant Edge shard · text / key / bm25</span></button>
+        <button class="comp" data-c="conflicts" style="left:504px;top:474px;width:300px;height:68px"><b>Conflict engine</b><span>check · resolve · apply</span></button>
+        <button class="comp" data-c="store" style="left:504px;top:582px;width:300px;height:68px"><b>Store · SQLite</b><span>outbox · conflicts · cursor</span></button>
+        <button class="comp" data-c="sync" style="left:504px;top:700px;width:300px;height:80px"><b>Sync worker</b><span>push · pull · transport hook</span></button>
+        <button class="comp hub" data-c="hub" style="left:924px;top:566px;width:240px;height:130px"><b>Team hub</b><span>Qdrant server · quorum_team</span></button>
+        <button class="comp peer" data-c="lakshya" style="left:924px;top:332px;width:240px;height:120px"><b>Lakshya's device</b><span>same stack, own shard</span></button>
+        <aside class="info" id="arch-info" aria-live="polite"></aside>
+      </div>
+      <p class="arch-note">For this round both laptops run on one machine as separate processes, each with its own shard. "Offline" is a per-device switch that cuts hub traffic at the transport; everything else keeps running.</p>
     </section>
 
     <!-- 6 -->
@@ -192,47 +222,6 @@
       <p class="hand blue bottom-line">Thank you. Ask us anything.</p>
     </section>
 
-    <!-- 15: interactive architecture -->
-    <section class="slide arch-slide" data-title="Architecture (interactive)">
-      <h2 class="tight">How the system fits together.</h2>
-      <div class="flows" role="toolbar" aria-label="Flows">
-        <button type="button" data-flow="capture">Capture a note</button>
-        <button type="button" data-flow="ask">Ask a question</button>
-        <button type="button" data-flow="sync">Sync and conflict</button>
-        <button type="button" data-flow="resolve">Resolve</button>
-      </div>
-      <div class="diagram" id="diagram">
-        <div class="frame-a"><p class="tape">Tanishk's device · one Python process</p></div>
-        <svg class="edges" viewBox="0 0 1600 900" aria-hidden="true">
-          <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3b4150"/></marker></defs>
-          <path class="edge" data-e="ui-api" d="M280 318 L280 352"/>
-          <path class="edge" data-e="api-extract" d="M280 422 L280 456"/>
-          <path class="edge" data-e="extract-ollama" d="M280 526 L280 560"/>
-          <path class="edge" data-e="api-answer" d="M134 387 C 108 387, 108 705, 134 705"/>
-          <path class="edge" data-e="api-memory" d="M426 380 L 504 380"/>
-          <path class="edge" data-e="api-conflicts" d="M426 400 C 466 400, 466 508, 504 508"/>
-          <path class="edge" data-e="api-store" d="M426 410 C 476 410, 450 616, 504 616"/>
-          <path class="edge" data-e="memory-conflicts" d="M654 432 L654 474"/>
-          <path class="edge" data-e="conflicts-store" d="M654 542 L654 582"/>
-          <path class="edge" data-e="sync-store" d="M654 700 L654 650"/>
-          <path class="edge" data-e="sync-memory" d="M804 735 C 846 735, 846 382, 804 382"/>
-          <path class="edge" data-e="sync-hub" d="M804 750 C 860 750, 880 650, 924 640"/>
-          <path class="edge" data-e="lakshya-hub" d="M1044 452 L1044 566"/>
-        </svg>
-        <button class="comp" data-c="ui" style="left:134px;top:248px;width:292px;height:70px"><b>Browser UI</b><span>stage · cloud · SSE</span></button>
-        <button class="comp" data-c="api" style="left:134px;top:352px;width:292px;height:70px"><b>FastAPI device app</b><span>routes · ctx · event bus</span></button>
-        <button class="comp" data-c="extract" style="left:134px;top:456px;width:292px;height:70px"><b>Extractor</b><span>text → claim drafts</span></button>
-        <button class="comp" data-c="ollama" style="left:134px;top:560px;width:292px;height:62px"><b>Ollama · llama3.2</b><span>localhost</span></button>
-        <button class="comp" data-c="answer" style="left:134px;top:672px;width:292px;height:66px"><b>Answers</b><span>templated, cited</span></button>
-        <button class="comp mem" data-c="memory" style="left:504px;top:342px;width:300px;height:90px"><b>Memory</b><span>Qdrant Edge shard · text / key / bm25</span></button>
-        <button class="comp" data-c="conflicts" style="left:504px;top:474px;width:300px;height:68px"><b>Conflict engine</b><span>check · resolve · apply</span></button>
-        <button class="comp" data-c="store" style="left:504px;top:582px;width:300px;height:68px"><b>Store · SQLite</b><span>outbox · conflicts · cursor</span></button>
-        <button class="comp" data-c="sync" style="left:504px;top:700px;width:300px;height:80px"><b>Sync worker</b><span>push · pull · transport hook</span></button>
-        <button class="comp hub" data-c="hub" style="left:924px;top:566px;width:240px;height:130px"><b>Team hub</b><span>Qdrant server · quorum_team</span></button>
-        <button class="comp peer" data-c="lakshya" style="left:924px;top:332px;width:240px;height:120px"><b>Lakshya's device</b><span>same stack, own shard</span></button>
-        <aside class="info" id="arch-info" aria-live="polite"></aside>
-      </div>
-    </section>
 
     <!-- 16: module map -->
     <section class="slide deep" data-title="Module map">
@@ -377,7 +366,7 @@ conflict_id · resolves</pre></div>
     </section>
 
   </main>
-  <div class="hud"><span id="counter">1 / 23</span><a href="#2" class="hud-toc">contents</a></div>
+  <div class="hud"><span id="counter">1 / 22</span><a href="#2" class="hud-toc">contents</a></div>
   <script defer src="js/deck.js"></script>
 </body>
 </html>
