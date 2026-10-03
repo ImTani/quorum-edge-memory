@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quorum · Q&amp;A deck</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 3h26v21l-5 5H3z' fill='%23ffe14d' transform='rotate(-7 16 16)'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800'%3EQ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/deck.css">
+</head>
+<body>
+  <main class="deck" id="deck" aria-roledescription="slide deck">
+
+    <!-- 1 -->
+    <section class="slide title" data-title="Quorum">
+      <div class="logo-big"><span class="sq">Q</span>Quorum</div>
+      <h1>Your team's memory, on every laptop. <span class="u">Even with no signal.</span></h1>
+      <p class="lede">Offline-first team memory on Qdrant Edge. When two people disagree about a deadline, it asks instead of guessing.</p>
+      <p class="hand blue aside">Code Cubicle 6.0 · Problem Statement 03 · by BKA</p>
+      <div class="sticky y" style="right:96px;top:110px;--r:4deg">Client just called: Sharma delivery moves to the 18th.<span>note · Tanishk</span></div>
+      <div class="sticky b" style="right:220px;top:420px;--r:-3deg">Confirming final delivery of the Sharma wedding edit on 16 October.<span>email · Lakshya</span></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="slide" data-title="Contents">
+      <h2>Ask us about</h2>
+      <nav class="toc">
+        <a href="#3"><b>The problem</b><span>why field teams lose track</span></a>
+        <a href="#4"><b>What Quorum does</b><span>four things, in one line each</span></a>
+        <a href="#5"><b>How it works</b><span>two laptops and a hub</span></a>
+        <a href="#6"><b>A claim</b><span>memory with a source</span></a>
+        <a href="#7"><b>Catching conflicts</b><span>the Qdrant query</span></a>
+        <a href="#8"><b>Sync and offline</b><span>outbox, cursor, switch</span></a>
+        <a href="#9"><b>Privacy</b><span>what never leaves</span></a>
+        <a href="#10"><b>Tech stack</b><span>and why each piece</span></a>
+        <a href="#11"><b>Real vs mocked</b><span>straight answers</span></a>
+        <a href="#12"><b>FAQ: design</b><span>key vector, LLM, 1.00</span></a>
+        <a href="#13"><b>FAQ: limits</b><span>scale, clocks, dates</span></a>
+        <a href="#14"><b>What's next</b><span>after this round</span></a>
+      </nav>
+    </section>
+
+    <!-- 3 -->
+    <section class="slide" data-title="The problem">
+      <h2>A deadline changes in one place and gets misquoted in another.</h2>
+      <div class="cols three">
+        <div class="note y"><b>Many clients, many channels</b>Email, WhatsApp, a call on set. Four people each hear a different piece.</div>
+        <div class="note b"><b>Often no signal</b>Shoots and site work happen where cloud tools don't reach.</div>
+        <div class="note y"><b>Cloud assistants don't fit</b>To help, they'd need everything: your inbox, your chats. That shouldn't leave the laptop.</div>
+      </div>
+      <p class="hand red bottom-line">Nobody notices until the client does.</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="slide" data-title="What Quorum does">
+      <h2>One memory for the team. Every laptop keeps its own copy.</h2>
+      <div class="cols four">
+        <div class="note y"><b>Remembers</b>Every message becomes a claim with its source: who said it, where, when.</div>
+        <div class="note b"><b>Works offline</b>Search, extraction and answers run on the laptop, in milliseconds.</div>
+        <div class="note y"><b>Syncs on reconnect</b>A durable outbox sends team claims to the hub; laptops pull what changed.</div>
+        <div class="note b"><b>Asks, never guesses</b>When claims disagree, both versions stay and the task's owner decides.</div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="slide" data-title="How it works">
+      <h2>Two edge nodes and a team hub.</h2>
+      <div class="arch">
+        <div class="node"><p class="tape">Tanishk's laptop</p><ul><li>FastAPI device app</li><li>Qdrant Edge shard</li><li>SQLite outbox</li><li>Local model (Ollama)</li></ul></div>
+        <div class="link"><span class="hand">push outbox</span><span class="hand">pull changes</span></div>
+        <div class="node hub"><p class="tape">Team hub</p><ul><li>Qdrant server</li><li>Team claims only</li><li>Stores, computes nothing</li></ul></div>
+        <div class="link"><span class="hand">push outbox</span><span class="hand">pull changes</span></div>
+        <div class="node"><p class="tape">Lakshya's laptop</p><ul><li>FastAPI device app</li><li>Qdrant Edge shard</li><li>SQLite outbox</li><li>Local model (Ollama)</li></ul></div>
+      </div>
+      <p class="small">For this round both laptops run on one machine as separate processes with their own shards. "Offline" is a per-device switch that blocks hub traffic at the transport; everything else keeps running.</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="slide" data-title="A claim">
+      <h2>Memory is claims, not facts.</h2>
+      <div class="split">
+        <div class="sticky y big" style="--r:-2deg">Client just called: Sharma delivery moves to the 18th.<span>note · Tanishk · 3 Oct, 14:02</span></div>
+        <table class="kv">
+          <tr><th>entity</th><td>Sharma wedding edit</td></tr>
+          <tr><th>attribute</th><td>due date</td></tr>
+          <tr><th>value</th><td>18 Oct</td></tr>
+          <tr><th>source</th><td>call, heard by Tanishk</td></tr>
+          <tr><th>tier</th><td>team</td></tr>
+          <tr><th>status</th><td>active · disputed · superseded</td></tr>
+        </table>
+      </div>
+      <p class="vecs"><b>Three vectors per claim:</b> <code>text</code> for meaning · <code>bm25</code> for keywords · <code>key</code> for what it's about (entity + attribute, never the value).</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="slide" data-title="Catching conflicts">
+      <h2>Qdrant finds claims about the same thing.</h2>
+      <ol class="steps">
+        <li><b>Every new claim</b>, typed or pulled from the hub, runs one query on the <code>key</code> vector.</li>
+        <li><b>Filtered</b> to the same attribute and live claims; <b>threshold 0.82</b>.</li>
+        <li><b>Same thing, different value</b> → a conflict. Nothing is overwritten.</li>
+        <li><b>Both laptops agree</b> without talking: the conflict id is a hash of the two claim ids.</li>
+        <li><b>The task's owner</b> keeps one; the other is kept as history; the decision syncs.</li>
+      </ol>
+      <div class="measure"><p class="hand">measured</p><p><b>0.899</b> "Sharma delivery" vs "Sharma edit"</p><p><b>0.738</b> vs an unrelated deadline</p></div>
+    </section>
+
+    <!-- 8 -->
+    <section class="slide" data-title="Sync and offline">
+      <h2>Works where the signal doesn't.</h2>
+      <div class="cols three">
+        <div class="note y"><b>Outbox</b>Team claims queue in SQLite, survive restarts, push oldest first, retry with backoff.</div>
+        <div class="note b"><b>Cursor</b>Each laptop scrolls the hub for claims changed since its last pull. Points sync with vectors, no re-embedding.</div>
+        <div class="note y"><b>Offline switch</b>One transport hook refuses hub traffic and counts bytes, so "0 B" is measured, not drawn.</div>
+      </div>
+      <p class="figures"><span><b>7–70 ms</b> search on the laptop</span><span><b>~1 s</b> conflict on both laptops after reconnect</span><span><b>~1 s</b> a decision reaches the other laptop</span></p>
+    </section>
+
+    <!-- 9 -->
+    <section class="slide" data-title="Privacy">
+      <h2>It reads everything. Nothing leaves unless it's team work.</h2>
+      <div class="split">
+        <div class="tiers">
+          <div class="tier"><b>Device only</b>salary, a friend's news<span>never leaves</span></div>
+          <div class="tier"><b>My devices</b>birthdays, my schedule<span>my laptops only</span></div>
+          <div class="tier"><b>Team</b>deadlines, shoots, deliverables<span>everyone</span></div>
+        </div>
+        <ul class="layers">
+          <li>Everything starts device-only; rules promote only clear team work.</li>
+          <li>A follow-up never gets a wider tier than its entity already has.</li>
+          <li>The outbox and the push both refuse device-only claims.</li>
+          <li>The pull only takes team claims (or my own).</li>
+          <li>Team view filters by tier inside the Qdrant query.</li>
+          <li>On stage we count private claims on the hub live: <b>0</b>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="slide" data-title="Tech stack">
+      <h2>What we used, and why.</h2>
+      <table class="stack">
+        <tr><th>Qdrant Edge</th><td>Vector DB on the laptop: BM25 + dense + filters in one query, offline. Same data model as the hub.</td></tr>
+        <tr><th>Qdrant server</th><td>The team hub. Points sync as-is, vectors included.</td></tr>
+        <tr><th>bge-small (FastEmbed)</th><td>Small, fast, local dense embeddings. 384 dims.</td></tr>
+        <tr><th>BM25 + RRF</th><td>Exact names ("Sharma") plus meaning; RRF fuses by rank, no score calibration.</td></tr>
+        <tr><th>Ollama · llama3.2</th><td>Local extraction, no cloud calls. Dates are resolved in code, not by the model.</td></tr>
+        <tr><th>SQLite</th><td>Durable outbox, conflicts and sync cursor.</td></tr>
+        <tr><th>FastAPI + vanilla JS</th><td>Two device processes and a live UI over SSE. No build step.</td></tr>
+      </table>
+    </section>
+
+    <!-- 11 -->
+    <section class="slide" data-title="Real vs mocked">
+      <h2>Straight answers.</h2>
+      <div class="split even">
+        <div><p class="tape green">Real</p><ul class="ticks"><li>Qdrant Edge memory and hybrid search on each device</li><li>Conflict detection at capture and at sync</li><li>Hub sync with a persistent outbox</li><li>Owner resolution that syncs</li><li>Tier privacy, zero private claims on the hub</li><li>Local extraction with sources</li></ul></div>
+        <div><p class="tape">Mocked or next</p><ul class="dashes"><li>Two physical laptops (one machine this round)</li><li>Gmail API (a fixture inbox stands in)</li><li>Phone app, live WhatsApp stream</li><li>Partial snapshots, encryption at rest</li><li>Hub auth and TLS</li></ul></div>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section class="slide faq" data-title="FAQ: design">
+      <h2>FAQ: design</h2>
+      <dl>
+        <dt>Why a separate key vector?</dt><dd>A conflict is "same thing, different value", so matching must ignore the value and the wording. The key is just entity + attribute.</dd>
+        <dt>Why not let the LLM decide conflicts?</dt><dd>Two laptops must reach the same conflict on their own. That needs a deterministic rule: same vectors, same query, same threshold, same id. The LLM only extracts.</dd>
+        <dt>Why does the demo show similarity 1.00?</dt><dd>Both mentions were matched to the known task "Sharma wedding edit", so the key text is identical. Worded differently, it's 0.85–0.90.</dd>
+        <dt>Why templated answers?</dt><dd>Milliseconds, no hallucinated facts, and every sentence cites a claim.</dd>
+      </dl>
+    </section>
+
+    <!-- 13 -->
+    <section class="slide faq" data-title="FAQ: limits">
+      <h2>FAQ: limits</h2>
+      <dl>
+        <dt>What if the model misreads a date?</dt><dd>It never computes dates; code resolves them from the message. And a wrong claim can't overwrite anything: it shows up as a conflict with both sources.</dd>
+        <dt>Three devices? Clock skew?</dt><dd>Detection scales: each device finds the same conflict. The sync cursor uses device clocks; the fix is a hub-assigned sync stamp.</dd>
+        <dt>Does it scale?</dt><dd>Each question is one hybrid query or one filtered nearest-neighbour search, which is what Qdrant is built for. We haven't benchmarked large memories yet.</dd>
+        <dt>Business model?</dt><dd>Per team, per month; no price set yet. Customer zero is BKA, a four-person production house and developer group.</dd>
+      </dl>
+    </section>
+
+    <!-- 14 -->
+    <section class="slide" data-title="What's next">
+      <h2>After this round.</h2>
+      <div class="cols three">
+        <div class="note y"><b>Two laptops</b>Real airplane mode, a hub-assigned sync stamp, partial snapshots.</div>
+        <div class="note b"><b>More inputs</b>Gmail API, WhatsApp import in the UI, phone capture.</div>
+        <div class="note y"><b>Hardening</b>Hub auth and TLS, encryption at rest, N-way conflicts, packaging.</div>
+      </div>
+      <p class="hand blue bottom-line">Thank you. Ask us anything.</p>
+    </section>
+
+  </main>
+  <div class="hud"><span id="counter">1 / 14</span><a href="#2" class="hud-toc">contents</a></div>
+  <script defer src="js/deck.js"></script>
+</body>
+</html>
