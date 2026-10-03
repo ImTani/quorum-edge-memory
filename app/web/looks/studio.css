@@ -361,3 +361,12 @@ html[data-look="studio"], html[data-look="studio"] body { background: #EEF0F3; }
   .links .token { fill: var(--green); stroke: #fff; stroke-width: 2; }
   .links .token-label { fill: var(--green-ink); stroke: var(--paper); }
 }
+
+/* the memory cloud sits on whiteboard enamel */
+[data-look="studio"] .cloud-wrap, [data-look="studio"] .on-stage .cloud-wrap {
+  background:
+    linear-gradient(112deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.85) 30%, rgba(255,255,255,0) 40%),
+    linear-gradient(112deg, rgba(255,255,255,0) 60%, rgba(255,255,255,.6) 65%, rgba(255,255,255,0) 71%),
+    radial-gradient(120% 95% at 50% 35%, #ffffff 0, #f7f8fa 60%, #e9ecf0 100%);
+  box-shadow: inset 0 0 0 1px rgba(20,23,31,.08), inset 0 2px 3px rgba(20,23,31,.10), inset 0 -10px 18px -14px rgba(20,23,31,.25);
+}

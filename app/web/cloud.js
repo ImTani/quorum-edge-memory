@@ -112,12 +112,16 @@ function glowLine(ctx, x1, y1, x2, y2, color, alpha = 1, width = 3) {
 }
 /** Studio look: a flat disc with a paper-white edge so overlapping claims stay separate. */
 function drawFlat(ctx, x, y, r, color, alpha, disputed) {
+  // A whiteboard marker blot: solid ink, a darker wet rim, and a glossy specular.
   if (alpha <= 0.003 || r <= 0) return;
   ctx.globalCompositeOperation = 'source-over';
   ctx.globalAlpha = clamp(alpha); ctx.fillStyle = color;
   ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
-  ctx.lineWidth = 1.5; ctx.strokeStyle = '#FFFFFF'; ctx.stroke();
-  if (disputed) { ctx.strokeStyle = color; ctx.globalAlpha = clamp(alpha * 0.6); ctx.beginPath(); ctx.arc(x, y, r + 5, 0, TAU); ctx.stroke(); }
+  ctx.lineWidth = Math.max(1, r * 0.22); ctx.strokeStyle = mixColor(color, '#000000', 0.28);
+  ctx.globalAlpha = clamp(alpha * 0.55); ctx.stroke();
+  ctx.globalAlpha = clamp(alpha * 0.7); ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.ellipse(x - r * 0.32, y - r * 0.36, r * 0.34, r * 0.18, -0.6, 0, TAU); ctx.fill();
+  if (disputed) { ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.globalAlpha = clamp(alpha * 0.6); ctx.beginPath(); ctx.arc(x, y, r + 5, 0, TAU); ctx.stroke(); }
   ctx.globalAlpha = 1;
 }
 function roundRect(ctx, x, y, w, h, r) {
@@ -445,7 +449,7 @@ export class MemoryCloud {
         const lx = C.x + (rand(c * 3 + b, 21) - 0.5) * C.s, ly = C.y + (rand(c * 3 + b, 22) - 0.5) * C.s * 0.5, lz = C.z + (rand(c * 3 + b, 23) - 0.5) * C.s;
         const pr = this._project(cam, rot(lx, ly, lz)); if (!pr.vis) continue;
         const R = C.s * (2.6 + b * 0.9) * pr.s;
-        ctx.globalAlpha = clamp(aOp * 0.34 * this._fog(cam, pr.z) * (1 + 0.12 * Math.sin(t * 0.4 + c + b)));
+        ctx.globalAlpha = clamp(aOp * 0.24 * this._fog(cam, pr.z) * (1 + 0.12 * Math.sin(t * 0.4 + c + b)));
         ctx.drawImage(glowSprite(WASH[c % WASH.length]), pr.x - R, pr.y - R, 2 * R, 2 * R);
       }
     }
@@ -480,10 +484,12 @@ export class MemoryCloud {
         seen.add(key);
         const mx = (A.pr.x + B.pr.x) / 2, my = (A.pr.y + B.pr.y) / 2;
         const bend = 0.08 * Math.hypot(B.pr.x - A.pr.x, B.pr.y - A.pr.y) * (rand(key.length, 31) - 0.5);
-        ctx.globalAlpha = clamp(0.34 * Math.min(A.n.vis, B.n.vis) * (1 - d / 0.9) * aOp + 0.1);
-        ctx.lineWidth = 1.4;
-        ctx.beginPath(); ctx.moveTo(A.pr.x, A.pr.y);
-        ctx.quadraticCurveTo(mx - (B.pr.y - A.pr.y) / Math.hypot(B.pr.x - A.pr.x, B.pr.y - A.pr.y || 1) * bend, my + (B.pr.x - A.pr.x) / Math.hypot(B.pr.x - A.pr.x || 1, B.pr.y - A.pr.y) * bend, B.pr.x, B.pr.y);
+        const la = clamp(0.58 * Math.min(A.n.vis, B.n.vis) * (1 - d / 0.9) * aOp + 0.12);
+        const cx = mx - (B.pr.y - A.pr.y) / Math.hypot(B.pr.x - A.pr.x, B.pr.y - A.pr.y || 1) * bend, cy = my + (B.pr.x - A.pr.x) / Math.hypot(B.pr.x - A.pr.x || 1, B.pr.y - A.pr.y) * bend;
+        ctx.strokeStyle = '#2B3140'; ctx.globalAlpha = la; ctx.lineWidth = 2.2;
+        ctx.beginPath(); ctx.moveTo(A.pr.x, A.pr.y); ctx.quadraticCurveTo(cx, cy, B.pr.x, B.pr.y); ctx.stroke();
+        ctx.strokeStyle = '#FFFFFF'; ctx.globalAlpha = la * 0.4; ctx.lineWidth = 0.6;
+        ctx.beginPath(); ctx.moveTo(A.pr.x - 0.6, A.pr.y - 0.7); ctx.quadraticCurveTo(cx - 0.6, cy - 0.7, B.pr.x - 0.6, B.pr.y - 0.7);
         ctx.stroke();
       }
     }
