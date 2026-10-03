@@ -141,12 +141,14 @@ export class MemoryCloud {
    * @param {HTMLCanvasElement} canvas
    * @param {{onHover?:Function, onSelect?:Function, onFrame?:Function, labelFor?:Function}} opts
    *   onHover(claim|null, x, y), onSelect(claim|null), onFrame(screenOf) each frame,
-   *   labelFor(claim) -> {label, sub} for leader-line tags.
+   *   labelFor(claim) -> {label, sub} for leader-line tags. fontScale scales the canvas tags.
    */
   constructor(canvas, opts = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.opts = opts;
+    this.fs = opts.fontScale || 1;
+    this.labelTop = opts.labelTop || 6;   // keep canvas tags below any overlay header
     this.nodes = new Map();          // claim_id -> node
     this.conflicts = new Map();      // conflict_id -> {ids, sim, openedAt, resolvedAt, winner}
     this.focusId = null;             // conflict the camera looks at
@@ -500,9 +502,9 @@ export class MemoryCloud {
       // similarity tag above the beam's midpoint
       const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
       ctx.globalCompositeOperation = 'source-over';
-      ctx.font = `700 15px ${MONO}`;
-      const tw = ctx.measureText(text).width, bw = tw + 22, bh = 28;
-      const bx = clamp(mx - bw / 2, 6, this.w - bw - 6), by = clamp(my - 48, 6, this.h - bh - 6);
+      ctx.font = `700 ${Math.round(15 * this.fs)}px ${MONO}`;
+      const tw = ctx.measureText(text).width, bw = tw + 22, bh = Math.round(28 * this.fs);
+      const bx = clamp(mx - bw / 2, 6, this.w - bw - 6), by = clamp(my - 48, this.labelTop, this.h - bh - 6);
       ctx.globalAlpha = al;
       ctx.strokeStyle = rgba(color, 0.6); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(mx, my - 6); ctx.lineTo(mx, by + bh); ctx.stroke();
@@ -522,16 +524,17 @@ export class MemoryCloud {
     ctx.globalAlpha = a; ctx.strokeStyle = rgba(color, 0.85); ctx.lineWidth = 1.3;
     ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x2, y1); ctx.stroke();
     ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x2, y1, 2.2, 0, TAU); ctx.fill();
-    ctx.font = `600 15px ${FONT}`; const tw = ctx.measureText(label).width;
-    let sw = 0; if (sub) { ctx.font = `400 12.5px ${FONT}`; sw = ctx.measureText(sub).width; }
-    const bw = Math.max(tw, sw) + 20, bh = sub ? 44 : 28;
+    const f1 = Math.round(15 * this.fs), f2 = Math.round(12.5 * this.fs * 10) / 10;
+    ctx.font = `600 ${f1}px ${FONT}`; const tw = ctx.measureText(label).width;
+    let sw = 0; if (sub) { ctx.font = `400 ${f2}px ${FONT}`; sw = ctx.measureText(sub).width; }
+    const bw = Math.max(tw, sw) + 20, bh = Math.round((sub ? 44 : 28) * this.fs);
     let bx = side > 0 ? x2 + 4 : x2 - 4 - bw; bx = clamp(bx, 4, this.w - bw - 4);
-    const by = clamp(y1 - 14, 4, this.h - bh - 4);
+    const by = clamp(y1 - 14, Math.max(4, this.labelTop - 2), this.h - bh - 4);
     ctx.fillStyle = 'rgba(10,14,22,.88)'; roundRect(ctx, bx, by, bw, bh, 8); ctx.fill();
     ctx.strokeStyle = rgba(color, 0.55); ctx.lineWidth = 1; ctx.stroke();
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = mixColor(color, '#ffffff', 0.3); ctx.font = `600 15px ${FONT}`; ctx.fillText(label, bx + 10, by + 14);
-    if (sub) { ctx.fillStyle = COLORS.sub; ctx.font = `400 12.5px ${FONT}`; ctx.fillText(sub, bx + 10, by + 32); }
+    ctx.fillStyle = mixColor(color, '#ffffff', 0.3); ctx.font = `600 ${f1}px ${FONT}`; ctx.fillText(label, bx + 10, by + 14 * this.fs);
+    if (sub) { ctx.fillStyle = COLORS.sub; ctx.font = `400 ${f2}px ${FONT}`; ctx.fillText(sub, bx + 10, by + 32 * this.fs); }
     ctx.textBaseline = 'alphabetic'; ctx.globalAlpha = 1;
   }
 }
