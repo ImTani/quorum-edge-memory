@@ -4,19 +4,8 @@
  * the presenter’s notes on). `insert` pulls a scene’s own stop list (window.SHOW_STOPS[id]).
  *   title : what the phone remote shows as the step name
  *   say   : talking points (shown large on the phone)
- *   do    : what to click (live steps)
+ *   do    : the operator's cue (live steps): a teammate drives the real app on the laptop by hand
  * Film times are the v4 film’s (cues.json / STORYBOARD.md). */
-/* Live-demo camera: rects in the stage’s own 1920x1080 px (measured: header 0-132, left pane x 16-772,
- * hub column x 790-1130, right pane x 1148-1904, panes y 144-1066). The real stage stays clickable when zoomed. */
-window.LIVE_FRAMES = {
-  WIDE:     null,
-  LEFT:     [0, 132, 1140, 940],      // Tanishk’s pane and the link to the hub
-  RIGHT:    [780, 132, 1140, 940],    // the hub column and Lakshya’s pane
-  L_TOP:    [0, 100, 1000, 600],      // Tanishk’s hub switch, counters and memory cloud
-  L_BOTTOM: [16, 680, 756, 390],      // Tanishk’s capture box, ask box and answer
-  R_TOP:    [780, 100, 1140, 600],    // hub counts and Lakshya’s Mine/Team view
-};
-
 window.SHOW_STEPS = [
   { title: 'Clean board', film: [240, 240],
     say: 'Walk on. Wait for the room. Then Next.' },
@@ -33,32 +22,32 @@ window.SHOW_STEPS = [
   { title: 'The promise', film: [18.9, 24.9],
     say: '"Built on Qdrant Edge, for Problem Statement 03. That’s the idea. Now the real thing."' },
 
-  { title: 'LIVE: two laptops, one hub', live: true, frame: 'WIDE',
-    do: 'Nothing yet. Point: left pane, hub column, right pane.',
+  { title: 'LIVE: two laptops, one hub', live: true,
+    do: 'Operator: hands off while Tanishk orients. Then slowly drag Tanishk’s memory cloud, so it’s clearly live.',
     say: '"This is running live. Left, Tanishk’s laptop, on a shoot. Right, Lakshya’s, at the office. Middle, the team hub: a Qdrant server. Each laptop is its own process with its own Qdrant Edge database. On this stage they share one machine."' },
-  { title: 'LIVE: Tanishk loses signal', live: true, frame: 'L_TOP',
-    do: 'Tanishk "Connected to hub" switch OFF.',
+  { title: 'LIVE: Tanishk loses signal', live: true,
+    do: 'Operator: on “Here that’s a switch…”, flip Tanishk’s “Connected to hub” OFF.',
     say: '"Tanishk loses signal. Here that’s a switch that cuts his link to the hub. [click] Watch his traffic counter: frozen."' },
-  { title: 'LIVE: it still answers', live: true, frame: 'L_BOTTOM',
-    do: 'Tanishk chip "What’s due this week?"',
+  { title: 'LIVE: it still answers', live: true,
+    do: 'Operator: on “What’s due this week?”, click Tanishk’s chip “What’s due this week?”.',
     say: '"What’s due this week? [click] [read the ms] milliseconds, with no hub, and every line cites where it came from."' },
-  { title: 'LIVE: a note, offline', live: true, frame: 'L_BOTTOM',
-    do: 'Tanishk Capture: Ctrl+V the note, Save. Click once.',
+  { title: 'LIVE: a note, offline', live: true,
+    do: 'Operator: on “…moves to the 18th”, click Tanishk’s note box, Ctrl+V, Save. Once; it reads for a few seconds.',
     say: '"The client calls him: the Sharma delivery moves to the 18th. [Save] A local model reads it, on the laptop, no cloud. ... Now it’s a claim with its source, waiting in his outbox. The hub doesn’t have it."' },
-  { title: 'LIVE: the email lands', live: true, frame: 'RIGHT',
-    do: 'Lakshya Inbox: Receive. Click once.',
+  { title: 'LIVE: the email lands', live: true,
+    do: 'Operator: on “…confirmed for the 16th”, click Receive in Lakshya’s inbox. Once.',
     say: '"Meanwhile Lakshya gets the client’s email: delivery confirmed for the 16th. [Receive] It’s client work, so it goes up to the team hub. ... Two laptops, two dates, one job, and neither knows."' },
-  { title: 'LIVE: reconnect (the moment)', live: true, frame: 'WIDE',
-    do: 'Say the line FIRST. Then Tanishk switch ON. Point left, then right. 2 s silence.',
+  { title: 'LIVE: reconnect (the moment)', live: true,
+    do: 'Operator: wait for “Watch both laptops…”, then flip Tanishk’s switch ON. Hands off for 2 s.',
     say: '"Watch both laptops when Tanishk gets signal back." [click] ... "Both found the same disagreement, each on its own. Nothing was overwritten. Two different messages, from two different people, and Qdrant matched them because they’re about the same thing."' },
-  { title: 'LIVE: it won’t guess', live: true, frame: 'L_BOTTOM',
-    do: 'Tanishk chip "When is the Sharma delivery?"',
+  { title: 'LIVE: it won’t guess', live: true,
+    do: 'Operator: on “Ask it now”, click Tanishk’s chip “When is the Sharma delivery?”.',
     say: '"Ask it now. [click] Disputed: the client’s email says the 16th, Tanishk’s note says the 18th. Tanishk owns this. It doesn’t guess."' },
-  { title: 'LIVE: the owner decides', live: true, frame: 'WIDE',
-    do: 'Point at Lakshya "Waiting for Tanishk". Then Tanishk "Keep 18 Oct".',
+  { title: 'LIVE: the owner decides', live: true,
+    do: 'Operator: hover Lakshya’s “Waiting for Tanishk”. On “Tanishk keeps the 18th”, click “Keep 18 Oct” on Tanishk’s card.',
     say: '"Only the owner decides. Lakshya can ask him; it drafts the message, never sends on its own. Tanishk keeps the 18th. [click] A second later Lakshya has it. The 16th isn’t deleted; it’s kept as history."' },
-  { title: 'LIVE: privacy', live: true, frame: 'R_TOP',
-    do: 'Lakshya "Team view". Point at "Device-only claims on the hub: 0".',
+  { title: 'LIVE: privacy', live: true,
+    do: 'Operator: on “Team view”, click Lakshya’s “Team view”. Then hover the hub’s “Device-only claims on the hub: 0”.',
     say: '"It reads everything, so privacy is built in. [Team view] Lakshya’s private claims drop out. And the hub counts private claims on the hub, live from Qdrant: zero. Only team work leaves a laptop."' },
 
   { title: 'BACKUP: the recorded conflict', film: [72, 98], skip: true,

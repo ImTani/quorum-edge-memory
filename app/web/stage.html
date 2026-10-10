@@ -69,11 +69,11 @@
 
   <script type="module" src="/web/stage.js"></script>
   <script>
-    // Embedded in the stage show (video/v4/show.html): hand presenter keys to the show, so a clicker
-    // keeps working after a click inside the demo. Arrows and space only when not typing.
+    // Embedded in the stage show (video/v4/show.html): hand a presenter's clicker keys to the show, so the
+    // clicker keeps working while a teammate uses the app. Only clicker keys: the app's own typing and
+    // arrow keys stay with the app.
     if (window.parent !== window) document.addEventListener('keydown', e => {
-      const typing = e.target.closest && e.target.closest('input, textarea, [contenteditable]');
-      if (['PageDown', 'PageUp', 'F5'].includes(e.key) || (!typing && ['ArrowRight', 'ArrowLeft', 'b', '.'].includes(e.key))) {
+      if (['PageDown', 'PageUp', 'F5'].includes(e.key)) {
         e.preventDefault();
         window.parent.postMessage({ quorumKey: e.key }, '*');
       }

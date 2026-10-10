@@ -49,6 +49,7 @@ const Audio = {
       let r = await fetch('audio/sfx_show.wav');
       if (!r.ok) r = await fetch('audio/sfx.wav');
       this.buf = await this.ctx.decodeAudioData(await r.arrayBuffer());
+      refreshPreflight();
       this.pickShots();
     } catch (e) { console.warn('[show] audio unavailable', e); }
   },
@@ -116,19 +117,6 @@ function play(a, b, sceneId, done) {
   P.raf = requestAnimationFrame(tick);
 }
 
-/** live-demo camera: frame a rect of the real stage (its own 1920x1080 px); the stage stays clickable */
-function liveFrame(name) {
-  const r = (window.LIVE_FRAMES || {})[name];
-  let z = 1, tx = 0, ty = 0;
-  if (r) {
-    const pad = 16;
-    z = Math.min(1920 / (r[2] + 2 * pad), 1080 / (r[3] + 2 * pad));
-    tx = Math.min(0, Math.max(1920 - 1920 * z, 960 - (r[0] + r[2] / 2) * z));
-    ty = Math.min(0, Math.max(1080 - 1080 * z, 540 - (r[1] + r[3] / 2) * z));
-  }
-  frame.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${z.toFixed(4)})`;
-}
-
 function setLive(on) {
   P.live = on;
   liveEl.classList.toggle('on', on);
@@ -170,7 +158,6 @@ function show(i) {
   P.cur = i;
   report();
   if (s.live) {
-    liveFrame(s.frame);
     if (!P.live) setLive(true);
     return;
   }
@@ -288,14 +275,28 @@ function refreshConnect() {
     $('arm-info').textContent = `${STEPS.length} steps · keys only`;
   });
 }
-refreshConnect();
-setInterval(() => { if (!armEl.classList.contains('off')) refreshConnect(); }, 5000);
+/** pre-flight: the server's checks (demo up, connected, freshly reset; model; phone) plus this page's own */
+function refreshPreflight() {
+  const local = [
+    { name: 'Sound', ok: Audio.buf ? true : 'warn', detail: Audio.buf ? `loaded (${Audio.muted ? 'muted' : 'on'})` : 'not loaded: the show runs silent' },
+    { name: 'Show scenes', ok: ['S16', 'S17', 'S18'].every(k => window.SHOW_STOPS && window.SHOW_STOPS[k]), detail: `${STEPS.length} steps` },
+  ];
+  const draw = checks => {
+    $('preflight').innerHTML = checks.map(c => {
+      const cls = c.ok === true ? 'ok' : c.ok === 'warn' ? 'warn' : 'fail', mark = c.ok === true ? '✓' : c.ok === 'warn' ? '!' : '✕';
+      return `<li class="${cls}"><i>${mark}</i><span>${c.name}<small>${c.detail}</small></span></li>`;
+    }).join('');
+  };
+  fetch('/api/preflight').then(r => r.json()).then(j => draw([...(j.checks || []), ...local])).catch(() => draw(local));
+}
+refreshConnect(); refreshPreflight();
+setInterval(() => { if (!armEl.classList.contains('off')) { refreshConnect(); refreshPreflight(); } }, 3000);
 /** U: bring the connect card back over the show (any time the phone needs to reconnect) */
 function peekConnect(on) {
   armEl.classList.toggle('off', !on);
   armEl.classList.toggle('peek', on);
   $('arm-msg').textContent = on ? 'Scan to connect the phone · U to close' : 'Press any key or click to start';
-  if (on) refreshConnect();
+  if (on) { refreshConnect(); refreshPreflight(); }
 }
 const st = document.createElement('div'); st.id = 'show-status'; body.appendChild(st);
 frame.src = LIVE_URL;              // load early so the live stage is connected long before it's shown

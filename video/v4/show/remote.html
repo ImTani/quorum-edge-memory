@@ -25,6 +25,12 @@ body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dv
 .notes { overflow-y: auto; display: grid; align-content: start; gap: 12px; padding-right: 2px; }
 #do { display: none; background: var(--amber); color: #1d1b16; border-radius: 12px; padding: 12px 14px; font: 600 19px/1.35 var(--ui); }
 #do.on { display: block; }
+#pre { display: none; background: #1d2129; border: 1px solid #2a2f39; border-radius: 12px; padding: 10px 12px; font: 600 16px/1.35 var(--ui); }
+#pre.on { display: grid; gap: 6px; }
+#pre b { font: 800 15px var(--ui); color: var(--ink3); letter-spacing: .04em; }
+#pre span { display: flex; gap: 8px; } #pre i { font-style: normal; font-weight: 800; width: 16px; flex: none; text-align: center; }
+#pre .ok i { color: #35c48a; } #pre .warn i { color: var(--amber); } #pre .fail i, #pre .fail { color: #ff6b7d; }
+#pre small { color: var(--ink3); font-weight: 500; }
 #say { font: 600 23px/1.42 var(--hand); color: #f3f4f6; }
 #next-up { font: 600 16px/1.3 var(--ui); color: var(--ink3); }
 #next-up b { color: #cfd3da; }
@@ -61,7 +67,7 @@ body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dv
 <body>
 <div class="top"><span class="dot" id="dot"></span><span id="pos">–</span><button class="tbtn" id="steps">Steps</button><button class="tbtn" id="treset">⟲</button><button class="tbtn" id="qabtn">Q&amp;A</button><span id="timer">0:00</span></div>
 <div id="title">Connecting…</div>
-<div class="notes"><div id="do"></div><div id="say"></div><div id="next-up"></div></div>
+<div class="notes"><div id="pre"></div><div id="do"></div><div id="say"></div><div id="next-up"></div></div>
 <div class="toggles"><button data-t="blank">Blank</button><button data-t="mute">Mute</button><button data-t="captions">Captions</button></div>
 <div class="nav"><button id="back">Back</button><button id="next">Next</button></div>
 <div id="list"></div>
@@ -99,7 +105,7 @@ function render() {
 async function loadSteps() { const r = await fetch('/api/steps'); const j = await r.json(); steps = j.steps || []; st = { ...st, ...j }; render(); }
 
 function connect() {
-  const es = new EventSource('/api/events');
+  const es = new EventSource('/api/events?who=remote');
   es.onopen = () => $('dot').classList.add('ok');
   es.onerror = () => $('dot').classList.remove('ok');
   es.onmessage = ev => {
@@ -143,6 +149,22 @@ $('qa-list').addEventListener('click', e => {
   $('qa-answer').scrollIntoView({ block: 'start' });
 });
 renderQA();
+
+// pre-flight, until the show starts: the same checks as the start screen
+async function preflight() {
+  const box = $('pre');
+  const before = st.step === 0 && !st.timer_start;
+  box.classList.toggle('on', before);
+  if (!before) return;
+  try {
+    const j = await (await fetch('/api/preflight')).json();
+    box.innerHTML = '<b>PRE-FLIGHT</b>' + j.checks.map(c => {
+      const cls = c.ok === true ? 'ok' : c.ok === 'warn' ? 'warn' : 'fail', mark = c.ok === true ? '✓' : c.ok === 'warn' ? '!' : '✕';
+      return `<span class="${cls}"><i>${mark}</i><span>${c.name} <small>${c.detail}</small></span></span>`;
+    }).join('');
+  } catch (e) { box.innerHTML = '<b>PRE-FLIGHT</b><span class="fail"><i>✕</i>show server not reachable</span>'; }
+}
+setInterval(preflight, 3000); setTimeout(preflight, 600);
 
 // keep the screen on while presenting, where the browser allows it (needs HTTPS on most phones)
 async function wake() { try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (e) {} }

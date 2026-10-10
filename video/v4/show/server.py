@@ -25,9 +25,40 @@ ROOT = V4.parent.parent
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 9000
 
 app = FastAPI()
+
+
+class Revalidate:
+    """The kiosk Chrome keeps its profile between runs: make it re-check every page and script (a cheap
+    304 when unchanged) so an updated show is never served stale. Frames and audio can cache. Plain ASGI,
+    headers only, so the event stream passes through untouched."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        path = scope.get("path", "")
+        if scope["type"] != "http" or path.startswith("/v4/clips/") or path.endswith(".wav"):
+            return await self.app(scope, receive, send)
+
+        async def send_wrapped(message):
+            if message["type"] == "http.response.start":
+                headers = [(k, v) for k, v in message.get("headers", []) if k.lower() != b"cache-control"]
+                message = {**message, "headers": headers + [(b"cache-control", b"no-cache")]}
+            await send(message)
+
+        await self.app(scope, receive, send_wrapped)
+
+
+app.add_middleware(Revalidate)
 state = {"step": 0, "count": 1, "blank": False, "mute": False, "captions": False,
          "timer_start": None, "deck": None, "rev": 0, "steps": []}
 listeners: set[asyncio.Queue] = set()
+phones: set[asyncio.Queue] = set()          # listeners that are phone remotes (/api/events?who=remote)
+
+HUB = "http://127.0.0.1:6333"
+DEVICES = {"tanishk": "http://127.0.0.1:8001", "lakshya": "http://127.0.0.1:8002"}
+OLLAMA = "http://127.0.0.1:11434"
+SEED_HUB_POINTS = 18                        # what scripts/demo.ps1 seeds the hub with
 
 
 def public() -> dict:
@@ -95,9 +126,11 @@ async def cmd(req: Request):
 
 
 @app.get("/api/events")
-async def events(req: Request):
+async def events(req: Request, who: str = ""):
     q: asyncio.Queue = asyncio.Queue()
     listeners.add(q)
+    if who == "remote":
+        phones.add(q)
 
     async def gen():
         try:
@@ -112,9 +145,53 @@ async def events(req: Request):
                     yield ": ping\n\n"
         finally:
             listeners.discard(q)
+            phones.discard(q)
 
     return StreamingResponse(gen(), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+@app.get("/api/preflight")
+async def preflight():
+    """Before walking on: is the live demo up, connected and freshly reset; is the model warm; is a phone
+    connected. Each check is {name, ok: true | false | "warn", detail}."""
+    import httpx
+
+    async def get(client, url):
+        try:
+            r = await client.get(url, timeout=1.5)
+            return r.json() if r.status_code == 200 else None
+        except (httpx.HTTPError, ValueError):
+            return None
+
+    async with httpx.AsyncClient() as c:
+        hub, tan, lak, oll = await asyncio.gather(get(c, f"{HUB}/collections/quorum_team"), get(c, f"{DEVICES['tanishk']}/api/state"),
+                                                  get(c, f"{DEVICES['lakshya']}/api/state"), get(c, f"{OLLAMA}/api/ps"))
+    checks = []
+    points = hub and hub.get("result", {}).get("points_count")
+    checks.append({"name": "Team hub", "ok": hub is not None, "detail": f"{points} claims" if hub else "not reachable: run scripts/show.ps1"})
+    for name, st in (("Tanishk's laptop", tan), ("Lakshya's laptop", lak)):
+        if st is None:
+            checks.append({"name": name, "ok": False, "detail": "not running"})
+        else:
+            sync = st.get("sync") or {}
+            good = sync.get("online") and sync.get("hub_ok")
+            checks.append({"name": name, "ok": bool(good), "detail": "connected to the hub" if good else "not connected to the hub (switch on?)"})
+    if hub and tan and lak:
+        fresh = (points == SEED_HUB_POINTS and not tan.get("conflicts") and not lak.get("conflicts")
+                 and not (tan.get("sync") or {}).get("outbox"))
+        checks.append({"name": "Demo reset", "ok": True if fresh else False,
+                       "detail": "fresh, ready for the live beats" if fresh else "already played: re-run scripts/show.ps1 to reset"})
+    if oll is None:
+        checks.append({"name": "Local model", "ok": "warn", "detail": "Ollama not running: the rules parser will read the note (same result)"})
+    else:
+        loaded = [m.get("name", "") for m in oll.get("models", [])]
+        warm = any(n.startswith("llama3.2") for n in loaded)
+        checks.append({"name": "Local model", "ok": True if warm else "warn",
+                       "detail": "llama3.2 loaded" if warm else "Ollama up, model not loaded yet: the first note may take ~8 s"})
+    checks.append({"name": "Phone remote", "ok": True if phones else "warn",
+                   "detail": f"{len(phones)} connected" if phones else "no phone connected yet"})
+    return {"checks": checks}
 
 
 @app.get("/api/now")
