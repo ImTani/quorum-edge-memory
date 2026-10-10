@@ -1,0 +1,40 @@
+/* Stage show: the film's 1920x1080 page scaled to fit any projector, plus the show-only layers. */
+html { width: 100vw; height: 100vh; background: #0b0c0f; overflow: hidden; }
+body { position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; cursor: none;
+  transform: translate(var(--ox, 0px), var(--oy, 0px)) scale(var(--s, 1)); }
+body.pointer { cursor: default; }
+
+/* captions are the film's; on stage the presenter speaks, so they're off unless toggled (C) */
+body:not(.captions) #cap { visibility: hidden; }
+
+/* the live demo: the real stage, embedded at 1920x1080 so it scales with everything else */
+#live { position: absolute; inset: 0; z-index: 40; opacity: 0; pointer-events: none; background: #eef0f3;
+  transition: opacity .35s ease; }
+#live.on { opacity: 1; pointer-events: auto; }
+#live iframe { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; border: 0; background: #eef0f3; }
+body.live { cursor: default; }
+
+/* fade through clean paper between segments that aren't next to each other on the board */
+#jumpfade { position: absolute; inset: 0; z-index: 50; background: #eef0f3; opacity: 0; pointer-events: none;
+  transition: opacity .28s ease; }
+#jumpfade.on { opacity: 1; }
+
+/* B / . : black screen (the projector's "pause") */
+#blank { position: absolute; inset: 0; z-index: 60; background: #000; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+#blank.on { opacity: 1; pointer-events: auto; }
+
+/* start screen: one key or click arms audio (browsers need a gesture) */
+#arm { position: absolute; inset: 0; z-index: 70; display: grid; place-items: center; background: #eef0f3; }
+#arm.off { display: none; }
+.arm-card { display: grid; gap: 18px; justify-items: center; font-family: var(--ui); color: var(--ink); }
+.arm-card b { font-weight: 800; font-size: 120px; letter-spacing: -.03em; }
+.arm-card span { font-family: var(--hand); font-weight: 600; font-size: 40px; color: var(--blue); }
+.arm-card small { font-size: 22px; color: var(--ink-3); white-space: pre; text-align: center; line-height: 1.5; }
+
+/* tiny status dot, bottom-right, only while the pointer is shown (P) */
+#show-status { position: absolute; right: 14px; bottom: 10px; z-index: 65; font: 600 16px var(--ui); color: var(--ink-3);
+  display: none; }
+body.pointer #show-status { display: block; }
+
+/* the live-demo camera (player.js liveFrame): eased like the film's camera moves */
+#live iframe { transform-origin: 0 0; transition: transform .85s cubic-bezier(.65, 0, .35, 1); will-change: transform; }

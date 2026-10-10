@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#14171f">
+<title>Quorum · remote</title>
+<style>
+@font-face { font-family: "Shantell Sans"; src: url(/site/fonts/shantell-sans-vf.woff2) format("woff2"); font-weight: 300 800; }
+@font-face { font-family: "Schibsted Grotesk"; src: url(/site/fonts/schibsted-grotesk-600.woff2) format("woff2"); font-weight: 600; }
+@font-face { font-family: "Schibsted Grotesk"; src: url(/site/fonts/schibsted-grotesk-800.woff2) format("woff2"); font-weight: 800; }
+:root { --ink:#14171f; --ink2:#3b4150; --ink3:#9aa0ad; --paper:#eef0f3; --blue:#1f4fd8; --red:#c81e34; --green:#14895a; --amber:#ffe14d;
+  --ui:"Schibsted Grotesk",system-ui,sans-serif; --hand:"Shantell Sans",system-ui,sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: #14171f; color: #f3f4f6; font-family: var(--ui); overscroll-behavior: none; user-select: none; -webkit-user-select: none; }
+body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dvh; padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); gap: 10px; }
+.top { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; color: var(--ink3); }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+.dot.ok { background: #35c48a; }
+#pos { color: #f3f4f6; font-weight: 800; }
+#timer { margin-left: auto; font: 800 26px var(--ui); color: #f3f4f6; font-variant-numeric: tabular-nums; }
+#timer.warn { color: var(--amber); } #timer.over { color: #ff6b7d; }
+.tbtn { border: 1px solid #3b4150; background: #1d2129; color: var(--ink3); border-radius: 10px; padding: 6px 10px; font: 600 14px var(--ui); }
+#title { font: 800 26px/1.15 var(--ui); color: #fff; letter-spacing: -.01em; }
+#title.live::before { content: "LIVE"; display: inline-block; margin-right: 10px; padding: 2px 8px 3px; border-radius: 6px; background: var(--red); color: #fff; font-size: 15px; vertical-align: 4px; }
+.notes { overflow-y: auto; display: grid; align-content: start; gap: 12px; padding-right: 2px; }
+#do { display: none; background: var(--amber); color: #1d1b16; border-radius: 12px; padding: 12px 14px; font: 600 19px/1.35 var(--ui); }
+#do.on { display: block; }
+#say { font: 600 23px/1.42 var(--hand); color: #f3f4f6; }
+#next-up { font: 600 16px/1.3 var(--ui); color: var(--ink3); }
+#next-up b { color: #cfd3da; }
+.toggles { display: flex; gap: 8px; }
+.toggles button { flex: 1; border: 1px solid #3b4150; background: #1d2129; color: #cfd3da; border-radius: 12px; padding: 12px 0; font: 600 16px var(--ui); }
+.toggles button.on { background: #f3f4f6; color: var(--ink); border-color: #f3f4f6; }
+.nav { display: grid; grid-template-columns: 1fr 2.4fr; gap: 10px; height: 30vh; min-height: 170px; }
+.nav button { border: 0; border-radius: 22px; font: 800 30px var(--ui); color: #fff; touch-action: manipulation; }
+#back { background: #2a2f39; }
+#next { background: var(--blue); box-shadow: inset 0 -6px 0 rgba(0,0,0,.25); }
+#next:active, #back:active { transform: scale(.97); filter: brightness(1.15); }
+#list { position: fixed; inset: 0; z-index: 9; background: rgba(20,23,31,.97); overflow-y: auto; padding: 16px 12px 40px; display: none; }
+#list.on { display: block; }
+#list button { display: block; width: 100%; text-align: left; border: 0; border-bottom: 1px solid #2a2f39; background: none; color: #cfd3da; font: 600 18px var(--ui); padding: 14px 6px; }
+#list button.cur { color: #fff; background: #1f4fd8; border-radius: 10px; }
+#list button i { font-style: normal; color: var(--ink3); margin-right: 10px; display: inline-block; width: 28px; }
+#list button.live i { color: #ff6b7d; }
+</style></head>
+<body>
+<div class="top"><span class="dot" id="dot"></span><span id="pos">–</span><button class="tbtn" id="steps">Steps</button><button class="tbtn" id="treset">⟲</button><span id="timer">0:00</span></div>
+<div id="title">Connecting…</div>
+<div class="notes"><div id="do"></div><div id="say"></div><div id="next-up"></div></div>
+<div class="toggles"><button data-t="blank">Blank</button><button data-t="mute">Mute</button><button data-t="captions">Captions</button></div>
+<div class="nav"><button id="back">Back</button><button id="next">Next</button></div>
+<div id="list"></div>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+let steps = [], st = { step: 0, count: 1 }, skew = 0;
+// checkpoints for the timer colour (seconds): amber past WARN, red past LIMIT
+const WARN = 4 * 60 + 30, LIMIT = 5 * 60;
+
+const post = (c, extra = {}) => fetch('/api/cmd', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cmd: c, ...extra }) });
+const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
+
+function render() {
+  const s = steps[st.step] || {};
+  $('pos').textContent = `${st.step + 1} / ${st.count}`;
+  $('title').textContent = s.title || '';
+  $('title').className = s.live ? 'live' : '';
+  $('do').textContent = s.do || ''; $('do').className = s.do ? 'on' : '';
+  $('say').textContent = s.say || '';
+  const n = steps[st.step + 1];
+  $('next-up').innerHTML = n ? `Next: <b>${n.live ? 'LIVE · ' : ''}${n.title}</b>` : '<b>End of show</b>';
+  for (const b of document.querySelectorAll('.toggles button')) b.classList.toggle('on', !!st[b.dataset.t]);
+  $('list').innerHTML = steps.map((x, i) => `<button data-i="${i}" class="${i === st.step ? 'cur' : ''} ${x.live ? 'live' : ''}"><i>${i + 1}</i>${x.title}</button>`).join('');
+}
+async function loadSteps() { const r = await fetch('/api/steps'); const j = await r.json(); steps = j.steps || []; st = { ...st, ...j }; render(); }
+
+function connect() {
+  const es = new EventSource('/api/events');
+  es.onopen = () => $('dot').classList.add('ok');
+  es.onerror = () => $('dot').classList.remove('ok');
+  es.onmessage = ev => {
+    const j = JSON.parse(ev.data), countChanged = j.count !== st.count;
+    st = j; if (countChanged || !steps.length) loadSteps(); else render();
+  };
+}
+fetch('/api/now').then(r => r.json()).then(j => { skew = j.now - Date.now() / 1000; });
+setInterval(() => {
+  const el = $('timer');
+  if (!st.timer_start) { el.textContent = '0:00'; el.className = ''; return; }
+  const s = Math.max(0, Math.floor(Date.now() / 1000 + skew - st.timer_start));
+  el.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  el.className = s >= LIMIT ? 'over' : s >= WARN ? 'warn' : '';
+}, 250);
+
+$('next').addEventListener('click', () => { buzz(25); post('next'); });
+$('back').addEventListener('click', () => { buzz([15, 40, 15]); post('back'); });
+$('treset').addEventListener('click', () => post('timer_reset'));
+for (const b of document.querySelectorAll('.toggles button')) b.addEventListener('click', () => { buzz(15); post(b.dataset.t); });
+$('steps').addEventListener('click', () => $('list').classList.add('on'));
+$('list').addEventListener('click', e => {
+  const b = e.target.closest('button[data-i]');
+  if (b) post('goto', { step: +b.dataset.i });
+  $('list').classList.remove('on');
+});
+// keep the screen on while presenting, where the browser allows it (needs HTTPS on most phones)
+async function wake() { try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (e) {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') wake(); });
+wake();
+loadSteps().then(connect);
+</script>
+</body></html>

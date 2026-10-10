@@ -68,5 +68,16 @@
   </main>
 
   <script type="module" src="/web/stage.js"></script>
+  <script>
+    // Embedded in the stage show (video/v4/show.html): hand presenter keys to the show, so a clicker
+    // keeps working after a click inside the demo. Arrows and space only when not typing.
+    if (window.parent !== window) document.addEventListener('keydown', e => {
+      const typing = e.target.closest && e.target.closest('input, textarea, [contenteditable]');
+      if (['PageDown', 'PageUp', 'F5'].includes(e.key) || (!typing && ['ArrowRight', 'ArrowLeft', 'b', '.'].includes(e.key))) {
+        e.preventDefault();
+        window.parent.postMessage({ quorumKey: e.key }, '*');
+      }
+    });
+  </script>
 </body>
 </html>
