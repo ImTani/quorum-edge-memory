@@ -6,3 +6,4 @@ uvicorn==0.35.0
 httpx==0.28.1
 numpy
 pytest
+segno==1.6.6        # stage show only: QR code of the phone remote's URL (video/v4/show/server.py)

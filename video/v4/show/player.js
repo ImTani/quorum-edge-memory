@@ -45,7 +45,10 @@ const Audio = {
     try {
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       this.gain = this.ctx.createGain(); this.gain.connect(this.ctx.destination);
-      const r = await fetch('audio/sfx.wav'); this.buf = await this.ctx.decodeAudioData(await r.arrayBuffer());
+      // the stage stem (show/sfx_show.py: softer marker and eraser) when it's been rendered, else the film's
+      let r = await fetch('audio/sfx_show.wav');
+      if (!r.ok) r = await fetch('audio/sfx.wav');
+      this.buf = await this.ctx.decodeAudioData(await r.arrayBuffer());
       this.pickShots();
     } catch (e) { console.warn('[show] audio unavailable', e); }
   },
@@ -244,6 +247,7 @@ function arm() { if (armed) return; armed = true; armEl.classList.add('off'); Au
 
 function onKey(key, e) {
   if (!armed) { arm(); e && e.preventDefault(); return; }
+  if (key === 'u' || key === 'U') { peekConnect(!armEl.classList.contains('peek')); return; }
   if (key === 'q' || key === 'Q') { cmd('deck', { slide: Deck.slide == null ? 2 : null }); return; }
   if (Deck.slide != null) {          // Q&A: the keys page the deck; Q or Escape goes back to the show
     if (['ArrowRight', 'PageDown', ' ', 'Enter', 'ArrowDown'].includes(key)) { e && e.preventDefault(); cmd('deck_step', { delta: 1 }); }
@@ -269,10 +273,30 @@ addEventListener('click', e => { if (!armed) arm(); });
 addEventListener('message', e => { if (e.data && e.data.quorumKey) onKey(e.data.quorumKey, null); });
 
 /* ---------------------------------------------------------------- start */
-fetch('/api/now').then(() => {
-  const host = location.hostname === '127.0.0.1' || location.hostname === 'localhost' ? '<laptop ip>' : location.hostname;
-  $('arm-info').textContent = `phone remote: http://${host}:${location.port || 80}/remote\n${STEPS.length} steps · live demo ${LIVE_URL}`;
-}).catch(() => { $('arm-info').textContent = `${STEPS.length} steps · no show server: keys only`; });
+/** the phone remote's address (the server knows the laptop's real IP) and its QR code; refreshed while
+ * the card is up, so switching the laptop to a phone hotspot shows the new address */
+function refreshConnect() {
+  fetch('/api/remote').then(r => r.json()).then(j => {
+    const urls = j.urls || [];
+    const bare = u => u.replace(/^http:\/\//, '');
+    $('arm-url').textContent = urls[0] ? bare(urls[0]) : 'no network';
+    $('arm-more').textContent = urls.slice(1).map(u => 'or ' + bare(u)).join('\n');
+    $('arm-qr').src = '/api/qr.svg?v=' + encodeURIComponent(urls[0] || '');
+    $('arm-info').textContent = `${STEPS.length} steps · live demo ${LIVE_URL}`;
+  }).catch(() => {
+    $('arm-url').textContent = 'no show server'; $('arm-qr').removeAttribute('src');
+    $('arm-info').textContent = `${STEPS.length} steps · keys only`;
+  });
+}
+refreshConnect();
+setInterval(() => { if (!armEl.classList.contains('off')) refreshConnect(); }, 5000);
+/** U: bring the connect card back over the show (any time the phone needs to reconnect) */
+function peekConnect(on) {
+  armEl.classList.toggle('off', !on);
+  armEl.classList.toggle('peek', on);
+  $('arm-msg').textContent = on ? 'Scan to connect the phone · U to close' : 'Press any key or click to start';
+  if (on) refreshConnect();
+}
 const st = document.createElement('div'); st.id = 'show-status'; body.appendChild(st);
 frame.src = LIVE_URL;              // load early so the live stage is connected long before it's shown
 Deck.frame.src = '/site/deck.html#2';

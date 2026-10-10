@@ -44,6 +44,14 @@ if ($held) { throw ":$Port is in use by PID $($held[0].OwningProcess). Stop it o
 
 if (-not $NoDemo) { & (Join-Path $PSScriptRoot "demo.ps1") -Look studio }
 
+# the stage SFX stem (softer marker and eraser) is rendered once from the film's composer; it needs numpy
+# and scipy, which the system Python has. Without it the show uses the film's own stem.
+$stem = Join-Path $root "video/v4/audio/sfx_show.wav"
+if (-not (Test-Path $stem)) {
+  Write-Host "Rendering the stage SFX stem ..."
+  try { & python (Join-Path $root "video/v4/show/sfx_show.py") | Select-Object -Last 1 } catch { Write-Warning "Couldn't render sfx_show.wav; the show will use the film's stem." }
+}
+
 New-Item -ItemType Directory -Force $run | Out-Null
 $logOut = Join-Path $run "show.out.log"; $logErr = Join-Path $run "show.err.log"
 $proc = Start-Process -FilePath $python -ArgumentList @("-u", "`"$server`"", $Port) -WindowStyle Hidden -PassThru `
@@ -66,13 +74,11 @@ if (-not $NoBrowser) {
   Start-Process -FilePath $chrome -ArgumentList ($chromeArgs + $url) | Out-Null
 }
 
-# adapters with a default gateway are the real networks (Wi-Fi, a phone hotspot); virtual switches have none
-$ips = Get-NetIPConfiguration -ErrorAction SilentlyContinue | Where-Object { $_.IPv4DefaultGateway } |
-  ForEach-Object { $_.IPv4Address.IPAddress }
-if (-not $ips) { $ips = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue |
-  Where-Object { $_.IPAddress -notlike "127.*" -and $_.IPAddress -notlike "169.254.*" } | Select-Object -ExpandProperty IPAddress }
 Write-Host ""
 Write-Host "Show:   $url"
-foreach ($ip in $ips) { Write-Host "Remote: http://${ip}:$Port/remote   (phone on the same Wi-Fi or hotspot)" }
-Write-Host "Keys:   Right/PageDown/Space next · Left/PageUp back · B blank · M mute · C captions · P pointer · F fullscreen"
+# the server works out the laptop's address (the interface with the default route), as the start screen shows it
+try { $urls = (Invoke-RestMethod "http://127.0.0.1:$Port/api/remote" -TimeoutSec 3).urls } catch { $urls = @() }
+if ($urls.Count -gt 0) { Write-Host "Remote: $($urls[0])   <- open this on the phone (same Wi-Fi or hotspot), or scan the QR on screen" }
+foreach ($u in ($urls | Select-Object -Skip 1)) { Write-Host "        $u" }
+Write-Host "Keys:   Right/PageDown/Space next · Left/PageUp back · B blank · M mute · C captions · Q Q&A · U phone address · F fullscreen"
 Write-Host "Stop:   .\scripts\show.ps1 -Stop"

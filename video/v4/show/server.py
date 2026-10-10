@@ -7,6 +7,7 @@ Run from the repo root:  app\\.venv\\Scripts\\python video\\v4\\show\\server.py 
 Only video/v4 and site/ are served; nothing else in the repo is reachable.
 """
 import asyncio
+import io
 import json
 import socket
 import sys
@@ -15,7 +16,7 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
+from fastapi.responses import FileResponse, RedirectResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 HERE = Path(__file__).resolve().parent
@@ -135,6 +136,49 @@ app.mount("/v4", StaticFiles(directory=V4), name="v4")
 app.mount("/site", StaticFiles(directory=ROOT / "site"), name="site")   # the landing page, the Q&A deck, fonts
 
 
+def primary_ip() -> str | None:
+    """The address of the interface with the default route: the one a phone on the same Wi-Fi or hotspot
+    can reach. (A UDP connect sends nothing; it only asks the OS which interface it would use.)"""
+    for target in ("8.8.8.8", "10.255.255.255", "192.168.255.255"):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+                s.connect((target, 1))
+                ip = s.getsockname()[0]
+                if not ip.startswith(("127.", "0.")):
+                    return ip
+        except OSError:
+            continue
+    return None
+
+
+def remote_urls() -> list[str]:
+    """Phone remote URLs, the most likely one first. Recomputed on every call, so switching to a phone
+    hotspot after the server started is picked up."""
+    first = primary_ip()
+    ips = ([first] if first else []) + [i for i in lan_ips() if i != first]
+    return [f"http://{ip}:{PORT}/remote" for ip in ips]
+
+
+@app.get("/api/remote")
+async def remote_info():
+    return {"urls": remote_urls()}
+
+
+@app.get("/api/qr.svg")
+async def qr_svg():
+    """QR code of the first remote URL, for the phone to scan off the screen (needs segno)."""
+    urls = remote_urls()
+    if not urls:
+        return Response(status_code=404)
+    try:
+        import segno
+    except ImportError:
+        return Response(status_code=404)
+    buf = io.BytesIO()
+    segno.make(urls[0], error="m").save(buf, kind="svg", scale=10, border=2, dark="#14171f", light="#ffffff", xmldecl=False)
+    return Response(buf.getvalue(), media_type="image/svg+xml", headers={"Cache-Control": "no-store"})
+
+
 def lan_ips() -> list[str]:
     ips = set()
     try:
@@ -154,6 +198,6 @@ def lan_ips() -> list[str]:
 
 if __name__ == "__main__":
     print(f"Projector page: http://127.0.0.1:{PORT}/v4/show.html")
-    for ip in lan_ips():
-        print(f"Phone remote:   http://{ip}:{PORT}/remote")
+    for url in remote_urls():
+        print(f"Phone remote:   {url}")
     uvicorn.run(app, host="0.0.0.0", port=PORT, log_level="warning")

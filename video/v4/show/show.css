@@ -44,3 +44,13 @@ body.pointer #show-status { display: block; }
 #qa.on { opacity: 1; pointer-events: auto; }
 #qa iframe { position: absolute; inset: 0; width: 1920px; height: 1080px; border: 0; }
 body.qa { cursor: default; }
+
+/* the phone remote's address on the start screen (and on U): real IP from the server, plus a QR code */
+.connect { display: flex; gap: 28px; align-items: center; margin-top: 18px; padding: 22px 30px; background: #fff; border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: 0 18px 30px -22px rgba(20,23,31,.45); }
+.connect img { width: 220px; height: 220px; image-rendering: pixelated; }
+.connect img:not([src]) { display: none; }
+.connect-text { display: grid; gap: 10px; }
+.connect-text small { font: 600 22px var(--ui); color: var(--ink-3); white-space: pre; }
+.connect-text code { font: 800 44px var(--ui); color: var(--blue); letter-spacing: -.01em; }
+#arm.peek { background: rgba(238,240,243,.97); }
