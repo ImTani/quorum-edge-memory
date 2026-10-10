@@ -38,3 +38,9 @@ body.pointer #show-status { display: block; }
 
 /* the live-demo camera (player.js liveFrame): eased like the film's camera moves */
 #live iframe { transform-origin: 0 0; transition: transform .85s cubic-bezier(.65, 0, .35, 1); will-change: transform; }
+
+/* Q&A: the deck over the show (Q, or the phone's Q&A panel) */
+#qa { position: absolute; inset: 0; z-index: 45; opacity: 0; pointer-events: none; background: #eef0f3; transition: opacity .3s ease; }
+#qa.on { opacity: 1; pointer-events: auto; }
+#qa iframe { position: absolute; inset: 0; width: 1920px; height: 1080px; border: 0; }
+body.qa { cursor: default; }

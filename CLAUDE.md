@@ -9,6 +9,7 @@ interfaces are frozen in `app/CONTRACT.md`. Read that before touching `app/`. `d
 - Tests: `app\.venv\Scripts\python -m pytest app\tests -q`
 - Hub binary: `.\scripts\fetch_hub.ps1` (Qdrant server into `app\hub\bin`, gitignored)
 - Full demo: `.\scripts\demo.ps1` (reset + seed + hub + two devices on :8001 / :8002); stop with `-Stop`
+- Stage show: `.\scripts\show.ps1` (demo + show server :9000 + Chrome kiosk; `-Window` to rehearse, `-Stop`); phone remote at `http://<laptop ip>:9000/remote`
 - End-to-end check (right after demo.ps1): `app\.venv\Scripts\python scripts\demo_check.py` (`--until 5` to rehearse)
 - Isolation guard: `.\scripts\check_isolation.ps1`
 
@@ -20,7 +21,7 @@ interfaces are frozen in `app/CONTRACT.md`. Read that before touching `app/`. `d
    uv/pip/npm. Python code sets its own model paths (`app/edge/__init__.py`), so it is safe
    from any shell. Never `pip install` into the system Python, never `ollama pull`
    (use the installed `llama3.2`), never install Playwright browsers outside `.cache\ms-playwright`.
-2. **Git.** Work happens on branch `worktree-mvp` in `.claude/worktrees/mvp`. Small commits after
+2. **Git.** Work happens on `main` (the MVP branch `worktree-mvp` is merged and gone). Small commits after
    verified changes. Subagents running in parallel do **not** commit; the orchestrator does.
 3. **Qdrant Edge API is beta.** Use only the methods verified in `app/CONTRACT.md` ("Verified
    API"). Introspect (`dir()`, `__text_signature__`) before using anything else; never guess.

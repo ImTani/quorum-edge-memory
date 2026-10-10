@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Quorum</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="show/show.css">
 <style>
 @font-face { font-family: "Shantell Sans"; src: url(../../site/fonts/shantell-sans-vf.woff2) format("woff2-variations"), url(../../site/fonts/shantell-sans-vf.woff2) format("woff2"); font-weight: 300 800; font-display: block; }
@@ -107,6 +108,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#cfd3da;color:va
   <span style="font-family:var(--ui);font-weight:800">Quorum</span><span style="font-family:var(--ui);font-weight:600">Aa</span><span style="font-family:var(--ui);font-weight:400">Aa</span><span style="font-family:var(--ui);font-weight:700">Aa</span></div>
 
 <div id="live"><iframe id="live-frame" title="Live demo" allow="clipboard-read; clipboard-write"></iframe></div>
+<div id="qa"><iframe id="qa-frame" title="Q&amp;A deck"></iframe></div>
 <div id="jumpfade"></div>
 <div id="blank"></div>
 <div id="arm"><div class="arm-card"><b>Quorum</b><span>Press any key or click to start</span><small id="arm-info"></small></div></div>
@@ -116,7 +118,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#cfd3da;color:va
 <script>
   // Show scene list: every film scene (the board and the S15 pull-out stay as in the film; the show never
   // plays S03-S11, where the live demo runs instead) plus the show-only scenes.
-  window.SCENE_FILES = (window.SCENE_FILES || []).concat(['S16_phone_share']);
+  window.SCENE_FILES = (window.SCENE_FILES || []).concat(['S16_phone_share', 'S17_opening', 'S18_roadmap']);
   for (const f of window.SCENE_FILES) document.write(`<script src="scenes/${f}.js" onerror="console.error('[loader] missing scenes/${f}.js')"><\/script>`);
 </script>
 <script src="main.js"></script>

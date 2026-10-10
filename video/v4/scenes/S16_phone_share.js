@@ -164,10 +164,11 @@
 
       // The film's close (S15) fades to clean paper from 167 s and keeps calling Q.setFade(1) whenever its
       // (huge-margin) region is on camera, which is always. For this live segment, past the film's end,
-      // ignore it so the board stays visible. Local guard: lib.js and S15 are untouched.
+      // ignore it so the board stays visible. This covers every show-only scene (all of them live past the
+      // film's 168 s end). Local guard: lib.js and S15 are untouched.
       if (!Q.__s16guard) {
         const orig = Q.setFade;
-        Q.setFade = v => { if (Q.t >= START - 1 && Q.t <= END + 60) return; orig(v); };
+        Q.setFade = v => { if (Q.t > 168.5) return; orig(v); };
         Q.__s16guard = true;
       }
 

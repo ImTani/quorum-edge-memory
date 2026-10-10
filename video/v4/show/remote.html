@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#14171f">
 <title>Quorum · remote</title>
+<link rel="icon" href="data:,">
 <style>
 @font-face { font-family: "Shantell Sans"; src: url(/site/fonts/shantell-sans-vf.woff2) format("woff2"); font-weight: 300 800; }
 @font-face { font-family: "Schibsted Grotesk"; src: url(/site/fonts/schibsted-grotesk-600.woff2) format("woff2"); font-weight: 600; }
@@ -41,14 +42,35 @@ body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dv
 #list button.cur { color: #fff; background: #1f4fd8; border-radius: 10px; }
 #list button i { font-style: normal; color: var(--ink3); margin-right: 10px; display: inline-block; width: 28px; }
 #list button.live i { color: #ff6b7d; }
+#list button.skip { color: #ffb020; font-style: italic; }
+#qa { position: fixed; inset: 0; z-index: 8; background: #14171f; display: none; grid-template-rows: auto auto 1fr; gap: 10px;
+  padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); }
+#qa.on { display: grid; }
+.qa-top { display: flex; gap: 8px; align-items: center; }
+.qa-top button { border: 0; border-radius: 12px; padding: 12px 14px; font: 800 18px var(--ui); background: #2a2f39; color: #fff; }
+.qa-top #qa-close { margin-left: auto; background: var(--blue); }
+#qa-slide { font: 800 18px var(--ui); color: #cfd3da; min-width: 64px; text-align: center; }
+#qa-answer { background: #f3f4f6; color: var(--ink); border-radius: 14px; padding: 14px; font: 600 20px/1.4 var(--hand); }
+#qa-answer b { display: block; font: 800 16px/1.3 var(--ui); color: var(--blue); margin-bottom: 6px; }
+#qa-answer:empty { display: none; }
+#qa-list { overflow-y: auto; display: grid; gap: 8px; align-content: start; }
+#qa-list button { text-align: left; border: 1px solid #2a2f39; background: #1d2129; color: #e5e7eb; border-radius: 12px; padding: 13px 12px; font: 600 17px/1.25 var(--ui); }
+#qa-list button i { font-style: normal; float: right; color: var(--ink3); font-size: 14px; margin-left: 8px; }
+#qa-list button.cur { border-color: var(--blue); background: #1b2a55; }
 </style></head>
 <body>
-<div class="top"><span class="dot" id="dot"></span><span id="pos">–</span><button class="tbtn" id="steps">Steps</button><button class="tbtn" id="treset">⟲</button><span id="timer">0:00</span></div>
+<div class="top"><span class="dot" id="dot"></span><span id="pos">–</span><button class="tbtn" id="steps">Steps</button><button class="tbtn" id="treset">⟲</button><button class="tbtn" id="qabtn">Q&amp;A</button><span id="timer">0:00</span></div>
 <div id="title">Connecting…</div>
 <div class="notes"><div id="do"></div><div id="say"></div><div id="next-up"></div></div>
 <div class="toggles"><button data-t="blank">Blank</button><button data-t="mute">Mute</button><button data-t="captions">Captions</button></div>
 <div class="nav"><button id="back">Back</button><button id="next">Next</button></div>
 <div id="list"></div>
+<div id="qa">
+  <div class="qa-top"><button id="qa-prev">◀</button><span id="qa-slide">–</span><button id="qa-next">▶</button><button id="qa-close">Back to show</button></div>
+  <div id="qa-answer"></div>
+  <div id="qa-list"></div>
+</div>
+<script src="/v4/show/qa.js"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -66,10 +88,13 @@ function render() {
   $('title').className = s.live ? 'live' : '';
   $('do').textContent = s.do || ''; $('do').className = s.do ? 'on' : '';
   $('say').textContent = s.say || '';
-  const n = steps[st.step + 1];
+  let k = st.step + 1; while (steps[k] && steps[k].skip) k++;
+  const n = steps[k];
   $('next-up').innerHTML = n ? `Next: <b>${n.live ? 'LIVE · ' : ''}${n.title}</b>` : '<b>End of show</b>';
   for (const b of document.querySelectorAll('.toggles button')) b.classList.toggle('on', !!st[b.dataset.t]);
-  $('list').innerHTML = steps.map((x, i) => `<button data-i="${i}" class="${i === st.step ? 'cur' : ''} ${x.live ? 'live' : ''}"><i>${i + 1}</i>${x.title}</button>`).join('');
+  $('qa').classList.toggle('on', st.deck != null);
+  $('qa-slide').textContent = st.deck != null ? `slide ${st.deck}` : '–';
+  $('list').innerHTML = steps.map((x, i) => `<button data-i="${i}" class="${i === st.step ? 'cur' : ''} ${x.live ? 'live' : ''} ${x.skip ? 'skip' : ''}"><i>${i + 1}</i>${x.title}</button>`).join('');
 }
 async function loadSteps() { const r = await fetch('/api/steps'); const j = await r.json(); steps = j.steps || []; st = { ...st, ...j }; render(); }
 
@@ -101,6 +126,24 @@ $('list').addEventListener('click', e => {
   if (b) post('goto', { step: +b.dataset.i });
   $('list').classList.remove('on');
 });
+// Q&A: tap a question, the projector opens the deck at its slide, the answer to say first shows here
+let qaCur = -1;
+function renderQA() {
+  $('qa-list').innerHTML = (window.QA || []).map((x, i) => `<button data-q="${i}" class="${i === qaCur ? 'cur' : ''}">${x.q}<i>${x.slide}</i></button>`).join('');
+  const x = (window.QA || [])[qaCur];
+  $('qa-answer').innerHTML = x ? `<b>${x.q}</b>${x.a}` : '';
+}
+$('qabtn').addEventListener('click', () => { buzz(15); post('deck', { slide: 2 }); });
+$('qa-close').addEventListener('click', () => { buzz(15); qaCur = -1; renderQA(); post('deck', { slide: null }); });
+$('qa-prev').addEventListener('click', () => post('deck_step', { delta: -1 }));
+$('qa-next').addEventListener('click', () => post('deck_step', { delta: 1 }));
+$('qa-list').addEventListener('click', e => {
+  const b = e.target.closest('button[data-q]'); if (!b) return;
+  qaCur = +b.dataset.q; buzz(15); renderQA(); post('deck', { slide: window.QA[qaCur].slide });
+  $('qa-answer').scrollIntoView({ block: 'start' });
+});
+renderQA();
+
 // keep the screen on while presenting, where the browser allows it (needs HTTPS on most phones)
 async function wake() { try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (e) {} }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') wake(); });

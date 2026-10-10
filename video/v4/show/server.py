@@ -4,7 +4,7 @@ position (step, blank, mute, captions) that the projector page and every phone f
 Run from the repo root:  app\\.venv\\Scripts\\python video\\v4\\show\\server.py   (or scripts\\show.ps1)
   projector page  http://127.0.0.1:9000/v4/show.html
   phone remote    http://<laptop LAN ip>:9000/remote
-Only video/v4 and site/fonts are served; nothing else in the repo is reachable.
+Only video/v4 and site/ are served; nothing else in the repo is reachable.
 """
 import asyncio
 import json
@@ -25,7 +25,7 @@ PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 9000
 
 app = FastAPI()
 state = {"step": 0, "count": 1, "blank": False, "mute": False, "captions": False,
-         "timer_start": None, "rev": 0, "steps": []}
+         "timer_start": None, "deck": None, "rev": 0, "steps": []}
 listeners: set[asyncio.Queue] = set()
 
 
@@ -56,20 +56,35 @@ async def get_steps():
     return {"steps": state["steps"], **public()}
 
 
+def step_from(i: int, d: int) -> int:
+    """Next/Back skip backup steps (skip: true); those are reached only by jumping to them."""
+    steps, j = state["steps"], i + d
+    while 0 <= j < len(steps) and steps[j].get("skip"):
+        j += d
+    return i if not 0 <= j < state["count"] else j
+
+
 @app.post("/api/cmd")
 async def cmd(req: Request):
     body = await req.json()
     c = body.get("cmd")
     if c == "next":
-        state["step"] = min(state["step"] + 1, state["count"] - 1)
+        state["step"] = step_from(state["step"], +1)
         if state["timer_start"] is None:
             state["timer_start"] = time.time()
     elif c == "back":
-        state["step"] = max(state["step"] - 1, 0)
+        state["step"] = step_from(state["step"], -1)
     elif c == "goto":
         state["step"] = max(0, min(int(body.get("step", 0)), state["count"] - 1))
     elif c in ("blank", "mute", "captions"):
         state[c] = not state[c] if "value" not in body else bool(body["value"])
+    elif c == "deck":
+        # Q&A: the deck over the show at a slide (1-based), or None to go back to the show
+        slide = body.get("slide")
+        state["deck"] = None if slide is None else max(1, min(int(slide), 99))
+    elif c == "deck_step":
+        if state["deck"] is not None:
+            state["deck"] = max(1, state["deck"] + int(body.get("delta", 1)))
     elif c == "timer_reset":
         state["timer_start"] = None
     elif c == "timer_start":
@@ -117,7 +132,7 @@ async def index():
 
 
 app.mount("/v4", StaticFiles(directory=V4), name="v4")
-app.mount("/site/fonts", StaticFiles(directory=ROOT / "site" / "fonts"), name="fonts")
+app.mount("/site", StaticFiles(directory=ROOT / "site"), name="site")   # the landing page, the Q&A deck, fonts
 
 
 def lan_ips() -> list[str]:

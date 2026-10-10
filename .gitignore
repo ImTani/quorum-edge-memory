@@ -43,3 +43,8 @@ app/data/
 !.impeccable/design.json
 !.impeccable/surfaces/
 
+
+# internal pitch and run-of-show notes (they hold pitch rules; the repo is public)
+docs/SHOWCASE*.md
+docs/STAGE_PLAN.md
+video/v4/.scratch/
