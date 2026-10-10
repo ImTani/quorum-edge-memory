@@ -66,9 +66,11 @@ if (-not $NoBrowser) {
   Start-Process -FilePath $chrome -ArgumentList ($chromeArgs + $url) | Out-Null
 }
 
-$ips = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue |
-  Where-Object { $_.IPAddress -notlike "127.*" -and $_.IPAddress -notlike "169.254.*" -and $_.PrefixOrigin -ne "WellKnown" } |
-  Select-Object -ExpandProperty IPAddress
+# adapters with a default gateway are the real networks (Wi-Fi, a phone hotspot); virtual switches have none
+$ips = Get-NetIPConfiguration -ErrorAction SilentlyContinue | Where-Object { $_.IPv4DefaultGateway } |
+  ForEach-Object { $_.IPv4Address.IPAddress }
+if (-not $ips) { $ips = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue |
+  Where-Object { $_.IPAddress -notlike "127.*" -and $_.IPAddress -notlike "169.254.*" } | Select-Object -ExpandProperty IPAddress }
 Write-Host ""
 Write-Host "Show:   $url"
 foreach ($ip in $ips) { Write-Host "Remote: http://${ip}:$Port/remote   (phone on the same Wi-Fi or hotspot)" }

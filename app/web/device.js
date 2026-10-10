@@ -608,8 +608,8 @@ export function createDeviceUI(root, opts = {}) {
     box.innerHTML = `
       <div class="answer-q">${esc(q)}</div>
       <div class="answer-text">${text}</div>
-      ${cites ? `<div class="cites">${cites}</div>` : ''}
-      <div class="answer-meta"><span class="took">${esc(Math.round(r.took_ms ?? 0))} ms, on this device</span>${offline ? '<span>no hub needed</span>' : ''}<span>${view === 'team' ? 'team view' : 'mine'}</span></div>`;
+      <div class="answer-meta"><span class="took">${esc(Math.round(r.took_ms ?? 0))} ms, on this device</span>${offline ? '<span>no hub needed</span>' : ''}<span>${view === 'team' ? 'team view' : 'mine'}</span></div>
+      ${cites ? `<div class="cites">${cites}</div>` : ''}`;
   }
 
   el('answer').addEventListener('mouseover', e => { const b = e.target.closest('.cite'); if (b) cloud.highlight([b.dataset.claim], 2.5); });
