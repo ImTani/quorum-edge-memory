@@ -121,7 +121,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#cfd3da;color:va
 <script>
   // Show scene list: every film scene (the board and the S15 pull-out stay as in the film; the show never
   // plays S03-S11, where the live demo runs instead) plus the show-only scenes.
-  window.SCENE_FILES = (window.SCENE_FILES || []).concat(['S16_phone_share', 'S17_opening', 'S18_roadmap']);
+  window.SCENE_FILES = (window.SCENE_FILES || []).concat(['S16_phone_share', 'S17_opening', 'S18_roadmap', 'S19_how_it_works']);
   for (const f of window.SCENE_FILES) document.write(`<script src="scenes/${f}.js" onerror="console.error('[loader] missing scenes/${f}.js')"><\/script>`);
 </script>
 <script src="main.js"></script>

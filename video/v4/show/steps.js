@@ -57,12 +57,8 @@ window.SHOW_STEPS = [
   { insert: 'S16', title: 'On the phone', film: [200, 226],
     say: '"Most of this starts on a phone. Clients are on WhatsApp, so getting a chat in is one share."' },
 
-  { title: 'How it works', film: [116, 127.4],
-    say: '"How it works. On each laptop a local model turns messages into claims. Each claim is a point in Qdrant Edge with three vectors: meaning, keywords, and a key vector of only what it’s about. When a claim syncs in, the laptop runs one filtered search on that key. The hub only relays."' },
-  { title: 'Not the value', film: [127.4, 132.0],
-    say: '"The key is the job and the kind of fact, never the value. \'Sharma delivery, due date\' and \'Sharma wedding edit, due date\'."' },
-  { title: 'The 0.82 bar', film: [132.0, 137.3],
-    say: '"Those two score 0.85. An unrelated deadline is 0.74. Above 0.82 with a different value, that’s a conflict, and its ID is a hash of the two claims, so both laptops agree without talking. Then it asks the owner."' },
+  { insert: 'S19', title: 'How it works', film: [320, 350.0],     // one idea per press (replaces the film's 116-137.3)
+    say: '"How it works."' },
   { title: 'Your own layer', film: [137.3, 145.9],
     say: '"And because nothing leaves your laptop unless the team needs it, it can know you: email, WhatsApp, calls and notes, what you’re working on. It can tell you when you’re on the wrong task with a deadline due."' },
   { insert: 'S18', title: 'Where it goes next', film: [280, 304],
