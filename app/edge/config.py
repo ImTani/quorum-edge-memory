@@ -10,7 +10,7 @@ APP_DIR = Path(__file__).resolve().parents[1]
 WEB_DIR = APP_DIR / "web"
 FIXTURES_DIR = APP_DIR / "fixtures"
 
-DISPLAY_NAMES = {"tanishk": "Tanishk · on set", "lakshya": "Lakshya · office"}
+DISPLAY_NAMES = {"tanishk": "Tanishk · on set", "lakshya": "Lakshya · office", "tushar": "Tushar · phone"}
 PEERS = {"tanishk": "http://127.0.0.1:8001", "lakshya": "http://127.0.0.1:8002"}
 # UI looks. "classic" is the page exactly as built; any other look is opt-in (app/web/looks/<name>.css).
 LOOKS = ("classic", "studio")

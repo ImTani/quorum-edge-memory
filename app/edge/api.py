@@ -194,6 +194,12 @@ def create_app(cfg, *, embedder=None, store=None, sync=None) -> FastAPI:
         html = (WEB_DIR / name).read_text(encoding="utf-8")
         return HTMLResponse(html.replace('<html lang="en">', f'<html lang="en" data-look="{cfg.look}">', 1))
 
+    @app.get("/phone", include_in_schema=False)
+    def phone():
+        """The phone page: this device's memory sized for a phone (ask, quick note, latest claims, conflicts).
+        The device runs on the laptop; a phone on the same network opens it (python -m edge --host 0.0.0.0)."""
+        return FileResponse(WEB_DIR / "phone.html", media_type="text/html")
+
     @app.get("/stage", include_in_schema=False)
     def stage():
         """The demo stage: both devices and the hub on one screen (also at /web/stage.html)."""

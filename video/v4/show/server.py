@@ -11,6 +11,7 @@ import io
 import json
 import os
 import shlex
+import shutil
 import socket
 import subprocess
 import sys
@@ -61,6 +62,7 @@ phones: set[asyncio.Queue] = set()          # listeners that are phone remotes (
 
 HUB = "http://127.0.0.1:6333"
 DEVICES = {"tanishk": "http://127.0.0.1:8001", "lakshya": "http://127.0.0.1:8002"}
+PHONE_DEVICE, PHONE_PORT = "tushar", 8003   # scripts/demo.ps1 -Phone: a teammate's Quorum, opened on a phone
 OLLAMA = "http://127.0.0.1:11434"
 SEED_HUB_POINTS = 18                        # what scripts/demo.ps1 seeds the hub with
 
@@ -140,7 +142,8 @@ RESET_CMD = os.environ.get("QUORUM_RESET_CMD")
 def reset_command() -> list[str]:
     if RESET_CMD:
         return shlex.split(RESET_CMD, posix=False)
-    return ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+    shell = shutil.which("pwsh") or "powershell"        # PowerShell 7 when installed, else Windows PowerShell
+    return [shell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
             str(ROOT / "scripts" / "demo.ps1"), *shlex.split(DEMO_ARGS, posix=False)]
 
 
@@ -229,8 +232,9 @@ async def preflight():
             return None
 
     async with httpx.AsyncClient() as c:
-        hub, tan, lak, oll = await asyncio.gather(get(c, f"{HUB}/collections/quorum_team"), get(c, f"{DEVICES['tanishk']}/api/state"),
-                                                  get(c, f"{DEVICES['lakshya']}/api/state"), get(c, f"{OLLAMA}/api/ps"))
+        hub, tan, lak, oll, ph = await asyncio.gather(get(c, f"{HUB}/collections/quorum_team"), get(c, f"{DEVICES['tanishk']}/api/state"),
+                                                      get(c, f"{DEVICES['lakshya']}/api/state"), get(c, f"{OLLAMA}/api/ps"),
+                                                      get(c, f"http://127.0.0.1:{PHONE_PORT}/api/state"))
     checks = []
     points = hub and hub.get("result", {}).get("points_count")
     checks.append({"name": "Team hub", "ok": hub is not None, "detail": f"{points} claims" if hub else "not reachable: run scripts/show.ps1"})
@@ -253,6 +257,15 @@ async def preflight():
         warm = any(n.startswith("llama3.2") for n in loaded)
         checks.append({"name": "Local model", "ok": True if warm else "warn",
                        "detail": "llama3.2 loaded" if warm else "Ollama up, model not loaded yet: the first note may take ~8 s"})
+    if "-Phone" in DEMO_ARGS:
+        if ph is None:
+            checks.append({"name": "Tushar's phone (Quorum)", "ok": "warn", "detail": "not running: re-run scripts/show.ps1"})
+        else:
+            psync = ph.get("sync") or {}
+            n = len(ph.get("claims") or [])
+            good = psync.get("online") and psync.get("hub_ok")
+            checks.append({"name": "Tushar's phone (Quorum)", "ok": True if good and n else "warn",
+                           "detail": f"{n} claims from the hub · Steps → Teammate's phone for the QR" if good else "not connected to the hub"})
     checks.append({"name": "Phone remote", "ok": True if phones else "warn",
                    "detail": f"{len(phones)} connected" if phones else "no phone connected yet"})
     return {"checks": checks}
@@ -302,13 +315,17 @@ def remote_urls() -> list[str]:
 
 @app.get("/api/remote")
 async def remote_info():
-    return {"urls": remote_urls()}
+    urls = remote_urls()
+    return {"urls": urls, "phone": [u.replace(f":{PORT}/remote", f":{PHONE_PORT}/phone") for u in urls]}
 
 
 @app.get("/api/qr.svg")
-async def qr_svg():
-    """QR code of the first remote URL, for the phone to scan off the screen (needs segno)."""
+async def qr_svg(target: str = "remote"):
+    """QR code of the first remote URL, for the phone to scan off the screen (needs segno). target=phone: the
+    teammate's Quorum page (the phone device, :8003/phone) at the same address."""
     urls = remote_urls()
+    if target == "phone":
+        urls = [u.replace(f":{PORT}/remote", f":{PHONE_PORT}/phone") for u in urls]
     if not urls:
         return Response(status_code=404)
     try:

@@ -9,7 +9,7 @@ interfaces are frozen in `app/CONTRACT.md`. Read that before touching `app/`. `d
 - Tests: `app\.venv\Scripts\python -m pytest app\tests -q`
 - Hub binary: `.\scripts\fetch_hub.ps1` (Qdrant server into `app\hub\bin`, gitignored)
 - Full demo: `.\scripts\demo.ps1` (reset + seed + hub + two devices on :8001 / :8002); stop with `-Stop`
-- Stage show: `.\scripts\show.ps1` (demo + show server :9000 + Chrome kiosk; `-Window` to rehearse, `-Stop`); phone remote at `http://<laptop ip>:9000/remote`
+- Stage show: `.\scripts\show.ps1` (demo + show server :9000 + Chrome kiosk; `-Window` to rehearse, `-Stop`); phone remote at `http://<laptop ip>:9000/remote`; a teammate's phone Quorum at `http://<laptop ip>:8003/phone` (`-NoPhone` to leave it out)
 - End-to-end check (right after demo.ps1): `app\.venv\Scripts\python scripts\demo_check.py` (`--until 5` to rehearse)
 - Isolation guard: `.\scripts\check_isolation.ps1`
 

@@ -316,6 +316,21 @@ def test_stage_is_served_at_slash_stage_and_under_web(data_dir, embedder, monkey
         assert "<title>Quorum</title>" in client.get("/").text  # the single-device page is unchanged
 
 
+def test_phone_page_is_served_at_slash_phone(data_dir, embedder, monkeypatch):
+    web = data_dir / "web"
+    web.mkdir()
+    (web / "phone.html").write_text("<!doctype html><title>Quorum phone</title>", encoding="utf-8")
+    monkeypatch.setattr(edge.api, "WEB_DIR", web)
+    store = FakeStore()
+    app = edge.api.create_app(Config(device="tushar", port=0, data_dir=data_dir), embedder=embedder,
+                              store=store, sync=FakeSync(store))
+    with TestClient(app) as client:
+        res = client.get("/phone")
+        assert res.status_code == 200 and res.headers["content-type"].startswith("text/html")
+        assert "Quorum phone" in res.text
+        assert client.get("/api/state").json()["display_name"] == "Tushar · phone"
+
+
 def test_look_defaults_to_classic_and_studio_is_opt_in(data_dir, embedder, monkeypatch):
     web = data_dir / "web"
     web.mkdir()

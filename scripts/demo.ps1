@@ -3,13 +3,15 @@
 #   .\scripts\demo.ps1 -NoSeed   restart without touching data
 #   .\scripts\demo.ps1 -Stop     stop all three processes
 #   -Force                       also stop foreign processes holding :6333/:8001/:8002
+#   -Phone                       also start "tushar", a teammate's Quorum for a phone (:8003, listening on the
+#                                network; open http://<laptop ip>:8003/phone). It starts empty and fills from the hub.
 #   -Look studio                 serve the optional studio look (default: classic, the look as built).
 #                                Any page also takes ?look=studio or ?look=classic, no restart needed.
 # Processes run in hidden windows; logs go to app\data\logs.
 # Only processes this checkout started are stopped (PID files in app\data\run, plus this checkout's
 # own qdrant.exe). Anything else on the demo ports is reported, never killed, unless -Force.
 # The stop is a hard kill; that is safe because devices flush their shard after every write.
-param([switch]$Stop, [switch]$NoSeed, [switch]$Force, [ValidateSet("classic", "studio")][string]$Look = "classic")
+param([switch]$Stop, [switch]$NoSeed, [switch]$Force, [switch]$Phone, [ValidateSet("classic", "studio")][string]$Look = "classic")
 $ErrorActionPreference = "Stop"
 
 . (Join-Path $PSScriptRoot "env.ps1")
@@ -22,7 +24,8 @@ $logs   = Join-Path $app "data\logs"
 $pids   = Join-Path $app "data\run"
 $hubUrl = "http://127.0.0.1:6333"
 $devices = [ordered]@{ tanishk = 8001; lakshya = 8002 }
-$ports  = @($devices.Values) + 6333
+$phoneDevice = "tushar"; $phonePort = 8003            # -Phone: not seeded, fills from the hub
+$ports  = @($devices.Values) + 6333 + $phonePort
 
 function Get-Listeners([int]$port) {
   Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue |
@@ -123,6 +126,9 @@ Invoke-WithEnv @{
 Wait-Http "$hubUrl/readyz" 30 "Hub"
 
 if (-not $NoSeed) {
+  # the phone device isn't seeded: wipe it so it pulls the fresh hub from scratch
+  $phoneData = Join-Path $app "data\$phoneDevice"
+  if (Test-Path $phoneData) { Remove-Item -Recurse -Force $phoneData }
   Write-Host "Seeding devices and hub ..."
   Push-Location $app
   try {
@@ -138,8 +144,15 @@ Invoke-WithEnv @{ PYTHONUNBUFFERED = "1" } {
     if ($Look -ne "classic") { $deviceArgs += @("--look", $Look) }
     Start-Hidden $d $python $deviceArgs
   }
+  if ($Phone) {
+    Write-Host "Starting device $phoneDevice (phone) on :$phonePort, reachable on the network ..."
+    $deviceArgs = @("-m", "edge", "--device", $phoneDevice, "--port", "$phonePort", "--hub", $hubUrl, "--host", "0.0.0.0")
+    if ($Look -ne "classic") { $deviceArgs += @("--look", $Look) }
+    Start-Hidden $phoneDevice $python $deviceArgs
+  }
 }
 foreach ($d in $devices.Keys) { Wait-Http "http://127.0.0.1:$($devices[$d])/api/state" 90 "Device $d" }
+if ($Phone) { Wait-Http "http://127.0.0.1:$phonePort/api/state" 90 "Device $phoneDevice" }
 
 Write-Host ""
 Write-Host "Quorum is running. Demo stage (both devices and the hub, one window):"
@@ -147,5 +160,9 @@ Write-Host "  stage    http://127.0.0.1:$($devices['tanishk'])/stage"
 Write-Host "Single-device pages:"
 foreach ($d in $devices.Keys) { Write-Host ("  {0,-8} http://127.0.0.1:{1}" -f $d, $devices[$d]) }
 Write-Host "  hub      $hubUrl/dashboard"
+if ($Phone) {
+  $ip = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -and $_.NetAdapter.Status -eq "Up" } | Select-Object -First 1).IPv4Address.IPAddress
+  Write-Host ("  {0,-8} http://{1}:{2}/phone   (a phone on the same network)" -f $phoneDevice, $(if ($ip) { $ip } else { "<laptop ip>" }), $phonePort)
+}
 if ($Look -ne "classic") { Write-Host "Look: $Look (add ?look=classic to any page for the classic look)" }
 Write-Host "Stop with: .\scripts\demo.ps1 -Stop"

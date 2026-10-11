@@ -1,0 +1,14 @@
+{
+  "name": "Quorum",
+  "short_name": "Quorum",
+  "description": "Your team's memory: ask it, add a note, see what the team knows.",
+  "start_url": "/phone",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#eef0f3",
+  "theme_color": "#eef0f3",
+  "icons": [
+    { "src": "/web/icons/quorum-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/web/icons/quorum-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

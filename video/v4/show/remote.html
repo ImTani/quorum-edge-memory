@@ -57,6 +57,12 @@ body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dv
 #rst.on { display: grid; gap: 4px; }
 #rst.running { background: var(--amber); color: #1d1b16; } #rst.done { background: #14895a; color: #fff; } #rst.failed { background: #5a1c26; color: #ffd6dc; }
 #rst small { font-weight: 500; font-size: 14px; opacity: .85; }
+#phoneqr { position: fixed; inset: 0; z-index: 10; background: #14171f; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px; text-align: center; }
+#phoneqr.on { display: flex; }
+#phoneqr b { font: 800 24px var(--ui); } #phoneqr span { font: 600 16px/1.4 var(--ui); color: #cfd3da; max-width: 320px; }
+#phoneqr img { width: min(78vw, 340px); background: #fff; border-radius: 14px; padding: 10px; }
+#phoneqr code { font: 700 17px var(--ui); color: #fff; word-break: break-all; }
+#phoneqr button { border: 0; border-radius: 12px; padding: 13px 28px; font: 800 18px var(--ui); background: var(--blue); color: #fff; }
 #qa { position: fixed; inset: 0; z-index: 8; background: #14171f; display: none; grid-template-rows: auto auto 1fr; gap: 10px;
   padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); }
 #qa.on { display: grid; }
@@ -78,7 +84,8 @@ body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dv
 <div class="notes"><div id="rst"></div><div id="pre"></div><div id="do"></div><div id="say"></div><div id="next-up"></div></div>
 <div class="toggles"><button data-t="blank">Blank</button><button data-t="mute">Mute</button><button data-t="captions">Captions</button></div>
 <div class="nav"><button id="back">Back</button><button id="next">Next</button></div>
-<div id="list"><div class="list-tools"><button id="rdemo">Reset demo…</button><button id="lclose">Close</button></div><div id="list-steps"></div></div>
+<div id="list"><div class="list-tools"><button id="rdemo">Reset demo…</button><button id="pqr">Teammate’s phone</button><button id="lclose">Close</button></div><div id="list-steps"></div></div>
+<div id="phoneqr"><b>Tushar’s Quorum</b><span>Scan with the teammate’s phone (same Wi-Fi or hotspot), then Add to Home Screen.</span><img id="pqr-img" alt=""><code id="pqr-url"></code><button id="pqr-close">Done</button></div>
 <div id="qa">
   <div class="qa-top"><button id="qa-prev">◀</button><span id="qa-slide">–</span><button id="qa-next">▶</button><button id="qa-close">Back to show</button></div>
   <div id="qa-answer"></div>
@@ -139,6 +146,7 @@ for (const b of document.querySelectorAll('.toggles button')) b.addEventListener
 $('steps').addEventListener('click', () => $('list').classList.add('on'));
 $('list').addEventListener('click', e => {
   if (e.target.closest('#rdemo')) { $('list').classList.remove('on'); resetDemo(); return; }
+  if (e.target.closest('#pqr')) { $('list').classList.remove('on'); showPhoneQR(); return; }
   const b = e.target.closest('button[data-i]');
   if (b) post('goto', { step: +b.dataset.i });
   $('list').classList.remove('on');
@@ -155,6 +163,13 @@ async function resetDemo() {
     if (!r.ok && r.status !== 409) throw new Error(`HTTP ${r.status}`);
   } catch (e) { alert(`Couldn't start the reset: ${e.message}`); }
 }
+// the teammate's phone: a QR of Tushar's Quorum page, to scan off this screen
+async function showPhoneQR() {
+  try { const j = await (await fetch('/api/remote')).json(); $('pqr-url').textContent = (j.phone || [])[0] || 'no network'; } catch (e) { $('pqr-url').textContent = 'show server not reachable'; }
+  $('pqr-img').src = '/api/qr.svg?target=phone&v=' + Date.now();
+  $('phoneqr').classList.add('on');
+}
+$('pqr-close').addEventListener('click', () => $('phoneqr').classList.remove('on'));
 function renderReset() {
   const box = $('rst'), r = st.reset;
   const fresh = r && (r.state !== 'done' || Date.now() / 1000 + skew - (r.ended || 0) < 25);

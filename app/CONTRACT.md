@@ -246,3 +246,14 @@ sparse input with `__text_signature__` before relying on them.
 - The device API allows CORS from `http://127.0.0.1:*` and `http://localhost:*` (GET/POST, SSE). The stage
   reads the hub straight from Qdrant REST (CORS is on by default): exact counts, `tier = device` count,
   latest points by `order_by modified_at`.
+
+### A teammate's phone (11 Oct)
+
+- `python -m edge --host 0.0.0.0` listens on the network (default `127.0.0.1`). `scripts\demo.ps1 -Phone` adds a
+  third device, `tushar` ("Tushar · phone", :8003), started that way; `scripts\show.ps1` passes `-Phone` unless `-NoPhone`.
+- It is not seeded: `demo.ps1` wipes `app/data/tushar` on every reset, so it starts empty and pulls the hub
+  (team claims, plus `my_devices` claims it captured: none). Measured: 17 team claims, no device or my-devices claims.
+- `GET /phone` serves `app/web/phone.html` (+ `phone.js`, `phone.webmanifest`, `icons/`): ask, quick note, open
+  conflicts (Keep buttons only where `can_settle`), the latest claims; live over the same SSE. Add to Home Screen
+  works over plain HTTP; offline install (a service worker) would need HTTPS, so there is none.
+- The memory is the device process on the laptop; the phone is its screen.

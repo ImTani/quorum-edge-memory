@@ -4,9 +4,10 @@
 #   .\scripts\show.ps1 -Window    same, in a normal window (rehearsal; F to go full screen)
 #   .\scripts\show.ps1 -NoDemo    leave the demo as it is (already running, or not needed)
 #   .\scripts\show.ps1 -NoBrowser start the servers only
+#   .\scripts\show.ps1 -NoPhone   without the teammate's phone device (tushar, :8003/phone; on by default)
 #   .\scripts\show.ps1 -Stop      stop the show server and its Chrome window, then the demo
 # Chrome runs with its own profile in .cache\chrome-show and autoplay allowed, so sound needs no click.
-param([switch]$Stop, [switch]$Window, [switch]$NoDemo, [switch]$NoBrowser, [int]$Port = 9000)
+param([switch]$Stop, [switch]$Window, [switch]$NoDemo, [switch]$NoBrowser, [switch]$NoPhone, [int]$Port = 9000)
 $ErrorActionPreference = "Stop"
 
 . (Join-Path $PSScriptRoot "env.ps1")
@@ -42,7 +43,9 @@ if ($Stop) {
 $held = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
 if ($held) { throw ":$Port is in use by PID $($held[0].OwningProcess). Stop it or pass -Port." }
 
-if (-not $NoDemo) { & (Join-Path $PSScriptRoot "demo.ps1") -Look studio }
+# the same arguments go to the show server, so the phone's "Reset demo" restarts the demo the same way
+$demoArgs = @("-Look", "studio") + $(if ($NoPhone) { @() } else { @("-Phone") })
+if (-not $NoDemo) { & (Join-Path $PSScriptRoot "demo.ps1") @demoArgs }
 
 # the stage SFX stem (softer marker and eraser) is rendered once from the film's composer; it needs numpy
 # and scipy, which the system Python has. Without it the show uses the film's own stem.
@@ -54,8 +57,11 @@ if (-not (Test-Path $stem)) {
 
 New-Item -ItemType Directory -Force $run | Out-Null
 $logOut = Join-Path $run "show.out.log"; $logErr = Join-Path $run "show.err.log"
-$proc = Start-Process -FilePath $python -ArgumentList @("-u", "`"$server`"", $Port) -WindowStyle Hidden -PassThru `
-  -RedirectStandardOutput $logOut -RedirectStandardError $logErr
+$env:QUORUM_DEMO_ARGS = $demoArgs -join " "
+try {
+  $proc = Start-Process -FilePath $python -ArgumentList @("-u", "`"$server`"", $Port) -WindowStyle Hidden -PassThru `
+    -RedirectStandardOutput $logOut -RedirectStandardError $logErr
+} finally { Remove-Item Env:QUORUM_DEMO_ARGS -ErrorAction SilentlyContinue }
 Set-Content -Path $pidFile -Value $proc.Id -NoNewline
 
 $ok = $false
@@ -80,5 +86,8 @@ Write-Host "Show:   $url"
 try { $urls = (Invoke-RestMethod "http://127.0.0.1:$Port/api/remote" -TimeoutSec 3).urls } catch { $urls = @() }
 if ($urls.Count -gt 0) { Write-Host "Remote: $($urls[0])   <- open this on the phone (same Wi-Fi or hotspot), or scan the QR on screen" }
 foreach ($u in ($urls | Select-Object -Skip 1)) { Write-Host "        $u" }
+if (-not $NoPhone -and $urls.Count -gt 0) {
+  Write-Host ("Phone:  {0}   <- the teammate's phone (Tushar's Quorum); allow Python through the firewall if Windows asks" -f ($urls[0] -replace ":$Port/remote$", ":8003/phone"))
+}
 Write-Host "Keys:   Right/PageDown/Space next · Left/PageUp back · B blank · M mute · C captions · Q Q&A · U phone address · F fullscreen"
 Write-Host "Stop:   .\scripts\show.ps1 -Stop"
