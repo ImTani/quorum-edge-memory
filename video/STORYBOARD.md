@@ -5,7 +5,7 @@ This is the single source of truth for every agent working on v3. **Don't change
 Output: 1920x1080, 30 fps, **150 s** total. No voiceover. On-screen text carries the story, so captions must be large, readable, and held long enough (~3 words/sec minimum reading time).
 
 Product: **Quorum**, offline-first team memory on **Qdrant Edge**. Code Cubicle 6.0, Problem Statement 03. Repo: github.com/ImTani/quorum-edge-memory
-Never mention ADHD. Never say "Jarvis". Names: Tanishk (laptop A, on a shoot), Lakshya (laptop B, in the studio), client "Sharma".
+Framing follows the internal brief (kept out of git). Names: Tanishk (laptop A, on a shoot), Lakshya (laptop B, in the studio), client "Sharma".
 
 ## Style bible
 

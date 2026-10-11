@@ -6,7 +6,7 @@ This is the single source of truth for every agent working on v4. `cues.json` is
 - Tempo: **120 BPM**, so 1 beat = 0.5 s and 1 bar = 2 s. Key events sit on the 0.5 s grid. The one exception is the 75.25 push, an 8th-note pickup into the hit. Cursor travel and capture-driven UI steps (deck flow steps every 0.9 s) are motion, not sync points, and SFX just follow them.
 - Product: **Quorum**, offline-first team memory on **Qdrant Edge**. Code Cubicle 6.0, Problem Statement 03. Repo: github.com/ImTani/quorum-edge-memory.
 - People: Tanishk (left laptop, "on set" / "on a shoot"), Lakshya (right laptop, "office"). The client is Rohit Sharma (from the fixture inbox). Customer zero: **BKA, a four-person production house and developer group**.
-- Never say "Jarvis". Never mention ADHD. No invented customers, users, numbers beyond the mocked demo timings below, logos or prices. "Per team, per month" with no figure; the call to action is early access.
+- Framing follows the internal brief (kept out of git). No invented customers, users, numbers beyond the mocked demo timings below, logos or prices. "Per team, per month" with no figure; the call to action is early access.
 
 ## The film in one breath
 
