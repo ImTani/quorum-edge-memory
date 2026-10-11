@@ -49,6 +49,14 @@ body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dv
 #list button i { font-style: normal; color: var(--ink3); margin-right: 10px; display: inline-block; width: 28px; }
 #list button.live i { color: #ff6b7d; }
 #list button.skip { color: #ffb020; font-style: italic; }
+.list-tools { display: flex; gap: 8px; margin-bottom: 12px; }
+.list-tools button { flex: 1; border: 1px solid #3b4150; border-radius: 12px; padding: 13px 10px; font: 700 17px var(--ui); background: #1d2129; color: #cfd3da; }
+.list-tools #rdemo { border-color: #7a2a35; background: #3a1c22; color: #ffb3bd; }
+#pre .rbtn, #rst .rbtn { margin-top: 4px; border: 1px solid #7a2a35; background: #3a1c22; color: #ffb3bd; border-radius: 10px; padding: 9px 12px; font: 700 16px var(--ui); justify-self: start; }
+#rst { display: none; border-radius: 12px; padding: 10px 12px; font: 700 17px/1.35 var(--ui); }
+#rst.on { display: grid; gap: 4px; }
+#rst.running { background: var(--amber); color: #1d1b16; } #rst.done { background: #14895a; color: #fff; } #rst.failed { background: #5a1c26; color: #ffd6dc; }
+#rst small { font-weight: 500; font-size: 14px; opacity: .85; }
 #qa { position: fixed; inset: 0; z-index: 8; background: #14171f; display: none; grid-template-rows: auto auto 1fr; gap: 10px;
   padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); }
 #qa.on { display: grid; }
@@ -67,10 +75,10 @@ body { display: grid; grid-template-rows: auto auto 1fr auto auto; height: 100dv
 <body>
 <div class="top"><span class="dot" id="dot"></span><span id="pos">–</span><button class="tbtn" id="steps">Steps</button><button class="tbtn" id="treset">⟲</button><button class="tbtn" id="qabtn">Q&amp;A</button><span id="timer">0:00</span></div>
 <div id="title">Connecting…</div>
-<div class="notes"><div id="pre"></div><div id="do"></div><div id="say"></div><div id="next-up"></div></div>
+<div class="notes"><div id="rst"></div><div id="pre"></div><div id="do"></div><div id="say"></div><div id="next-up"></div></div>
 <div class="toggles"><button data-t="blank">Blank</button><button data-t="mute">Mute</button><button data-t="captions">Captions</button></div>
 <div class="nav"><button id="back">Back</button><button id="next">Next</button></div>
-<div id="list"></div>
+<div id="list"><div class="list-tools"><button id="rdemo">Reset demo…</button><button id="lclose">Close</button></div><div id="list-steps"></div></div>
 <div id="qa">
   <div class="qa-top"><button id="qa-prev">◀</button><span id="qa-slide">–</span><button id="qa-next">▶</button><button id="qa-close">Back to show</button></div>
   <div id="qa-answer"></div>
@@ -98,9 +106,10 @@ function render() {
   const n = steps[k];
   $('next-up').innerHTML = n ? `Next: <b>${n.live ? 'LIVE · ' : ''}${n.title}</b>` : '<b>End of show</b>';
   for (const b of document.querySelectorAll('.toggles button')) b.classList.toggle('on', !!st[b.dataset.t]);
+  renderReset();
   $('qa').classList.toggle('on', st.deck != null);
   $('qa-slide').textContent = st.deck != null ? `slide ${st.deck}` : '–';
-  $('list').innerHTML = steps.map((x, i) => `<button data-i="${i}" class="${i === st.step ? 'cur' : ''} ${x.live ? 'live' : ''} ${x.skip ? 'skip' : ''}"><i>${i + 1}</i>${x.title}</button>`).join('');
+  $('list-steps').innerHTML = steps.map((x, i) => `<button data-i="${i}" class="${i === st.step ? 'cur' : ''} ${x.live ? 'live' : ''} ${x.skip ? 'skip' : ''}"><i>${i + 1}</i>${x.title}</button>`).join('');
 }
 async function loadSteps() { const r = await fetch('/api/steps'); const j = await r.json(); steps = j.steps || []; st = { ...st, ...j }; render(); }
 
@@ -121,6 +130,7 @@ setInterval(() => {
   el.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   el.className = s >= LIMIT ? 'over' : s >= WARN ? 'warn' : '';
 }, 250);
+setInterval(() => { if (st.reset) renderReset(); }, 1000);
 
 $('next').addEventListener('click', () => { buzz(25); post('next'); });
 $('back').addEventListener('click', () => { buzz([15, 40, 15]); post('back'); });
@@ -128,10 +138,35 @@ $('treset').addEventListener('click', () => post('timer_reset'));
 for (const b of document.querySelectorAll('.toggles button')) b.addEventListener('click', () => { buzz(15); post(b.dataset.t); });
 $('steps').addEventListener('click', () => $('list').classList.add('on'));
 $('list').addEventListener('click', e => {
+  if (e.target.closest('#rdemo')) { $('list').classList.remove('on'); resetDemo(); return; }
   const b = e.target.closest('button[data-i]');
   if (b) post('goto', { step: +b.dataset.i });
   $('list').classList.remove('on');
 });
+
+// Demo reset: scripts/demo.ps1 on the laptop (back to the seed, hub and devices restarted), then the show goes
+// to step 1 and the projector reloads the live view. Confirmed first: it wipes everything typed into the demo.
+async function resetDemo() {
+  if ((st.reset || {}).state === 'running') return;
+  buzz(15);
+  if (!confirm('Reset the live demo?\n\nEverything typed into the app goes back to the start, the hub and both laptops restart (about a minute), and the show goes back to step 1.')) return;
+  try {
+    const r = await fetch('/api/reset_demo', { method: 'POST' });
+    if (!r.ok && r.status !== 409) throw new Error(`HTTP ${r.status}`);
+  } catch (e) { alert(`Couldn't start the reset: ${e.message}`); }
+}
+function renderReset() {
+  const box = $('rst'), r = st.reset;
+  const fresh = r && (r.state !== 'done' || Date.now() / 1000 + skew - (r.ended || 0) < 25);
+  box.className = fresh ? `on ${r.state}` : '';
+  if (!fresh) { box.innerHTML = ''; return; }
+  const secs = Math.max(0, Math.floor((r.state === 'running' ? Date.now() / 1000 + skew : r.ended) - r.started));
+  const el = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+  box.innerHTML = r.state === 'running' ? `Resetting the demo… ${el}<small>Hub and both laptops restarting. Don't press Next yet.</small>`
+    : r.state === 'done' ? `Demo reset ✓ (${el})<small>Back on step 1. Check the pre-flight below.</small>`
+    : `Reset failed<small>${r.detail || ''}</small><button class="rbtn" data-reset>Try again</button>`;
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-reset]')) resetDemo(); });
 // Q&A: tap a question, the projector opens the deck at its slide, the answer to say first shows here
 let qaCur = -1;
 function renderQA() {
@@ -161,7 +196,8 @@ async function preflight() {
     box.innerHTML = '<b>PRE-FLIGHT</b>' + j.checks.map(c => {
       const cls = c.ok === true ? 'ok' : c.ok === 'warn' ? 'warn' : 'fail', mark = c.ok === true ? '✓' : c.ok === 'warn' ? '!' : '✕';
       return `<span class="${cls}"><i>${mark}</i><span>${c.name} <small>${c.detail}</small></span></span>`;
-    }).join('');
+    }).join('') + (j.checks.some(c => c.name === 'Demo reset' && c.ok === false) && (st.reset || {}).state !== 'running'
+      ? '<button class="rbtn" data-reset>Reset demo…</button>' : '');
   } catch (e) { box.innerHTML = '<b>PRE-FLIGHT</b><span class="fail"><i>✕</i>show server not reachable</span>'; }
 }
 setInterval(preflight, 3000); setTimeout(preflight, 600);

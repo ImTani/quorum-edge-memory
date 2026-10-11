@@ -9,7 +9,10 @@ Only video/v4 and site/ are served; nothing else in the repo is reachable.
 import asyncio
 import io
 import json
+import os
+import shlex
 import socket
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -51,7 +54,8 @@ class Revalidate:
 
 app.add_middleware(Revalidate)
 state = {"step": 0, "count": 1, "blank": False, "mute": False, "captions": False,
-         "timer_start": None, "deck": None, "rev": 0, "steps": []}
+         "timer_start": None, "deck": None, "rev": 0, "steps": [],
+         "reset": None, "live_rev": 0}     # reset: {state: running|done|failed, started, ended, detail}
 listeners: set[asyncio.Queue] = set()
 phones: set[asyncio.Queue] = set()          # listeners that are phone remotes (/api/events?who=remote)
 
@@ -125,6 +129,66 @@ async def cmd(req: Request):
     return public()
 
 
+# ---- demo reset (the phone's "Reset demo" button) ------------------------------------------------
+# scripts/demo.ps1 wipes the demo data back to the seed and restarts the hub and the devices; it returns
+# once every device answers. show.ps1 passes the same demo arguments it started with (QUORUM_DEMO_ARGS).
+# QUORUM_RESET_CMD replaces the whole command (tests: a harmless stand-in, so a running demo is untouched).
+DEMO_ARGS = os.environ.get("QUORUM_DEMO_ARGS", "-Look studio")
+RESET_CMD = os.environ.get("QUORUM_RESET_CMD")
+
+
+def reset_command() -> list[str]:
+    if RESET_CMD:
+        return shlex.split(RESET_CMD, posix=False)
+    return ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+            str(ROOT / "scripts" / "demo.ps1"), *shlex.split(DEMO_ARGS, posix=False)]
+
+
+RESET_LOG = ROOT / ".cache" / "run" / "reset.log"
+_reset_task = None
+
+
+def _run_reset_blocking() -> tuple[bool, str]:
+    """Run the reset with its output in a log file, not a pipe: demo.ps1 starts long-lived processes that
+    could inherit a pipe and hold it open, and a pipe read would then wait for them."""
+    RESET_LOG.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(RESET_LOG, "w", encoding="utf-8", errors="replace") as log:
+            proc = subprocess.Popen(reset_command(), cwd=str(ROOT), stdout=log, stderr=subprocess.STDOUT,
+                                    stdin=subprocess.DEVNULL, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+            code = proc.wait(timeout=240)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        return False, "demo.ps1 took longer than 4 minutes"
+    except OSError as e:
+        return False, f"{type(e).__name__}: {e}"
+    out = RESET_LOG.read_text(encoding="utf-8", errors="replace")
+    return code == 0, " · ".join(line.strip() for line in out.strip().splitlines()[-3:] if line.strip())[:300]
+
+
+async def run_reset() -> None:
+    started = state["reset"]["started"]
+    ok, tail = await asyncio.to_thread(_run_reset_blocking)
+    state["reset"] = {"state": "done" if ok else "failed", "started": started, "ended": time.time(),
+                      "detail": "" if ok else (tail or "demo.ps1 failed")}
+    if ok:
+        # back to the top of the show, timer cleared, and the projector reloads the live demo view
+        state.update(step=0, timer_start=None, deck=None, blank=False)
+        state["live_rev"] += 1
+    await broadcast()
+
+
+@app.post("/api/reset_demo")
+async def reset_demo():
+    if (state.get("reset") or {}).get("state") == "running":
+        return Response(json.dumps({"detail": "a reset is already running"}), status_code=409, media_type="application/json")
+    state["reset"] = {"state": "running", "started": time.time(), "ended": None, "detail": ""}
+    await broadcast()
+    global _reset_task
+    _reset_task = asyncio.create_task(run_reset())     # keep a reference: a bare task can be collected
+    return public()
+
+
 @app.get("/api/events")
 async def events(req: Request, who: str = ""):
     q: asyncio.Queue = asyncio.Queue()
@@ -181,7 +245,7 @@ async def preflight():
         fresh = (points == SEED_HUB_POINTS and not tan.get("conflicts") and not lak.get("conflicts")
                  and not (tan.get("sync") or {}).get("outbox"))
         checks.append({"name": "Demo reset", "ok": True if fresh else False,
-                       "detail": "fresh, ready for the live beats" if fresh else "already played: re-run scripts/show.ps1 to reset"})
+                       "detail": "fresh, ready for the live beats" if fresh else "already played: Reset demo (phone, Steps) or re-run scripts/show.ps1"})
     if oll is None:
         checks.append({"name": "Local model", "ok": "warn", "detail": "Ollama not running: the rules parser will read the note (same result)"})
     else:

@@ -223,6 +223,9 @@ function connect() {
     es.onmessage = ev => {
       const st = JSON.parse(ev.data);
       applyToggles(st);
+      // a demo reset (the phone's button) restarted the devices: reload the live view onto the fresh data
+      if (Net.liveRev != null && st.live_rev !== Net.liveRev && frame.src) frame.src = frame.src;
+      Net.liveRev = st.live_rev;
       if (st.step !== P.cur) { arm(); show(st.step); }
     };
   }).catch(() => { Net.ok = false; report(); });
