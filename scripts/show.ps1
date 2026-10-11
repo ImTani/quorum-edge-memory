@@ -44,8 +44,9 @@ $held = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction Silentl
 if ($held) { throw ":$Port is in use by PID $($held[0].OwningProcess). Stop it or pass -Port." }
 
 # the same arguments go to the show server, so the phone's "Reset demo" restarts the demo the same way
-$demoArgs = @("-Look", "studio") + $(if ($NoPhone) { @() } else { @("-Phone") })
-if (-not $NoDemo) { & (Join-Path $PSScriptRoot "demo.ps1") @demoArgs }
+$demo = @{ Look = "studio" }; if (-not $NoPhone) { $demo.Phone = $true }      # named, so they bind as options
+$demoArgs = @("-Look", "studio") + $(if ($NoPhone) { @() } else { @("-Phone") })  # the same, as text for the server
+if (-not $NoDemo) { & (Join-Path $PSScriptRoot "demo.ps1") @demo }
 
 # the stage SFX stem (softer marker and eraser) is rendered once from the film's composer; it needs numpy
 # and scipy, which the system Python has. Without it the show uses the film's own stem.

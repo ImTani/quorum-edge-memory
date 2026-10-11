@@ -161,7 +161,7 @@ Write-Host "Single-device pages:"
 foreach ($d in $devices.Keys) { Write-Host ("  {0,-8} http://127.0.0.1:{1}" -f $d, $devices[$d]) }
 Write-Host "  hub      $hubUrl/dashboard"
 if ($Phone) {
-  $ip = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway -and $_.NetAdapter.Status -eq "Up" } | Select-Object -First 1).IPv4Address.IPAddress
+  $ip = (Find-NetRoute -RemoteIPAddress 8.8.8.8 -ErrorAction SilentlyContinue | Where-Object { $_.IPAddress } | Select-Object -First 1).IPAddress   # the route the OS would use (as the show server does)
   Write-Host ("  {0,-8} http://{1}:{2}/phone   (a phone on the same network)" -f $phoneDevice, $(if ($ip) { $ip } else { "<laptop ip>" }), $phonePort)
 }
 if ($Look -ne "classic") { Write-Host "Look: $Look (add ?look=classic to any page for the classic look)" }
